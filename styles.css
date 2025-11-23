@@ -1,21 +1,4 @@
-/* #nav {
-    background-color: #ffffff;
-    overflow: hidden;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    margin-left: 0px;
-} */
 
-.body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #000000;
-}
-.bg-body-tertiary{
-    background-color: #ffffff;
-    --bs-bg-opacity: 0;
+nav{
     box-shadow: #0000004b 0px 4px 8px 0px;
 }
-/* .navbar-collapse {
-    flex-grow: 0;
-} */
