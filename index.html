@@ -2,420 +2,112 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>श्री Vijay Enterprises — Ceramics & Luster Colours</title>
-  <meta name="description" content="श्री Vijay Enterprises — Manufacturers of Lustre Colours, Liquid Gold and importers of Ceramic Colours. Since 1975." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Shri Vijay Enterprises — brief description here" />
+  <meta name="author" content="Kartik Agarwal" />
+  <title>Shri Vijay Enterprises</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <!-- Local stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
-
-  <style>
-    :root{
-      --bg1:#fff7f2;
-      --bg2:#f4f9ff;
-      --accent:#c45b2a;   /* terracotta */
-      --accent-2:#2b6f8f; /* deep teal */
-      --muted:#6b6b6b;
-      --card-bg: rgba(255,255,255,0.85);
-      --glass: rgba(255,255,255,0.6);
-      --radius:14px;
-      --nav-height:72px;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans Devanagari", Arial;
-      background: linear-gradient(160deg,var(--bg1),var(--bg2));
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      color:#24343f;
-      line-height:1.5;
-    }
-
-    /* Page layout */
-    .container{max-width:1150px;margin:0 auto;padding:24px;}
-    /* Nav */
-    .site-nav{
-      position:sticky; top:0; z-index:999;
-      backdrop-filter: blur(6px) saturate(120%);
-      background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.45));
-      border-bottom: 1px solid rgba(0,0,0,0.04);
-    }
-    .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:10px 20px;height:var(--nav-height);}
-    .brand{
-      display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit;
-    }
-    .logo{
-      width:52px;height:52px;border-radius:50%;
-      background: radial-gradient(circle at 30% 25%, #ffeede, #ffd8bf 30%, #f0c7ab 60%, #cfa08a 100%);
-      display:flex;align-items:center;justify-content:center;
-      font-weight:800;font-size:20px;color:#6b2b12;border:3px solid rgba(255,255,255,0.6);
-      box-shadow: 0 6px 18px rgba(60,40,20,0.06);
-    }
-    .brand .title{font-weight:700;font-size:16px;display:flex;flex-direction:column;line-height:1;}
-    .brand .title .hindi{font-family:"Noto Sans Devanagari";font-weight:700;font-size:14px}
-    nav ul{list-style:none;margin:0;padding:0;display:flex;gap:14px;align-items:center}
-    nav a{color: #21323a;text-decoration:none;padding:8px 10px;border-radius:8px;font-weight:600;font-size:14px}
-    nav a:hover{background: rgba(196,91,42,0.07)}
-    /* product dropdown */
-    .has-sub{position:relative}
-    .sub{
-      position:absolute;top:calc(var(--nav-height) - 6px);left:0;
-      background:white;border-radius:10px;padding:8px;border:1px solid rgba(0,0,0,0.06);
-      box-shadow:0 10px 30px rgba(35,50,70,0.08);display:none;min-width:220px;
-    }
-    .sub a{display:block;padding:8px 12px;font-weight:500;color:#37474f}
-    .has-sub:hover .sub{display:block}
-    /* mobile menu */
-    .mobile-toggle{display:none;border:0;background:transparent;padding:8px;cursor:pointer}
-    .mobile-toggle svg{width:26px;height:26px}
-    @media (max-width:900px){
-      nav ul{display:none;position:absolute;right:16px;top:72px;background:white;padding:12px;border-radius:10px;flex-direction:column;box-shadow:0 10px 30px rgba(35,50,70,0.08)}
-      nav ul.show{display:flex}
-      .mobile-toggle{display:block}
-      .has-sub:hover .sub{display:none}
-      .sub{position:static;box-shadow:none;border-radius:6px;padding-left:6px}
-    }
-
-    /* Hero */
-    .hero{
-      display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center;padding:54px 0;
-    }
-    .hero-card{
-      background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.78));
-      border-radius:18px;padding:28px;box-shadow: 0 20px 50px rgba(40,60,80,0.06);
-    }
-    .eyebrow{display:inline-block;background:linear-gradient(90deg, rgba(196,91,42,0.12), rgba(43,111,143,0.06));padding:6px 10px;border-radius:999px;font-weight:700;font-size:12px;margin-bottom:12px}
-    h1{font-size:40px;margin:6px 0 10px 0;line-height:1.02}
-    .lead{color:var(--muted);font-size:16px;margin-bottom:16px}
-    .cta{display:flex;gap:12px;flex-wrap:wrap}
-    .btn{
-      display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;border:0;cursor:pointer;font-weight:700;
-    }
-    .btn-primary{background:linear-gradient(90deg,var(--accent), #d87b4e);color:white;box-shadow:0 10px 30px rgba(200,100,60,0.12)}
-    .btn-ghost{background:transparent;border:1px solid rgba(0,0,0,0.06);color:var(--muted)}
-
-    /* small info box */
-    .info{
-      padding:14px;border-radius:12px;background:rgba(255,255,255,0.9);border:1px solid rgba(0,0,0,0.04);font-size:14px;color:#384b56
-    }
-
-    /* right column - quick contact */
-    .quick{
-      display:flex;flex-direction:column;gap:12px;
-      align-items:stretch;
-    }
-    .quick .card{padding:16px;border-radius:12px}
-
-    /* sections */
-    section{padding:42px 0;border-top:1px dashed rgba(0,0,0,0.03)}
-    section h2{margin:0 0 12px 0;font-size:22px}
-    .about-grid{display:grid;grid-template-columns:1fr 360px;gap:22px;align-items:start}
-    .history{background:var(--card-bg);padding:18px;border-radius:12px}
-    .products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:12px}
-    .product{background:white;border-radius:12px;padding:16px;border:1px solid rgba(0,0,0,0.04)}
-    .product h3{margin:0 0 8px 0;font-size:16px}
-    .product ul{margin:0;padding-left:18px;color:var(--muted);font-size:14px}
-    /* gallery */
-    .gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-    .gallery-grid .tile{background:linear-gradient(180deg,#fff,#f7f7f7);height:140px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-weight:700;border:1px dashed rgba(0,0,0,0.04)}
-    /* contact */
-    .contact-grid{display:grid;grid-template-columns:1fr 360px;gap:22px}
-    form .field{display:flex;flex-direction:column;margin-bottom:10px}
-    input[type="text"], input[type="email"], textarea{padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.08);font-size:14px}
-    textarea{min-height:120px;resize:vertical}
-    .foot{padding:18px 0;color:var(--muted);font-size:14px;border-top:1px solid rgba(0,0,0,0.03);margin-top:30px;text-align:center}
-
-    @media (max-width:1020px){
-      .hero{grid-template-columns:1fr;gap:18px}
-      .about-grid{grid-template-columns:1fr}
-      .contact-grid{grid-template-columns:1fr}
-      .products-grid{grid-template-columns:repeat(2,1fr)}
-      .gallery-grid{grid-template-columns:repeat(2,1fr)}
-    }
-    @media (max-width:520px){
-      .products-grid{grid-template-columns:1fr}
-      .gallery-grid{grid-template-columns:1fr}
-      .logo{width:44px;height:44px;font-size:16px}
-      h1{font-size:28px}
-      .brand .title{font-size:13px}
-    }
-
-    /* smooth scroll highlight */
-    .active-link{background: rgba(43,111,143,0.08)}
-  </style>
+  <!-- Favicon (optional) -->
+  <link rel="icon" href="favicon.ico" />
 </head>
 <body>
-  <!-- NAV -->
-  <header class="site-nav" role="banner">
-    <div class="nav-inner container">
-      <a class="brand" href="#home">
-        <div class="logo" aria-hidden="true">श्री</div>
-        <div class="title">
-          <span class="hindi">श्री Vijay Enterprises</span>
-          <small style="color:var(--muted);font-weight:600">Ceramics & Luster Colours</small>
-        </div>
-      </a>
+  <nav class="navbar bg-body-tertiary">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-      <button class="mobile-toggle" aria-label="Toggle menu" id="menuBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 6h18M3 12h18M3 18h18"></path>
-        </svg>
-      </button>
-
-      <nav role="navigation" aria-label="Main navigation">
-        <ul id="navList">
-          <li><a href="#home">Home</a></li>
-          <li><a href="#about">About Us</a></li>
-          <li><a href="#gallery">Gallery</a></li>
-          <li class="has-sub">
-            <a href="#products">Products ▾</a>
-            <div class="sub" aria-hidden="true">
-              <a href="#ceramic">Ceramic Colors › Domestic</a>
-              <a href="#ceramic-imported">Ceramic Colors › Imported</a>
-              <a href="#luster">Luster Colors › High Temp</a>
-              <a href="#luster-low">Luster Colors › Low Temp</a>
-              <a href="#liquidgold">Liquid Gold Luster › 7%</a>
-              <a href="#liquidgold-10">Liquid Gold Luster › 10%</a>
-              <a href="#liquidgold-12">Liquid Gold Luster › 12%</a>
-              <a href="#liquidgold-custom">Liquid Gold Luster › Customize</a>
-            </div>
-          </li>
-          <li><a href="#contact">Contact Us</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-
-  <!-- HERO -->
-  <main id="home" class="container">
-    <div class="hero">
-      <div class="hero-card">
-        <span class="eyebrow">Manufacturer & Importer</span>
-        <h1>श्री Vijay Enterprises</h1>
-        <p class="lead">Manufacturers of Lustre colours and Liquid Gold, and importers of premium Ceramic Colours for third-firing decorations on ceramic and glass ware. Crafting finishes with precision and decades of experience.</p>
-
-        <div class="cta">
-          <a class="btn btn-primary" href="#products">Our Products</a>
-          <a class="btn btn-ghost" href="#contact">Get in Touch</a>
-        </div>
-
-        <div style="margin-top:16px" class="info">
-          Since 1975 we have been manufacturing lustre colours. A firm named <strong>VIJAY ENTERPRISES</strong> was formed in 2002. In 2025 we formed a new firm named <strong>“श्री” VIJAY ENTERPRISES</strong> and continue the same business under the new name.
-        </div>
-      </div>
-
-      <aside class="quick">
-        <div class="card info">
-          <strong>Contact</strong><br>
-          <div style="margin-top:8px;font-weight:700;color:#254a57">+91 12345 67890</div>
-          <div style="font-size:14px;color:var(--muted);margin-top:6px">info@vijayenterprises.example</div>
-        </div>
-
-        <div class="card info">
-          <strong>Address</strong>
-          <div style="margin-top:8px;color:var(--muted);font-size:14px">Industrial Area, Jaipur, India</div>
-        </div>
-
-        <div class="card info">
-          <strong>Hours</strong>
-          <div style="margin-top:8px;color:var(--muted);font-size:14px">Mon – Sat: 9:00 AM – 6:00 PM</div>
-        </div>
-      </aside>
-    </div>
-  </main>
-
-  <!-- ABOUT -->
-  <section id="about" class="container" aria-labelledby="aboutHeading">
-    <h2 id="aboutHeading">About Us</h2>
-    <div class="about-grid">
-      <div class="history">
-        <p><strong>Our story</strong></p>
-        <p>We are the manufacturers of Lustre colours and Liquid Gold and importers of Ceramic Colours for third-firing decorations for ceramic and glass ware. Since 1975, we are manufacturing Lustre colours and formed a firm in 2002 named <strong>VIJAY ENTERPRISES</strong>. In 2025 we formed a new firm named <strong>“श्री” VIJAY ENTERPRISES</strong> and are continuing the same business with the new firm name.</p>
-
-        <h3 style="margin-top:12px">What we make</h3>
-        <ul>
-          <li>Lustre Colours for high and low temperature firings</li>
-          <li>Liquid Gold Luster in multiple concentrations</li>
-          <li>Ceramic Colours — domestic & imported</li>
-        </ul>
-      </div>
-
-      <div>
-        <h3>Why choose us</h3>
-        <p style="color:var(--muted)">Decades of experience, strict quality control, and a focus on reliable supply for ceramic decorators and glass artists. We provide product customization and technical support for application and firing.</p>
-
-        <div style="margin-top:16px" class="info">
-          <strong>Core strengths</strong>
-          <ul style="margin-top:8px;color:var(--muted)">
-            <li>Premium raw materials</li>
-            <li>Technical guidance</li>
-            <li>Custom formulations</li>
+     <a class="navbar-brand" href="#">
+      <img src="SVE1450x390.gif" alt="Logo" width="362.5vw" height="97.4vw" class="d-inline-block align-text-top">
+    </a>
+    <a class="navbar-brand" href="#">
+      <img src="login.svg" alt="Logo" width="20" height="20" class="d-inline-block align-text-top">
+    </a>
+    
+    <div style="width: 50%;" class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">About Us</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Products
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
           </ul>
-        </div>
+        </li>
+        
+        <li class="nav-item">
+          <a class="nav-link" href="#">Gallery</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Contact Us</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">News!</a>
+        </li>
+      </ul>
+    </div>
+    
+   
+  </div>
+</nav>
+<br>
+<div style="width: 81vw; height: 54vw; margin-left: 9.5vw;" id="carouselExampleInterval" id="carouselExampleCaptions" class="carousel slide carousel-fade" data-bs-ride="carousel">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+  </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active" data-bs-interval="4000">
+      <img src="C1.png" class="d-block w-100" alt="...">
+      <div class="carousel-caption d-none d-md-block" >
+        <h5>First slide label</h5>
+        <p>Some representative placeholder content for the first slide.</p>
       </div>
     </div>
-  </section>
-
-  <!-- PRODUCTS -->
-  <section id="products" class="container" aria-labelledby="productsHeading">
-    <h2 id="productsHeading">Products</h2>
-    <p class="lead" style="margin-top:6px">We supply a wide range of ceramic & luster products. Click any item for details.</p>
-
-    <div class="products-grid">
-      <div class="product" id="ceramic">
-        <h3>Ceramic Colors — Domestic</h3>
-        <p style="color:var(--muted);margin-bottom:8px">High-quality domestic ceramic pigments for third-firing decorations.</p>
-        <ul>
-          <li>Single-shot & multi-layer compatible</li>
-          <li>Stable colour on firing</li>
-          <li>Available in powder & liquid form</li>
-        </ul>
-      </div>
-
-      <div class="product" id="ceramic-imported">
-        <h3>Ceramic Colors — Imported</h3>
-        <p style="color:var(--muted);margin-bottom:8px">Imported shades and special-effect pigments for premium finishes.</p>
-        <ul>
-          <li>Unique shades and metallic effects</li>
-          <li>Consistent batch-to-batch quality</li>
-        </ul>
-      </div>
-
-      <div class="product" id="luster">
-        <h3>Luster Colors — High Temp</h3>
-        <p style="color:var(--muted);margin-bottom:8px">Lusters formulated for high-temperature firings with bright metallic finishes.</p>
-      </div>
-
-      <div class="product" id="luster-low">
-        <h3>Luster Colors — Low Temp</h3>
-        <p style="color:var(--muted);margin-bottom:8px">Low-temperature lusters for delicate substrates and cost-effective processes.</p>
-      </div>
-
-      <div class="product" id="liquidgold">
-        <h3>Liquid Gold Luster — 7%</h3>
-        <p style="color:var(--muted);margin-bottom:8px">High-shine liquid gold, 7% concentration.</p>
-      </div>
-
-      <div class="product" id="liquidgold-10">
-        <h3>Liquid Gold Luster — 10%</h3>
-        <p style="color:var(--muted);margin-bottom:8px">Richer gold effect at 10% concentration.</p>
-      </div>
-
-      <div class="product" id="liquidgold-12">
-        <h3>Liquid Gold Luster — 12%</h3>
-        <p style="color:var(--muted);margin-bottom:8px">Premium 12% concentration for deep metallic sheen.</p>
-      </div>
-
-      <div class="product" id="liquidgold-custom">
-        <h3>Liquid Gold Luster — Customize</h3>
-        <p style="color:var(--muted);margin-bottom:8px">Custom concentrations and formulations available on request.</p>
-        <p style="margin-top:8px"><a href="#contact" class="btn btn-ghost" style="padding:8px 10px">Request Quote</a></p>
+    <div class="carousel-item" data-bs-interval="4000">
+      <img src="C2.png" class="d-block w-100" alt="...">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>Second slide label</h5>
+        <p>Some representative placeholder content for the second slide.</p>
       </div>
     </div>
-  </section>
-
-  <!-- GALLERY -->
-  <section id="gallery" class="container" aria-labelledby="galleryHeading">
-    <h2 id="galleryHeading">Gallery</h2>
-    <p class="lead" style="margin-top:6px">Samples and finishes — click to view larger versions (replace these placeholders with your product photos).</p>
-
-    <div class="gallery-grid" style="margin-top:12px">
-      <div class="tile">Image 1</div>
-      <div class="tile">Image 2</div>
-      <div class="tile">Image 3</div>
-      <div class="tile">Image 4</div>
-      <div class="tile">Image 5</div>
-      <div class="tile">Image 6</div>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
-  <section id="contact" class="container" aria-labelledby="contactHeading">
-    <h2 id="contactHeading">Contact Us</h2>
-    <div class="contact-grid" style="margin-top:12px">
-      <div>
-        <form id="contactForm" onsubmit="event.preventDefault(); alert('Thanks! This demo form does not send email. Replace with Netlify Forms or an email endpoint.');">
-          <div class="field">
-            <label for="name">Name</label>
-            <input id="name" type="text" required placeholder="Your name">
-          </div>
-          <div class="field">
-            <label for="email">Email</label>
-            <input id="email" type="email" required placeholder="you@example.com">
-          </div>
-          <div class="field">
-            <label for="message">Message</label>
-            <textarea id="message" placeholder="Tell us what you need"></textarea>
-          </div>
-          <p><button class="btn btn-primary" type="submit">Send Message</button></p>
-        </form>
+    <div class="carousel-item" data-bs-interval="4000">
+      <img src="C3.png" class="d-block w-100" alt="...">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>Third slide label</h5>
+        <p>Some representative placeholder content for the third slide.</p>
       </div>
-
-      <aside>
-        <div class="info" style="margin-bottom:12px">
-          <strong>Head Office</strong>
-          <div style="margin-top:8px">Industrial Area, Jaipur, India</div>
-          <div style="margin-top:8px;color:var(--muted)"><strong>Phone:</strong> +91 12345 67890</div>
-          <div style="margin-top:6px;color:var(--muted)"><strong>Email:</strong> info@vijayenterprises.example</div>
-        </div>
-
-        <div class="info">
-          <strong>Quick Links</strong>
-          <ul style="margin:8px 0 0 16px;color:var(--muted)">
-            <li><a href="#products">Products</a></li>
-            <li><a href="#gallery">Gallery</a></li>
-            <li><a href="#contact">Get a Quote</a></li>
-          </ul>
-        </div>
-      </aside>
     </div>
-  </section>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
 
-  <footer class="container foot">
-    © <span id="yr"></span> श्री Vijay Enterprises — Ceramics & Luster Colours. All rights reserved.
+  <footer>
+    <p>&copy; 2025 श्री Vijay Enterprises</p>
   </footer>
 
-  <script>
-    // Footer year
-    document.getElementById('yr').textContent = new Date().getFullYear();
-
-    // Mobile menu toggle
-    const menuBtn = document.getElementById('menuBtn');
-    const navList = document.getElementById('navList');
-    menuBtn.addEventListener('click', () => navList.classList.toggle('show'));
-
-    // Smooth scroll for anchor links & active link highlight
-    const links = document.querySelectorAll('nav a[href^="#"], .brand[href^="#"]');
-    const navAnchors = Array.from(document.querySelectorAll('nav a'));
-
-    links.forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const target = document.querySelector(link.getAttribute('href'));
-        if(!target) return;
-        const yOffset = -60; // offset for sticky header
-        const y = target.getBoundingClientRect().top + window.pageYOffset + yOffset;
-        window.scrollTo({top: y, behavior:'smooth'});
-        navList.classList.remove('show');
-      });
-    });
-
-    // Simple active-link logic on scroll
-    const sections = Array.from(document.querySelectorAll('main, section'));
-    function onScroll(){
-      const scrollPos = window.pageYOffset + 80;
-      let current = sections[0];
-      for(let sec of sections){
-        if(sec.offsetTop <= scrollPos) current = sec;
-      }
-      const id = current.id || 'home';
-      navAnchors.forEach(a => a.classList.toggle('active-link', a.getAttribute('href') === '#' + id));
-    }
-    window.addEventListener('scroll', onScroll);
-    window.addEventListener('load', onScroll);
-  </script>
+  <!-- Site scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  <script src="main.js"></script>
 </body>
 </html>
