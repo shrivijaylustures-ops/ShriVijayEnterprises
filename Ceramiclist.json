@@ -1,0 +1,135 @@
+[
+    {
+        "colour_name": "Cobalt Blue",
+        "hex_value": "#0047AB",
+        "image_file": "landing.png",
+        "stock_level": "In Stock",
+        "colour_code": "4821"
+    },
+    {
+        "colour_name": "Ruby Red",
+        "hex_value": "#9B111E",
+        "image_file": "landing.png",
+        "stock_level": "Low Stock",
+        "colour_code": "9374"
+    },
+    {
+        "colour_name": "Emerald Green",
+        "hex_value": "#50C878",
+        "image_file": "landing.png",
+        "stock_level": "Out of Stock",
+        "colour_code": "6502"
+    },
+    {
+        "colour_name": "Sunshine Yellow",
+        "hex_value": "#FFFD37",
+        "image_file": "landing.png",
+        "stock_level": "In Stock",
+        "colour_code": "1289"
+    },
+    {
+        "colour_name": "Onyx Black",
+        "hex_value": "#353839",
+        "image_file": "landing.png",
+        "stock_level": "In Stock",
+        "colour_code": "7045"
+    },
+    {
+        "colour_name": "Pure White",
+        "hex_value": "#FFFFFF",
+        "image_file": "landing.png",
+        "stock_level": "Low Stock",
+        "colour_code": "2197"
+    },
+    {
+        "colour_name": "Amethyst Purple",
+        "hex_value": "#9966CC",
+        "image_file": "landing.png",
+        "stock_level": "In Stock",
+        "colour_code": "8420"
+    },
+    {
+        "colour_name": "Copper Brown",
+        "hex_value": "#B87333",
+        "image_file": "landing.png",
+        "stock_level": "Out of Stock",
+        "colour_code": "5613"
+    },
+    {
+        "colour_name": "Silver Grey",
+        "hex_value": "#C0C0C0",
+        "image_file": "landing.png",
+        "stock_level": "In Stock",
+        "colour_code": "9032"
+    },
+    {
+        "colour_name": "Turquoise Teal",
+        "hex_value": "#30D5C8",
+        "image_file": "landing.png",
+        "stock_level": "In Stock",
+        "colour_code": "7764"
+    },
+    {
+        "colour_name": "Magenta Pink",
+        "hex_value": "#FF00FF",
+        "image_file": "landing.png",
+        "stock_level": "Low Stock",
+        "colour_code": "4129"
+    },
+    {
+        "colour_name": "Golden Yellow",
+        "hex_value": "#FFD700",
+        "image_file": "landing.png",
+        "stock_level": "In Stock",
+        "colour_code": "3008"
+    },
+    {
+        "colour_name": "Cobalt Blue",
+        "hex_value": "#0047AB",
+        "image_file": "landing.png",
+        "stock_level": "In Stock",
+        "colour_code": "4830"
+    },
+    {
+        "colour_name": "Ruby Red",
+        "hex_value": "#9B111E",
+        "image_file": "landing.png",
+        "stock_level": "Low Stock",
+        "colour_code": "9016"
+    },
+    {
+        "colour_name": "Emerald Green",
+        "hex_value": "#50C878",
+        "image_file": "landing.png",
+        "stock_level": "Out of Stock",
+        "colour_code": "2784"
+    },
+    {
+        "colour_name": "Sunshine Yellow",
+        "hex_value": "#FFFD37",
+        "image_file": "landing.png",
+        "stock_level": "In Stock",
+        "colour_code": "6451"
+    },
+    {
+        "colour_name": "Onyx Black",
+        "hex_value": "#353839",
+        "image_file": "landing.png",
+        "stock_level": "In Stock",
+        "colour_code": "1893"
+    },
+    {
+        "colour_name": "Pure White",
+        "hex_value": "#FFFFFF",
+        "image_file": "landing.png",
+        "stock_level": "Low Stock",
+        "colour_code": "5970"
+    },
+    {
+        "colour_name": "Amethyst Purple",
+        "hex_value": "#9966CC",
+        "image_file": "landing.png",
+        "stock_level": "In Stock",
+        "colour_code": "8345"
+    }
+]
