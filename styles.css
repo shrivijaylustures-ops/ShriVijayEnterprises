@@ -46,18 +46,48 @@ footer{
     font-style: normal;
 }
 
+.intro-heading{
+    color: white;
+    font-size: xx-large;
+    text-shadow: 2px 2px 4px #000000;
+    text-align: justify;
+    font-family: "Stack Sans Headline", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+}
+
 .btn-cstm{
     background-color: #5799dd;
     color: white;
+    box-shadow: #000000 0px 5px 10px 0px;
+
 }
 
 .btn-cstm:hover{
     background-color: #03182e;
     color: white;
+    box-shadow: #000000 0 25% 25% 0;
 }
 
 .landing{
-    width: 100%;
+    width: 80%;
+    border-radius: 5%;
     height: auto;
     z-index: 1000;
+    box-shadow: #000000 0px 20px 40px 0px;
+
+}
+
+
+.landing_parent{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media screen and (max-width: 992px) {
+
+    .landing {display:none;}
+
 }
