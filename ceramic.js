@@ -10,8 +10,8 @@ fetch('./Ceramiclist.json')
     items.forEach((item) => {
 
       // Generate color code if missing
-      if (!item.color_code) {
-        item.color_code = Math.floor(1000 + Math.random() * 9000).toString();
+      if (!item.colour_code) {
+        item.colour_code = Math.floor(1000 + Math.random() * 9000).toString();
       }
 
       const colDiv = document.createElement('div');
@@ -43,7 +43,7 @@ fetch('./Ceramiclist.json')
       patch.style.backgroundColor = item.hex_value;
 
       const code = document.createElement('span');
-      code.textContent = item.color_code;
+      code.textContent = item.colour_code;
       code.style.fontSize = "1.25rem";
       code.style.fontWeight = "700";
       code.style.letterSpacing = "1px";
