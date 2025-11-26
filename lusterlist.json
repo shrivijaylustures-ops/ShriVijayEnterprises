@@ -1,135 +1,247 @@
 [
-    {
-        "colour_name": "Cobalt Blue",
-        "hex_value": "#0047AB",
-        "image_file": "landing.png",
-        "stock_level": "In Stock",
-        "colour_code": "4821"
-    },
-    {
-        "colour_name": "Ruby Red",
-        "hex_value": "#9B111E",
-        "image_file": "landing.png",
-        "stock_level": "Low Stock",
-        "colour_code": "9374"
-    },
-    {
-        "colour_name": "Emerald Green",
-        "hex_value": "#50C878",
-        "image_file": "landing.png",
-        "stock_level": "Out of Stock",
-        "colour_code": "6502"
-    },
-    {
-        "colour_name": "Sunshine Yellow",
-        "hex_value": "#FFFD37",
-        "image_file": "landing.png",
-        "stock_level": "In Stock",
-        "colour_code": "1289"
-    },
-    {
-        "colour_name": "Onyx Black",
-        "hex_value": "#353839",
-        "image_file": "landing.png",
-        "stock_level": "In Stock",
-        "colour_code": "7045"
-    },
-    {
-        "colour_name": "Pure White",
-        "hex_value": "#FFFFFF",
-        "image_file": "landing.png",
-        "stock_level": "Low Stock",
-        "colour_code": "2197"
-    },
-    {
-        "colour_name": "Amethyst Purple",
-        "hex_value": "#9966CC",
-        "image_file": "landing.png",
-        "stock_level": "In Stock",
-        "colour_code": "8420"
-    },
-    {
-        "colour_name": "Copper Brown",
-        "hex_value": "#B87333",
-        "image_file": "landing.png",
-        "stock_level": "Out of Stock",
-        "colour_code": "5613"
-    },
-    {
-        "colour_name": "Silver Grey",
-        "hex_value": "#C0C0C0",
-        "image_file": "landing.png",
-        "stock_level": "In Stock",
-        "colour_code": "9032"
-    },
-    {
-        "colour_name": "Turquoise Teal",
-        "hex_value": "#30D5C8",
-        "image_file": "landing.png",
-        "stock_level": "In Stock",
-        "colour_code": "7764"
-    },
-    {
-        "colour_name": "Magenta Pink",
-        "hex_value": "#FF00FF",
-        "image_file": "landing.png",
-        "stock_level": "Low Stock",
-        "colour_code": "4129"
-    },
-    {
-        "colour_name": "Golden Yellow",
-        "hex_value": "#FFD700",
-        "image_file": "landing.png",
-        "stock_level": "In Stock",
-        "colour_code": "3008"
-    },
-    {
-        "colour_name": "Cobalt Blue",
-        "hex_value": "#0047AB",
-        "image_file": "landing.png",
-        "stock_level": "In Stock",
-        "colour_code": "4830"
-    },
-    {
-        "colour_name": "Ruby Red",
-        "hex_value": "#9B111E",
-        "image_file": "landing.png",
-        "stock_level": "Low Stock",
-        "colour_code": "9016"
-    },
-    {
-        "colour_name": "Emerald Green",
-        "hex_value": "#50C878",
-        "image_file": "landing.png",
-        "stock_level": "Out of Stock",
-        "colour_code": "2784"
-    },
-    {
-        "colour_name": "Sunshine Yellow",
-        "hex_value": "#FFFD37",
-        "image_file": "landing.png",
-        "stock_level": "In Stock",
-        "colour_code": "6451"
-    },
-    {
-        "colour_name": "Onyx Black",
-        "hex_value": "#353839",
-        "image_file": "landing.png",
-        "stock_level": "In Stock",
-        "colour_code": "1893"
-    },
-    {
-        "colour_name": "Pure White",
-        "hex_value": "#FFFFFF",
-        "image_file": "landing.png",
-        "stock_level": "Low Stock",
-        "colour_code": "5970"
-    },
-    {
-        "colour_name": "Amethyst Purple",
-        "hex_value": "#9966CC",
-        "image_file": "landing.png",
-        "stock_level": "In Stock",
-        "colour_code": "8345"
-    }
+  {
+    "colour_name": "Deep Orange",
+    "hex_value": "#FF7F24",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Ceramic Luster (750°C–850°C)"
+  },
+  {
+    "colour_name": "Golden Orange",
+    "hex_value": "#FFA64D",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Ceramic Luster (750°C–850°C)"
+  },
+  {
+    "colour_name": "Bronze",
+    "hex_value": "#CD7F32",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Ceramic Luster (750°C–850°C)"
+  },
+  {
+    "colour_name": "Brown",
+    "hex_value": "#8B4513",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Ceramic Luster (750°C–850°C)"
+  },
+  {
+    "colour_name": "Golden",
+    "hex_value": "#FFD700",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Ceramic Luster (750°C–850°C)"
+  },
+  {
+    "colour_name": "Steel Grey",
+    "hex_value": "#7F8C8D",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Ceramic Luster (750°C–850°C)"
+  },
+  {
+    "colour_name": "MOP",
+    "hex_value": "#F0EAD6",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Ceramic Luster (750°C–850°C)"
+  },
+  {
+    "colour_name": "Coffee Brown",
+    "hex_value": "#4B3621",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Ceramic Luster (750°C–850°C)"
+  },
+  {
+    "colour_name": "Olive Green",
+    "hex_value": "#708238",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Ceramic Luster (750°C–850°C)"
+  },
+
+  {
+    "colour_name": "Sky Blue",
+    "hex_value": "#87CEEB",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Gold Based",
+    "description": "Ceramic Luster (Gold Based)"
+  },
+  {
+    "colour_name": "Lemon Yellow",
+    "hex_value": "#FFF44F",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Ceramic Luster (750°C–850°C)"
+  },
+  {
+    "colour_name": "Amla Green",
+    "hex_value": "#6BAA2D",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Gold Based",
+    "description": "Ceramic Luster (Gold Based)"
+  },
+  {
+    "colour_name": "Green Parrot",
+    "hex_value": "#3CB043",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Gold Based",
+    "description": "Ceramic Luster (Gold Based)"
+  },
+  {
+    "colour_name": "Rose Pink",
+    "hex_value": "#FF66CC",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Gold Based",
+    "description": "Ceramic Luster (Gold Based)"
+  },
+  {
+    "colour_name": "Green Deep",
+    "hex_value": "#004526",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Gold Based",
+    "description": "Ceramic Luster (Gold Based)"
+  },
+  {
+    "colour_name": "Blue",
+    "hex_value": "#1E90FF",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Gold Based",
+    "description": "Ceramic Luster (Gold Based)"
+  },
+  {
+    "colour_name": "Turquoise Blue",
+    "hex_value": "#30D5C8",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Gold Based",
+    "description": "Ceramic Luster (Gold Based)"
+  },
+
+  {
+    "colour_name": "Medium (Oil Base)",
+    "hex_value": "#C8C8C8",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Medium (Oil Base) for Ceramic Colors"
+  },
+
+  /* ---------------- GLASS LUSTER ---------------- */
+
+  {
+    "colour_name": "Deep Orange",
+    "hex_value": "#FF7F24",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Glass Luster (500°C–600°C)"
+  },
+  {
+    "colour_name": "Golden Orange",
+    "hex_value": "#FFA64D",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Glass Luster (500°C–600°C)"
+  },
+  {
+    "colour_name": "Brown",
+    "hex_value": "#8B4513",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Glass Luster (500°C–600°C)"
+  },
+  {
+    "colour_name": "Golden",
+    "hex_value": "#FFD700",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Glass Luster (500°C–600°C)"
+  },
+  {
+    "colour_name": "Steel Grey",
+    "hex_value": "#7F8C8D",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Glass Luster (500°C–600°C)"
+  },
+  {
+    "colour_name": "MOP",
+    "hex_value": "#F0EAD6",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Glass Luster (500°C–600°C)"
+  },
+  {
+    "colour_name": "Coffee Brown",
+    "hex_value": "#4B3621",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Glass Luster (500°C–600°C)"
+  },
+  {
+    "colour_name": "Russet",
+    "hex_value": "#80461B",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Glass Luster (500°C–600°C)"
+  },
+  {
+    "colour_name": "Lemon Yellow",
+    "hex_value": "#FFF44F",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Glass Luster (500°C–600°C)"
+  },
+  {
+    "colour_name": "Green",
+    "hex_value": "#008000",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Gold Based",
+    "description": "Glass Luster (Gold Based)"
+  },
+  {
+    "colour_name": "Blue",
+    "hex_value": "#1E90FF",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Gold Based",
+    "description": "Glass Luster (Gold Based)"
+  },
+  {
+    "colour_name": "Turquoise Blue",
+    "hex_value": "#30D5C8",
+    "image_file": "landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Gold Based",
+    "description": "Glass Luster (Gold Based)"
+  }
 ]
