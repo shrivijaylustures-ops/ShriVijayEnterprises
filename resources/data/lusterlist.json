@@ -1,0 +1,155 @@
+[
+  {
+    "colour_name": "Deep Orange",
+    "hex_value": "#FF7F24",
+    "image_file": "./resources/Luster/Orange.jpg",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Ceramic Luster (750°C–850°C)"
+  },
+  {
+    "colour_name": "Golden Orange",
+    "hex_value": "#FFA64D",
+    "image_file": "./resources/Luster/GoldenOrange.jpg",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Ceramic Luster (750°C–850°C)"
+  },
+  {
+    "colour_name": "Bronze",
+    "hex_value": "#CD7F32",
+    "image_file": "./resources/Luster/Bronze.jpg",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Ceramic Luster (750°C–850°C)"
+  },
+  {
+    "colour_name": "Brown",
+    "hex_value": "#8B4513",
+    "image_file": "./resources/Luster/Brown.jpg",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Ceramic Luster (750°C–850°C)"
+  },
+  {
+    "colour_name": "Steel Grey",
+    "hex_value": "#7F8C8D",
+    "image_file": "./resources/Luster/SteelGrey.jpg",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Ceramic Luster (750°C–850°C)"
+  },
+  {
+    "colour_name": "MOP",
+    "hex_value": "#F0EAD6",
+    "image_file": "./resources/Luster/MotherofPearl.jpg",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Ceramic Luster (750°C–850°C)"
+  },
+  {
+    "colour_name": "Coffee Brown",
+    "hex_value": "#4B3621",
+    "image_file": "./resources/Luster/CoffeeBrown.jpg",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Ceramic Luster (750°C–850°C)"
+  },
+  {
+    "colour_name": "Olive Green",
+    "hex_value": "#708238",
+    "image_file": "./resources/Luster/OliveGreen.jpg",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Ceramic Luster (750°C–850°C)"
+  },
+  {
+    "colour_name": "Lemon Yellow",
+    "hex_value": "#FFF44F",
+    "image_file": "./resources/Luster/Yellow.jpg",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Ceramic Luster (750°C–850°C)"
+  },
+  {
+    "colour_name": "Golden Yellow",
+    "hex_value": "#FFF44F",
+    "image_file": "./resources/Luster/GoldenYellow.jpg",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Ceramic Luster (750°C–850°C)"
+  },
+  {
+    "colour_name": "Amla Green",
+    "hex_value": "#6BAA2D",
+    "image_file": "./resources/Luster/AmlaGreen.jpg",
+    "stock_level": "In Stock",
+    "color_code": "Gold Based",
+    "description": "Ceramic Luster (Gold Based)"
+  },
+  {
+    "colour_name": "Parrot Green",
+    "hex_value": "#3CB043",
+    "image_file": "./resources/Luster/ParrotGreen.jpg",
+    "stock_level": "In Stock",
+    "color_code": "Gold Based",
+    "description": "Ceramic Luster (Gold Based)"
+  },
+  {
+    "colour_name": "Rose Pink",
+    "hex_value": "#FF66CC",
+    "image_file": "./resources/Luster/Pink.jpg",
+    "stock_level": "In Stock",
+    "color_code": "Gold Based",
+    "description": "Ceramic Luster (Gold Based)"
+  },
+  {
+    "colour_name": "Blue",
+    "hex_value": "#1E90FF",
+    "image_file": "./resources/Luster/Blue.jpg",
+    "stock_level": "In Stock",
+    "color_code": "Gold Based",
+    "description": "Ceramic Luster (Gold Based)"
+  },
+  {
+    "colour_name": "Green Deep",
+    "hex_value": "#004526",
+    "image_file": "./resources/Luster/landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Gold Based",
+    "description": "Ceramic Luster (Gold Based)"
+  },
+  {
+    "colour_name": "Turquoise Blue",
+    "hex_value": "#30D5C8",
+    "image_file": "./resources/Luster/landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Gold Based",
+    "description": "Ceramic Luster (Gold Based)"
+  },
+
+  {
+    "colour_name": "Medium (Oil Base)",
+    "hex_value": "#C8C8C8",
+    "image_file": "./resources/Luster/landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Medium (Oil Base) for Ceramic Colors"
+  },
+  {
+    "colour_name": "Sky Blue",
+    "hex_value": "#87CEEB",
+    "image_file": "./resources/Luster/landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Gold Based",
+    "description": "Ceramic Luster (Gold Based)"
+  },
+  {
+    "colour_name": "Golden",
+    "hex_value": "#FFD700",
+    "image_file": "./resources/Luster/landing.png",
+    "stock_level": "In Stock",
+    "color_code": "Not Gold Based",
+    "description": "Ceramic Luster (750°C–850°C)"
+  }
+]
