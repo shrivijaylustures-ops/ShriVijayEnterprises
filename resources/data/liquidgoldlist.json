@@ -1,0 +1,65 @@
+[
+    {
+        "colour_name": "Liquid Luster Gold",
+        "hex_value": "#d4af37",
+        "image_file": "./resources/Gold/liq_gold.png",
+        "stock_level": "In Stock",
+        "colour_code": "7%"
+    },
+    {
+        "colour_name": "Liquid Ceramic Gold",
+        "hex_value": "#d4af37",
+        "image_file": "./resources/Gold/LiquidGold.jpg",
+        "stock_level": "In Stock",
+        "colour_code": "7%"
+    },
+    {
+        "colour_name": "Liquid Luster Gold",
+        "hex_value": "#d4af37",
+        "image_file": "./resources/Gold/liq_gold.png",
+        "stock_level": "In Stock",
+        "colour_code": "10%"
+    },
+    {
+        "colour_name": "Liquid Ceramic Gold",
+        "hex_value": "#d4af37",
+        "image_file": "./resources/Gold/LiquidGoldCup.jpg",
+        "stock_level": "In Stock",
+        "colour_code": "10%"
+    },
+    {
+        "colour_name": "Liquid Luster Gold",
+        "hex_value": "#d4af37",
+        "image_file": "./resources/Gold/liq_gold.png",
+        "stock_level": "In Stock",
+        "colour_code": "12%"
+    },
+    {
+        "colour_name": "Liquid Ceramic Gold",
+        "hex_value": "#d4af37",
+        "image_file": "./resources/Gold/LiquidGold.jpg",
+        "stock_level": "In Stock",
+        "colour_code": "12%"
+    },
+    {
+        "colour_name": "Liquid Gold",
+        "hex_value": "#daa520",
+        "image_file": "./resources/Gold/LiquidGoldCup.jpg",
+        "stock_level": "In Stock",
+        "colour_code": "custom%"
+    },
+    {
+        "colour_name": "Liquid Luster Platinum",
+        "hex_value": "#E5E4E2",
+        "image_file": "./resources/Gold/liq_plat.png",
+        "stock_level": "In Stock",
+        "colour_code": "custom%"
+    },
+    {
+        "colour_name": "Liquid Ceramic Platinum",
+        "hex_value": "#E5E4E2",
+        "image_file": "./resources/Gold/LiquidPlatinum.jpg",
+        "stock_level": "In Stock",
+        "colour_code": "custom%"
+    }
+]

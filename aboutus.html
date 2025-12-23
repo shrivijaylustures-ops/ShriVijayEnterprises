@@ -14,18 +14,130 @@
 
   <!-- Favicon (optional) -->
   <link rel="icon" href="favicon.ico" />
+  <style>
+    :root {
+      --primary-color: #1a472a;
+      --accent-color: #d4af37;
+      --light-bg: #f8f7f3;
+      --text-dark: #2c2c2c;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text-dark);
+      line-height: 1.7;
+    }
+
+    .section-divider {
+      border-top: 2px solid var(--accent-color);
+      margin: 3rem 0;
+      opacity: 0.3;
+    }
+
+    h1.display-4 {
+      color: var(--primary-color);
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    h2.h2 {
+      color: var(--primary-color);
+      position: relative;
+      padding-bottom: 0.75rem;
+      margin-bottom: 1.5rem !important;
+    }
+
+    h2.h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-color), transparent);
+    }
+
+    .lead {
+      font-size: 1.05rem;
+      color: #4a4a4a;
+    }
+
+    .visionary-card {
+      background: var(--light-bg);
+      padding: 2rem;
+      border-radius: 12px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid rgba(212, 175, 55, 0.1);
+    }
+
+    .visionary-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(26, 71, 42, 0.1);
+    }
+
+    .visionary-card img {
+      border: 3px solid var(--accent-color);
+      transition: transform 0.3s ease;
+    }
+
+    .visionary-card:hover img {
+      transform: scale(1.02);
+    }
+
+    .promise-box {
+      background: linear-gradient(135deg, rgba(26, 71, 42, 0.05) 0%, rgba(212, 175, 55, 0.05) 100%);
+      border-left: 5px solid var(--accent-color);
+      padding: 2.5rem;
+      border-radius: 8px;
+      backdrop-filter: blur(10px);
+    }
+
+    .promise-box h3 {
+      color: var(--primary-color);
+      font-weight: 700;
+    }
+
+    .promise-box .lead {
+      color: var(--text-dark);
+    }
+
+    ul.list-unstyled li {
+      margin-bottom: 1rem;
+      padding-left: 1rem;
+      border-left: 2px solid var(--accent-color);
+      padding-left: 1.5rem;
+      opacity: 0.9;
+    }
+
+    .container {
+      max-width: 900px;
+    }
+
+    section {
+      background: white;
+      padding: 2rem 0;
+    }
+
+    .text-center h5 {
+      color: var(--primary-color);
+      margin-top: 1rem;
+      font-weight: 700;
+    }
+
+    .navbar {
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    }
+  </style>
 </head>
 
 <body>
-
-  
 
   <nav style="background-color: rgba(0, 0, 0, 0.836);" class="navbar sticky-top navbar-expand-lg navbar-light"
     data-bs-theme="dark">
     <div class="container-fluid">
       
       <a class="navbar-brand" href="/">
-      <img src="./SVE_trans2.gif" alt="Bootstrap" width="auto" height="100">
+      <img src="./resources/base-image/SVE_trans2.gif" alt="Bootstrap" width="auto" height="100">
     </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
         aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
@@ -70,88 +182,123 @@
       </div>
     
   </nav>
-  <br />
-  <br />
-  <br />
+
   <div class="container my-5">
     <!-- About Us Header -->
     <section class="mb-5">
-      <h1 class="display-4 fw-bold mb-4">About Us</h1>
+      <h1 class="display-4 fw-bold mb-5">About Us</h1>
+      <div class="section-divider"></div>
       
       <!-- Our Journey -->
-      <div class="mb-5">
-        <h2 class="h2 fw-bold mb-3">Our Journey</h2>
+      <div class="mb-5 pt-4">
+        <h2 class="h2 fw-bold mb-4">Our Journey</h2>
         <p class="lead">The legacy of "श्री" Vijay Enterprises began in 1975 with the establishment of Spectrum India, a pioneer in the manufacturing of Lustre Colours and specialty decorative materials for the ceramic industry.</p>
         <p class="lead">In 2001, the business evolved into Vijay Enterprises, expanding its product range, refining formulations, and becoming a trusted supplier to ceramic and glass manufacturers across India.</p>
         <p class="lead">Continuing this legacy of excellence, 2025 marks a new chapter with the formation of "श्री" Vijay Enterprises—a renewed identity that carries forward five decades of expertise, innovation, and customer trust.</p>
       </div>
 
+      <div class="section-divider"></div>
+
       <!-- Who We Are Today -->
-      <div class="mb-5">
-        <h2 class="h2 fw-bold mb-3">Who We Are Today</h2>
-        <p class="lead mb-3">At "श्री" Vijay Enterprises, we specialize in:</p>
-        <ul class="list-unstyled ms-3">
-          <li class="mb-2"><p class="lead">✓ Manufacturing Lustre Colours for ceramicware and glassware</p></li>
-          <li class="mb-2"><p class="lead">✓ Producing Liquid Gold & Platinum Lustre in multiple purity grades</p></li>
-          <li class="mb-2"><p class="lead">✓ Importing premium Ceramic Colours for third-firing decoration</p></li>
-          <li class="mb-2"><p class="lead">✓ Supplying high-performance On-Glaze, In-Glaze, and Glass Colours</p></li>
+      <div class="mb-5 pt-4">
+        <h2 class="h2 fw-bold mb-4">Who We Are Today</h2>
+        <p class="lead mb-4">At "श्री" Vijay Enterprises, we specialize in:</p>
+        <ul class="list-unstyled ms-0">
+          <li><p class="lead mb-0">Manufacturing Lustre Colours for ceramicware and glassware</p></li>
+          <li><p class="lead mb-0">Producing Liquid Gold & Platinum Lustre in multiple purity grades</p></li>
+          <li><p class="lead mb-0">Importing premium Ceramic Colours for third-firing decoration</p></li>
+          <li><p class="lead mb-0">Supplying high-performance On-Glaze, In-Glaze, and Glass Colours</p></li>
         </ul>
-        <p class="mt-3"><p class="lead">Across every product line, our focus remains consistent—precision, purity, consistent firing results, and superior visual finish.</p></p>
+        <p class="lead mt-4">Across every product line, our focus remains consistent—precision, purity, consistent firing results, and superior visual finish.</p>
       </div>
+
+      <div class="section-divider"></div>
 
       <!-- Our Visionary -->
-      <div class="mb-5">
-        <h2 class="h2 fw-bold mb-3">Our Visionary</h2>
-        <p class="lead">Our growth and technical excellence are guided by Mr. Hemant Agarwal, who brings 25+ years of industry experience. His expertise in colour formulation, firing behavior, and quality control has helped establish the brand as a reliable name for manufacturers seeking consistent and high-quality decorative colours.</p>
+      <div class="mb-5 pt-4">
+        <h2 class="h2 fw-bold mb-4">Our Visionary</h2>
+        
+        <div class="row mt-4 g-4">
+          <div class="col-md-6">
+            <div class="visionary-card text-center">
+              <img src="./resources/base-image/umesh.jpg" alt="Late Mr. Umesh Agarwal" class="img-fluid rounded-3 mb-3" style="max-width: 250px;">
+              <h5 class="fw-bold mb-2">Late Mr. Umesh Agarwal</h5>
+              <p class="lead" style="font-size: 0.95rem;">Founder & Metallurgical Engineer (IIT Bombay)<br><span style="color: #888;">Laid the technical foundation of Spectrum India and Vijay Enterprises in 1975</span></p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="visionary-card text-center">
+              <img src="./resources/base-image/hemant.jpg" alt="Mr. Hemant Agarwal" class="img-fluid rounded-3 mb-3" style="max-width: 250px;">
+              <h5 class="fw-bold mb-2">Mr. Hemant Agarwal</h5>
+              <p class="lead" style="font-size: 0.95rem;">Managing Director<br><span style="color: #888;">25+ years of industry expertise in colour formulation & quality control</span></p>
+            </div>
+          </div>
+        </div>
+        <p class="lead mt-4">Building on the strong technical foundation laid by our visionary founder, Late Mr. Umesh Agarwal, our growth and technical excellence are led by Mr. Hemant Agarwal, who brings over 25 years of industry expertise in colour formulation, firing behaviour, and stringent quality control.</p>
       </div>
 
+      <div class="section-divider"></div>
+        
       <!-- 50+ Years of Trust -->
-      <div class="mb-5">
-        <h2 class="h2 fw-bold mb-3">50+ Years of Trust</h2>
-        <p class="mb-3 lead">For over five decades, we have built long-standing relationships with:</p>
-        <ul class="list-unstyled ms-3 mb-4">
-          <li><p class="lead">• Ceramic manufacturers</p></li>
-          <li><p class="lead">• Glassware producers</p></li>
-          <li><p class="lead">• Decorative ware industries</p></li>
-          <li><p class="lead">• Giftware and premium tableware brands</p></li>
+      <div class="mb-5 pt-4">
+        <div class="row g-4">
+          
+        <h2 class="h2 fw-bold mb-4">50+ Years of Trust</h2>
+          <div class="col-lg-6">
+            
+        <p class="lead fw-bold mb-3">For over five decades, we have built long-standing relationships with:</p>
+        <ul class="list-unstyled ms-0 mb-4">
+          <li><p class="lead mb-0">Ceramic manufacturers</p></li>
+          <li><p class="lead mb-0">Glassware producers</p></li>
+          <li><p class="lead mb-0">Decorative ware industries</p></li>
+          <li><p class="lead mb-0">Giftware and premium tableware brands</p></li>
         </ul>
-        <p class="lead fw-bold mb-2">Our customers value us for:</p>
-        <ul class="list-unstyled ms-3">
-          <li class="lead mb-2">✔ Consistent product quality</li>
-          <li class="lead mb-2">✔ Reliable firing performance</li>
-          <li class="lead mb-2">✔ Technical support and guidance</li>
-          <li class="lead mb-2">✔ Ethical business practices</li>
-          <li class="lead mb-2">✔ Long-term partnership mindset</li>
+          </div>
+          <div class="col-lg-6">
+        <p class="lead fw-bold mb-3">Our customers value us for:</p>
+        <ul class="list-unstyled ms-0">
+          <li><p class="lead mb-0">Consistent product quality</p></li>
+          <li><p class="lead mb-0">Reliable firing performance</p></li>
+          <li><p class="lead mb-0">Technical support and guidance</p></li>
+          <li><p class="lead mb-0">Ethical business practices</p></li>
+          <li><p class="lead mb-0">Long-term partnership mindset</p></li>
         </ul>
+          </div>
+        </div>
       </div>
+
+      <div class="section-divider"></div>
 
       <!-- Our Commitment -->
-      <div class="mb-5">
-        <h2 class="h2 fw-bold mb-3">Our Commitment</h2>
-        <p>We are committed to:</p>
-        <ul class="list-unstyled ms-3">
-          <li class="lead mb-2">• Maintaining the highest quality standards</li>
-          <li class="lead mb-2">• Continuously innovating in lustre and metallic decoration</li>
-          <li class="lead mb-2">• Offering tailor-made solutions such as custom purity Liquid Gold</li>
-          <li class="lead mb-2">• Supporting manufacturers with accurate technical information</li>
-          <li class="lead mb-2">• Preserving our legacy while embracing modern manufacturing practices</li>
+      <div class="mb-5 pt-4">
+        <h2 class="h2 fw-bold mb-4">Our Commitment</h2>
+        <ul class="list-unstyled ms-0">
+          <li class="lead mb-0">• Maintaining the highest quality standards</li>
+          <li class="lead mb-0">• Continuously innovating in lustre and metallic decoration</li>
+          <li class="lead mb-0">• Offering tailor-made solutions such as custom purity Liquid Gold</li>
+          <li class="lead mb-0">• Supporting manufacturers with accurate technical information</li>
+          <li class="lead mb-0">• Preserving our legacy while embracing modern manufacturing practices</li>
         </ul>
       </div>
+
+      <div class="section-divider"></div>
 
       <!-- Product Portfolio -->
-      <div class="mb-5">
-        <h2 class="h2 fw-bold mb-3">Our Product Portfolio</h2>
-        <ul class="list-unstyled ms-3">
-          <li class="lead mb-2"><strong>Ceramic Colours:</strong> Glass colours, On-glaze colours, In-glaze colours</li>
-          <li class="lead mb-2"><strong>Lustre Colours:</strong> For ceramic and glass decorations</li>
-          <li class="lead mb-2"><strong>Liquid Gold & Platinum Lustre:</strong> 7%, 10%, 12%, and custom formulations</li>
+      <div class="mb-5 pt-4">
+        <h2 class="h2 fw-bold mb-4">Our Product Portfolio</h2>
+        <ul class="list-unstyled ms-0">
+          <li class="lead mb-0"><strong>Ceramic Colours:</strong> Glass colours, On-glaze colours, In-glaze colours</li>
+          <li class="lead mb-0"><strong>Lustre Colours:</strong> For ceramic and glass decorations</li>
+          <li class="lead mb-0"><strong>Liquid Gold & Platinum Lustre:</strong> 7%, 10%, 12%, and custom formulations</li>
         </ul>
-        <p class="lead mt-3">Each batch undergoes strict quality checks to ensure stable viscosity, smooth application, and a brilliant final finish after firing.</p>
+        <p class="lead mt-4">Each batch undergoes strict quality checks to ensure stable viscosity, smooth application, and a brilliant final finish after firing.</p>
       </div>
 
+      <div class="section-divider"></div>
+
       <!-- Our Promise -->
-      <div style="background-color: #579add48;" class="alert alert-info p-4 rounded-3">
-        <h3 class="h4 fw-bold mb-3">Our Promise</h3>
+      <div class="promise-box mt-5">
+        <h3 class="mb-3">Our Promise</h3>
         <p class="mb-0 lead">At "श्री" Vijay Enterprises, we don't just supply colours—<br><strong>we supply consistency, reliability, and a legacy of craftsmanship built since 1975.</strong></p>
       </div>
     </section>
@@ -161,7 +308,6 @@
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
     crossorigin="anonymous"></script>
   <script src="main.js"></script>
-  <!-- </div>   -->
 </body>
 
 </html>
