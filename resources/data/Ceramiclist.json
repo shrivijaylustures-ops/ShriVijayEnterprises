@@ -10,7 +10,7 @@
   {
     "colour_name": "Yellow",
     "hex_value": "#FFF200",
-    "image_file": "./resources/Ceramic/SF25.jpeg",
+    "image_file": "./resources/Ceramic/SF25.jpg",
     "stock_level": "In Stock",
     "color_code": "SF25",
     "description": "On Glaze Third Firing Ceramic Colors 760°C – 830°C"
@@ -58,7 +58,7 @@
   {
     "colour_name": "RED",
     "hex_value": "#C21E1E",
-    "image_file": "./resources/Ceramic/3130.png",
+    "image_file": "./resources/Ceramic/3130.jpeg",
     "stock_level": "In Stock",
     "color_code": "8101",
     "description": "Glass Colors 500°C – 560°C"
