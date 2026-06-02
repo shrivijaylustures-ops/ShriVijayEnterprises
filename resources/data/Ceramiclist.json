@@ -2,7 +2,7 @@
   {
     "colour_name": "Cobalt blue",
     "hex_value": "#0047AB",
-    "image_file": "./resources/Ceramic/CobaltBlue.jpg",
+    "image_file": "./resources/Ceramic/3589.jpeg",
     "stock_level": "In Stock",
     "color_code": "3589",
     "description": "On Glaze Third Firing Ceramic Colors 760°C – 830°C"
@@ -10,39 +10,23 @@
   {
     "colour_name": "Yellow",
     "hex_value": "#FFF200",
-    "image_file": "./resources/Ceramic/Yellow.jpeg",
+    "image_file": "./resources/Ceramic/SF25.jpeg",
     "stock_level": "In Stock",
     "color_code": "SF25",
     "description": "On Glaze Third Firing Ceramic Colors 760°C – 830°C"
   },
   {
-    "colour_name": "YELLOW",
-    "hex_value": "#F5D142",
-    "image_file": "./resources/Ceramic/SF25.jpg",
-    "stock_level": "In Stock",
-    "color_code": "8205",
-    "description": "Glass Colors 500°C – 560°C"
-  },
-  {
     "colour_name": "WHITE",
     "hex_value": "#FFFFFF",
-    "image_file": "./resources/Ceramic/ceramic2.png",
+    "image_file": "./resources/Ceramic/8340.jpeg",
     "stock_level": "In Stock",
     "color_code": "8340",
     "description": "Glass Colors 500°C – 560°C"
   },
   {
-    "colour_name": "RED",
-    "hex_value": "#C21E1E",
-    "image_file": "./resources/Ceramic/CeramicColor.png",
-    "stock_level": "In Stock",
-    "color_code": "8101",
-    "description": "Glass Colors 500°C – 560°C"
-  },
-  {
     "colour_name": "FROST WHITE",
     "hex_value": "#F3F3F3",
-    "image_file": "./resources/Ceramic/ceramic2.png",
+    "image_file": "./resources/Ceramic/8340.jpeg",
     "stock_level": "In Stock",
     "color_code": "8395",
     "description": "Glass Colors 500°C – 560°C"
@@ -50,7 +34,7 @@
   {
     "colour_name": "GREEN",
     "hex_value": "#4CAF50",
-    "image_file": "./resources/Ceramic/CeramicColor.png",
+    "image_file": "./resources/Ceramic/3470.jpeg",
     "stock_level": "In Stock",
     "color_code": "8460",
     "description": "Glass Colors 500°C – 560°C"
@@ -58,7 +42,7 @@
   {
     "colour_name": "BLUE",
     "hex_value": "#1E4ABF",
-    "image_file": "./resources/Ceramic/ceramic2.png",
+    "image_file": "./resources/Ceramic/3589.jpeg",
     "stock_level": "In Stock",
     "color_code": "8548",
     "description": "Glass Colors 500°C – 560°C"
@@ -66,15 +50,23 @@
   {
     "colour_name": "TURQUOISE BLUE",
     "hex_value": "#30D5C8",
-    "image_file": "./resources/Ceramic/CeramicColor.png",
+    "image_file": "./resources/Ceramic/3536.jpeg",
     "stock_level": "In Stock",
     "color_code": "8506",
     "description": "Glass Colors 500°C – 560°C"
   },
   {
+    "colour_name": "RED",
+    "hex_value": "#C21E1E",
+    "image_file": "./resources/Ceramic/3130.png",
+    "stock_level": "In Stock",
+    "color_code": "8101",
+    "description": "Glass Colors 500°C – 560°C"
+  },
+  {
     "colour_name": "BLACK",
     "hex_value": "#000000",
-    "image_file": "./resources/Ceramic/ceramic2.png",
+    "image_file": "./resources/Ceramic/3737.jpeg",
     "stock_level": "In Stock",
     "color_code": "8707",
     "description": "Glass Colors 500°C – 560°C"
@@ -82,7 +74,7 @@
   {
     "colour_name": "Flux",
     "hex_value": "#D9D9D9",
-    "image_file": "./resources/Ceramic/CeramicColor.png",
+    "image_file": "./resources/Ceramic/8340.jpeg",
     "stock_level": "In Stock",
     "color_code": "8000",
     "description": "Glass Colors 500°C – 560°C"
@@ -90,7 +82,7 @@
   {
     "colour_name": "Orange",
     "hex_value": "#FFA500",
-    "image_file": "./resources/Ceramic/ceramic2.png",
+    "image_file": "./resources/Ceramic/3181.jpeg",
     "stock_level": "In Stock",
     "color_code": "8102",
     "description": "Glass Colors 500°C – 560°C"
@@ -98,7 +90,7 @@
   {
     "colour_name": "Pink",
     "hex_value": "#FF9EC4",
-    "image_file": "./resources/Ceramic/CeramicColor.png",
+    "image_file": "./resources/Ceramic/3149.jpeg",
     "stock_level": "In Stock",
     "color_code": "3149",
     "description": "On Glaze Third Firing Ceramic Colors 760°C – 830°C"
@@ -106,7 +98,7 @@
   {
     "colour_name": "Red",
     "hex_value": "#E2242D",
-    "image_file": "./resources/Ceramic/ceramic2.png",
+    "image_file": "./resources/Ceramic/3130.jpeg",
     "stock_level": "In Stock",
     "color_code": "3130",
     "description": "On Glaze Third Firing Ceramic Colors 760°C – 830°C"
@@ -114,7 +106,7 @@
   {
     "colour_name": "Dark Red",
     "hex_value": "#8B0000",
-    "image_file": "./resources/Ceramic/CeramicColor.png",
+    "image_file": "./resources/Ceramic/xxx.png",
     "stock_level": "In Stock",
     "color_code": "3155",
     "description": "On Glaze Third Firing Ceramic Colors 760°C – 830°C"
@@ -122,7 +114,7 @@
   {
     "colour_name": "Orange",
     "hex_value": "#FF7A19",
-    "image_file": "./resources/Ceramic/ceramic2.png",
+    "image_file": "./resources/Ceramic/3181.jpeg",
     "stock_level": "In Stock",
     "color_code": "3181",
     "description": "On Glaze Third Firing Ceramic Colors 760°C – 830°C"
@@ -130,7 +122,7 @@
   {
     "colour_name": "Yellow",
     "hex_value": "#FFF200",
-    "image_file": "./resources/Ceramic/CeramicColor.png",
+    "image_file": "./resources/Ceramic/3241.jpeg",
     "stock_level": "In Stock",
     "color_code": "3241",
     "description": "On Glaze Third Firing Ceramic Colors 760°C – 830°C"
@@ -138,7 +130,7 @@
   {
     "colour_name": "Pumpkin yellow",
     "hex_value": "#FBD165",
-    "image_file": "./resources/Ceramic/ceramic2.png",
+    "image_file": "./resources/Ceramic/3245.jpeg",
     "stock_level": "In Stock",
     "color_code": "3245",
     "description": "On Glaze Third Firing Ceramic Colors 760°C – 830°C"
@@ -146,7 +138,7 @@
   {
     "colour_name": "Opaque White",
     "hex_value": "#FAFAFA",
-    "image_file": "./resources/Ceramic/CeramicColor.png",
+    "image_file": "./resources/Ceramic/8340.jpeg",
     "stock_level": "In Stock",
     "color_code": "3320",
     "description": "On Glaze Third Firing Ceramic Colors 760°C – 830°C"
@@ -154,7 +146,7 @@
   {
     "colour_name": "Mixing White",
     "hex_value": "#FDFDFD",
-    "image_file": "./resources/Ceramic/ceramic2.png",
+    "image_file": "./resources/Ceramic/8340.jpeg",
     "stock_level": "In Stock",
     "color_code": "3366",
     "description": "On Glaze Third Firing Ceramic Colors 760°C – 830°C"
@@ -162,7 +154,7 @@
   {
     "colour_name": "Green",
     "hex_value": "#4BBF6B",
-    "image_file": "./resources/Ceramic/CeramicColor.png",
+    "image_file": "./resources/Ceramic/xxx.png",
     "stock_level": "In Stock",
     "color_code": "3418",
     "description": "On Glaze Third Firing Ceramic Colors 760°C – 830°C"
@@ -178,7 +170,7 @@
   {
     "colour_name": "Teal green",
     "hex_value": "#2A9D8F",
-    "image_file": "./resources/Ceramic/CeramicColor.png",
+    "image_file": "./resources/Ceramic/3470.jpeg",
     "stock_level": "In Stock",
     "color_code": "3470",
     "description": "On Glaze Third Firing Ceramic Colors 760°C – 830°C"
@@ -186,7 +178,7 @@
   {
     "colour_name": "Green",
     "hex_value": "#2F8F2F",
-    "image_file": "./resources/Ceramic/ceramic2.png",
+    "image_file": "./resources/Ceramic/3470.jpeg",
     "stock_level": "In Stock",
     "color_code": "3471",
     "description": "On Glaze Third Firing Ceramic Colors 760°C – 830°C"
@@ -194,7 +186,7 @@
   {
     "colour_name": "Turquoise blue",
     "hex_value": "#2ACCCB",
-    "image_file": "./resources/Ceramic/CeramicColor.png",
+    "image_file": "./resources/Ceramic/3536.jpeg",
     "stock_level": "In Stock",
     "color_code": "3536",
     "description": "On Glaze Third Firing Ceramic Colors 760°C – 830°C"
@@ -202,7 +194,7 @@
   {
     "colour_name": "Blue",
     "hex_value": "#2A55FF",
-    "image_file": "./resources/Ceramic/ceramic2.png",
+    "image_file": "./resources/Ceramic/3541.jpeg",
     "stock_level": "In Stock",
     "color_code": "3541",
     "description": "On Glaze Third Firing Ceramic Colors 760°C – 830°C"
@@ -210,7 +202,7 @@
   {
     "colour_name": "Sky Blue",
     "hex_value": "#87CEEB",
-    "image_file": "./resources/Ceramic/CeramicColor.png",
+    "image_file": "./resources/Ceramic/3581.jpeg",
     "stock_level": "In Stock",
     "color_code": "3581",
     "description": "On Glaze Third Firing Ceramic Colors 760°C – 830°C"
@@ -226,7 +218,7 @@
   {
     "colour_name": "Light brown",
     "hex_value": "#B88A55",
-    "image_file": "./resources/Ceramic/CeramicColor.png",
+    "image_file": "./resources/Ceramic/3668.jpeg",
     "stock_level": "In Stock",
     "color_code": "3668",
     "description": "On Glaze Third Firing Ceramic Colors 760°C – 830°C"
@@ -234,7 +226,7 @@
   {
     "colour_name": "Red brown",
     "hex_value": "#8B4513",
-    "image_file": "./resources/Ceramic/ceramic2.png",
+    "image_file": "./resources/Ceramic/xxx.png",
     "stock_level": "In Stock",
     "color_code": "3670",
     "description": "On Glaze Third Firing Ceramic Colors 760°C – 830°C"
@@ -242,7 +234,7 @@
   {
     "colour_name": "Black",
     "hex_value": "#000000",
-    "image_file": "./resources/Ceramic/CeramicColor.png",
+    "image_file": "./resources/Ceramic/3737.jpeg",
     "stock_level": "In Stock",
     "color_code": "3737",
     "description": "On Glaze Third Firing Ceramic Colors 760°C – 830°C"
@@ -250,7 +242,7 @@
   {
     "colour_name": "Grey",
     "hex_value": "#B0B0B0",
-    "image_file": "./resources/Ceramic/ceramic2.png",
+    "image_file": "./resources/Ceramic/3783.jpeg",
     "stock_level": "In Stock",
     "color_code": "3783",
     "description": "On Glaze Third Firing Ceramic Colors 760°C – 830°C"
@@ -258,7 +250,7 @@
   {
     "colour_name": "Cyan blue",
     "hex_value": "#1BC4F5",
-    "image_file": "./resources/Ceramic/CeramicColor.png",
+    "image_file": "./resources/Ceramic/3536.jpeg",
     "stock_level": "In Stock",
     "color_code": "SF58",
     "description": "On Glaze Third Firing Ceramic Colors 760°C – 830°C"
@@ -266,7 +258,7 @@
   {
     "colour_name": "Black",
     "hex_value": "#000000",
-    "image_file": "./resources/Ceramic/ceramic2.png",
+    "image_file": "./resources/Ceramic/3737.jpeg",
     "stock_level": "In Stock",
     "color_code": "SF77",
     "description": "On Glaze Third Firing Ceramic Colors 760°C – 830°C"
@@ -274,7 +266,7 @@
   {
     "colour_name": "Flux (normal)",
     "hex_value": "#E0E0E0",
-    "image_file": "./resources/Ceramic/CeramicColor.png",
+    "image_file": "./resources/Ceramic/8340.jpeg",
     "stock_level": "In Stock",
     "color_code": "3000",
     "description": "On Glaze Third Firing Ceramic Colors 760°C – 830°C"
@@ -282,7 +274,7 @@
   {
     "colour_name": "Flux (cadmium)",
     "hex_value": "#C9C9C9",
-    "image_file": "./resources/Ceramic/ceramic2.png",
+    "image_file": "./resources/Ceramic/8340.jpeg",
     "stock_level": "In Stock",
     "color_code": "3100",
     "description": "On Glaze Third Firing Ceramic Colors 760°C – 830°C"
@@ -290,7 +282,7 @@
   {
     "colour_name": "Flux (cover coating)",
     "hex_value": "#D7D7D7",
-    "image_file": "./resources/Ceramic/CeramicColor.png",
+    "image_file": "./resources/Ceramic/8340.jpeg",
     "stock_level": "In Stock",
     "color_code": "3955",
     "description": "On Glaze Third Firing Ceramic Colors 760°C – 830°C"
