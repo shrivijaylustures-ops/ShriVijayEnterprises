@@ -1,0 +1,252 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../layouts/Base.astro';
+import Catalogue from './Catalogue.jsx';
+import { lineById, lines, type LineId } from '../data/lines';
+import { thumb } from '../lib/images';
+import { waLink } from '../lib/links';
+
+export interface Item {
+  name: string;
+  code?: string;
+  purity?: string;
+  hex: string;
+  image?: string | null;
+  stock: string;
+  range: string;
+}
+
+interface Props {
+  line: LineId;
+  items: Item[];
+  description: string;
+  noun?: string;
+  firingFor: (item: Item) => string;
+}
+
+const { line: id, items, description, noun = 'shades', firingFor } = Astro.props;
+const line = lineById[id];
+const labels = Object.fromEntries(line.filters.map((f) => [f.id, f.label.replace(/ \d.*$/, '')]));
+
+const prepared = await Promise.all(
+  items.map(async (i) => {
+    const code = i.code ?? i.purity;
+    return {
+      name: i.name,
+      code,
+      hex: i.hex,
+      img: await thumb(i.image, 640),
+      stock: i.stock,
+      range: i.range,
+      rangeLabel: labels[i.range] ?? '',
+      firing: firingFor(i),
+      enquire: waLink(`Hello, I would like to enquire about ${line.short}: ${i.name}${code ? ` (${code})` : ''}.`),
+    };
+  }),
+);
+const others = lines.filter((l) => l.id !== id);
+---
+
+<Base title={line.title} description={description}>
+  <section class="wrap head">
+    <a class="back" href="/products.html"><Icon name="ph:arrow-left" aria-hidden="true" /> All products</a>
+    <div class="head-grid">
+      <h1 data-reveal>{line.title}</h1>
+      <div class="head-side" data-reveal style="--i:1">
+        <p class="lede">{line.summary}</p>
+        <p class="firing num"><Icon name="ph:thermometer-simple" aria-hidden="true" /> Firing range {line.firing}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap body">
+    {
+      prepared.length > 0 ? (
+        <>
+          <p class="note">
+            <Icon name="ph:info" aria-hidden="true" />
+            Screens show colour approximately. For an exact match, ask us for a fired sample.
+          </p>
+          <Catalogue client:load items={prepared} filters={line.filters} noun={noun} />
+        </>
+      ) : (
+        <div class="empty bezel" data-reveal>
+          <div class="plate empty-plate">
+            <h2>The range is being added</h2>
+            <p class="lede">
+              We are photographing and cataloguing this range now. Tell us the shade or code you need and we will confirm availability and send details.
+            </p>
+            <a class="btn" href={waLink(`Hello, I would like to enquire about ${line.title}.`)} target="_blank" rel="noopener">
+              WhatsApp us <span class="btn-icon"><Icon name="ph:whatsapp-logo" aria-hidden="true" /></span>
+            </a>
+          </div>
+        </div>
+      )
+    }
+  </section>
+
+  <section class="wrap more">
+    <h2 class="more-h">Other ranges</h2>
+    <ul class="more-list">
+      {
+        others.map((l) => (
+          <li>
+            <a href={l.href}>
+              <span class="more-title">{l.title}</span>
+              <span class="more-meta num">{l.firing}</span>
+              <Icon name="ph:arrow-right" aria-hidden="true" />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .head {
+    padding-top: clamp(32px, 5vw, 64px);
+    padding-bottom: clamp(32px, 4vw, 48px);
+  }
+
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.92rem;
+    color: var(--muted);
+    text-decoration: none;
+    margin-bottom: 28px;
+  }
+
+  .back:hover {
+    color: var(--ink);
+  }
+
+  .back :global(svg) {
+    width: 16px;
+    height: 16px;
+  }
+
+  .head-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 24px 64px;
+    align-items: end;
+  }
+
+  .head-side {
+    display: grid;
+    gap: 16px;
+  }
+
+  .firing {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    color: var(--gold-ink);
+  }
+
+  .firing :global(svg) {
+    width: 20px;
+    height: 20px;
+  }
+
+  .body {
+    padding-bottom: clamp(56px, 8vw, 96px);
+  }
+
+  .note {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+    padding: 14px 18px;
+    border-radius: var(--radius-inner);
+    background: var(--gold-soft);
+    color: var(--ink-2);
+    font-size: 0.95rem;
+  }
+
+  .note :global(svg) {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    color: var(--gold-ink);
+  }
+
+  .empty-plate {
+    display: grid;
+    justify-items: start;
+    gap: 20px;
+    padding: clamp(32px, 6vw, 72px);
+    background:
+      radial-gradient(60% 120% at 100% 0%, var(--gold-soft), transparent 70%),
+      var(--surface);
+  }
+
+  .more {
+    padding-bottom: 24px;
+  }
+
+  .more-h {
+    font-size: 1.9rem;
+    margin-bottom: 16px;
+  }
+
+  .more-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .more-list a {
+    display: grid;
+    grid-template-columns: 1fr auto 24px;
+    align-items: center;
+    gap: 24px;
+    padding: 22px 4px;
+    border-bottom: 1px solid var(--line);
+    text-decoration: none;
+    transition: padding 0.4s var(--ease);
+  }
+
+  .more-list a:hover {
+    color: var(--gold-ink);
+  }
+
+  .more-title {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 600;
+  }
+
+  .more-meta {
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+
+  .more-list :global(svg) {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.4s var(--ease);
+  }
+
+  .more-list a:hover :global(svg) {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 820px) {
+    .head-grid {
+      grid-template-columns: 1fr;
+    }
+    .more-list a {
+      grid-template-columns: 1fr 24px;
+    }
+    .more-meta {
+      display: none;
+    }
+  }
+</style>

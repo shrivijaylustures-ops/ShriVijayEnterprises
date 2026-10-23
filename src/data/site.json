@@ -1,0 +1,22 @@
+{
+  "name": "Shri Vijay Enterprises",
+  "nameHindi": "श्री",
+  "tagline": "A tradition of trust since 1975",
+  "founded": 1975,
+  "phones": [
+    { "label": "Mobile", "display": "+91 98971 35970", "tel": "+919897135970" },
+    { "label": "Office", "display": "+91 562 400 2970", "tel": "+915624002970" }
+  ],
+  "whatsapp": "919897135970",
+  "emails": ["shrivijaylustures@gmail.com", "vijaylustures@yahoo.com"],
+  "hours": "Monday to Sunday, 10:00 am to 9:00 pm",
+  "address": {
+    "line1": "35/60/2D-1, New Lashkarpur, Mughal Road",
+    "line2": "Kamla Nagar, Agra",
+    "region": "Uttar Pradesh 282005",
+    "country": "India"
+  },
+  "mapsLink": "https://www.google.com/maps/search/?api=1&query=Vijay+Enterprises+Mughal+Road+Kamla+Nagar+Agra",
+  "mapsEmbed": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3548.1209954476453!2d78.01305567638508!3d27.215350747017737!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397479e400000007%3A0x2a9dbfcfac99339e!2sVijay%20Enterprises!5e0!3m2!1sen!2sin!4v1765298895846!5m2!1sen!2sin",
+  "youtube": "kUGRYMWtUvA"
+}

@@ -1,0 +1,74 @@
+[
+  {
+    "name": "Liquid Luster Gold",
+    "purity": "7%",
+    "hex": "#d4af37",
+    "image": "resources/Gold/liq_gold.png",
+    "stock": "in",
+    "range": "gold"
+  },
+  {
+    "name": "Liquid Ceramic Gold",
+    "purity": "7%",
+    "hex": "#d4af37",
+    "image": "resources/Gold/LiquidGold.jpg",
+    "stock": "in",
+    "range": "gold"
+  },
+  {
+    "name": "Liquid Luster Gold",
+    "purity": "10%",
+    "hex": "#d4af37",
+    "image": "resources/Gold/liq_gold.png",
+    "stock": "in",
+    "range": "gold"
+  },
+  {
+    "name": "Liquid Ceramic Gold",
+    "purity": "10%",
+    "hex": "#d4af37",
+    "image": "resources/Gold/LiquidGoldCup.jpg",
+    "stock": "in",
+    "range": "gold"
+  },
+  {
+    "name": "Liquid Luster Gold",
+    "purity": "12%",
+    "hex": "#d4af37",
+    "image": "resources/Gold/liq_gold.png",
+    "stock": "in",
+    "range": "gold"
+  },
+  {
+    "name": "Liquid Ceramic Gold",
+    "purity": "12%",
+    "hex": "#d4af37",
+    "image": "resources/Gold/LiquidGold.jpg",
+    "stock": "in",
+    "range": "gold"
+  },
+  {
+    "name": "Liquid Gold",
+    "purity": "Custom",
+    "hex": "#daa520",
+    "image": "resources/Gold/LiquidGoldCup.jpg",
+    "stock": "in",
+    "range": "gold"
+  },
+  {
+    "name": "Liquid Luster Platinum",
+    "purity": "Custom",
+    "hex": "#E5E4E2",
+    "image": "resources/Gold/liq_plat.png",
+    "stock": "in",
+    "range": "platinum"
+  },
+  {
+    "name": "Liquid Ceramic Platinum",
+    "purity": "Custom",
+    "hex": "#E5E4E2",
+    "image": "resources/Gold/LiquidPlatinum.jpg",
+    "stock": "in",
+    "range": "platinum"
+  }
+]

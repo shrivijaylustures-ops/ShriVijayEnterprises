@@ -1,0 +1,207 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import Base from '../layouts/Base.astro';
+import { lineById, type LineId } from '../data/lines';
+import ceramicImg from '../assets/resources/Ceramic/CeramicColor.png';
+import lustreImg from '../assets/resources/Luster/Pink.jpg';
+import goldImg from '../assets/resources/Gold/LiquidPlatinum.jpg';
+import ceramic from '../data/ceramic.json';
+import luster from '../data/luster.json';
+import gold from '../data/gold.json';
+
+const ranges: { id: LineId; img?: ImageMetadata; count: number; points: string[] }[] = [
+  {
+    id: 'gold',
+    img: goldImg,
+    count: gold.length,
+    points: ['7%, 10%, 12% and custom purity', 'Glass 500 to 600°C, ceramic 760 to 830°C', 'Rich shine, streak-free application, high durability after firing'],
+  },
+  {
+    id: 'luster',
+    img: lustreImg,
+    count: luster.length,
+    points: ['Glassware 500 to 600°C', 'Ceramicware third firing 760 to 830°C', 'Stable viscosity, high coverage, consistent finish'],
+  },
+  {
+    id: 'ceramic',
+    img: ceramicImg,
+    count: ceramic.length,
+    points: ['Glass colours 500 to 600°C', 'On-glaze third firing 760 to 830°C, sharp shades and high gloss', 'Imported for purity and firing consistency'],
+  },
+  {
+    id: 'inglaze',
+    count: 0,
+    points: ['1050 to 1150°C', 'Fuses into the glaze layer', 'Scratch resistance and thermal stability'],
+  },
+];
+---
+
+<Base
+  title="Products"
+  description="Liquid gold and platinum lustre, liquid lustre colours, ceramic and glass colours and in-glaze colours. Firing ranges from 500 to 1150°C."
+>
+  <section class="wrap intro">
+    <h1 data-reveal>Products</h1>
+    <p class="lede" data-reveal style="--i:1">
+      Lustres and liquid gold made in our Agra works, alongside imported ceramic colours chosen for purity and firing consistency.
+    </p>
+  </section>
+
+  <section class="wrap list">
+    {
+      ranges.map((r, i) => {
+        const line = lineById[r.id];
+        return (
+          <a href={line.href} class="range bezel" data-reveal style={`--i:${i % 2}`}>
+            <div class="plate range-plate">
+              <div class="range-media">
+                {r.img ? (
+                  <Image src={r.img} alt="" widths={[480, 800]} sizes="(max-width: 860px) 100vw, 50vw" />
+                ) : (
+                  <div class="range-glaze" />
+                )}
+              </div>
+              <div class="range-body">
+                <div class="range-top">
+                  <h2>{line.title}</h2>
+                  <span class="range-count num">{r.count ? `${r.count} listed` : 'Being added'}</span>
+                </div>
+                <p class="range-summary">{line.summary}</p>
+                <ul class="range-points">
+                  {r.points.map((p) => (
+                    <li>
+                      <Icon name="ph:check" aria-hidden="true" /> {p}
+                    </li>
+                  ))}
+                </ul>
+                <span class="link-arrow">
+                  View {line.short.toLowerCase()} <Icon name="ph:arrow-right" aria-hidden="true" />
+                </span>
+              </div>
+            </div>
+          </a>
+        );
+      })
+    }
+  </section>
+</Base>
+
+<style>
+  .intro {
+    display: grid;
+    gap: 20px;
+    padding-block: clamp(40px, 6vw, 80px) clamp(32px, 4vw, 56px);
+  }
+
+  .list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding-bottom: clamp(56px, 8vw, 104px);
+  }
+
+  .range {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.5s var(--ease);
+  }
+
+  .range:hover {
+    transform: translateY(-4px);
+  }
+
+  .range-plate {
+    display: grid;
+    height: 100%;
+    grid-template-rows: auto 1fr;
+  }
+
+  .range-media {
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+  }
+
+  .range-media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.2s var(--ease);
+  }
+
+  .range:hover .range-media :global(img) {
+    transform: scale(1.04);
+  }
+
+  .range-glaze {
+    width: 100%;
+    height: 100%;
+    background:
+      radial-gradient(70% 90% at 15% 20%, rgb(255 255 255 / 0.25), transparent 60%),
+      radial-gradient(80% 120% at 100% 100%, #2f6d8a, transparent 65%),
+      radial-gradient(70% 100% at 0% 100%, #8a3b2a, transparent 70%),
+      #3c4a3f;
+  }
+
+  .range-body {
+    display: grid;
+    align-content: start;
+    gap: 16px;
+    padding: clamp(22px, 3vw, 36px);
+  }
+
+  .range-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+  }
+
+  .range-top h2 {
+    font-size: clamp(1.8rem, 2.6vw, 2.3rem);
+  }
+
+  .range-count {
+    flex: none;
+    font-size: 0.88rem;
+    color: var(--muted);
+  }
+
+  .range-summary {
+    color: var(--ink-2);
+  }
+
+  .range-points {
+    list-style: none;
+    margin: 0 0 8px;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+    font-size: 0.96rem;
+  }
+
+  .range-points li {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+  }
+
+  .range-points :global(svg) {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    color: var(--gold-ink);
+    transform: translateY(2px);
+  }
+
+  .range .link-arrow {
+    justify-self: start;
+  }
+
+  @media (max-width: 860px) {
+    .list {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

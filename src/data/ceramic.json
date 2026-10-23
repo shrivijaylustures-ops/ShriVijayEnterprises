@@ -1,0 +1,290 @@
+[
+  {
+    "name": "Cobalt blue",
+    "code": "3589",
+    "hex": "#0047AB",
+    "image": "resources/Ceramic/3589.jpeg",
+    "stock": "in",
+    "range": "on-glaze"
+  },
+  {
+    "name": "Yellow",
+    "code": "SF25",
+    "hex": "#FFF200",
+    "image": "resources/Ceramic/SF25.jpg",
+    "stock": "in",
+    "range": "on-glaze"
+  },
+  {
+    "name": "White",
+    "code": "8340",
+    "hex": "#FFFFFF",
+    "image": "resources/Ceramic/8340.jpeg",
+    "stock": "in",
+    "range": "glass"
+  },
+  {
+    "name": "Frost White",
+    "code": "8395",
+    "hex": "#F3F3F3",
+    "image": "resources/Ceramic/8340.jpeg",
+    "stock": "in",
+    "range": "glass"
+  },
+  {
+    "name": "Green",
+    "code": "8460",
+    "hex": "#4CAF50",
+    "image": "resources/Ceramic/3470.jpeg",
+    "stock": "in",
+    "range": "glass"
+  },
+  {
+    "name": "Blue",
+    "code": "8548",
+    "hex": "#1E4ABF",
+    "image": "resources/Ceramic/3589.jpeg",
+    "stock": "in",
+    "range": "glass"
+  },
+  {
+    "name": "Turquoise Blue",
+    "code": "8506",
+    "hex": "#30D5C8",
+    "image": "resources/Ceramic/3536.jpeg",
+    "stock": "in",
+    "range": "glass"
+  },
+  {
+    "name": "Red",
+    "code": "8101",
+    "hex": "#C21E1E",
+    "image": "resources/Ceramic/3130.jpeg",
+    "stock": "in",
+    "range": "glass"
+  },
+  {
+    "name": "Black",
+    "code": "8707",
+    "hex": "#000000",
+    "image": "resources/Ceramic/3737.jpeg",
+    "stock": "in",
+    "range": "glass"
+  },
+  {
+    "name": "Flux",
+    "code": "8000",
+    "hex": "#D9D9D9",
+    "image": "resources/Ceramic/8340.jpeg",
+    "stock": "in",
+    "range": "glass"
+  },
+  {
+    "name": "Orange",
+    "code": "8102",
+    "hex": "#FFA500",
+    "image": "resources/Ceramic/3181.jpeg",
+    "stock": "in",
+    "range": "glass"
+  },
+  {
+    "name": "Pink",
+    "code": "3149",
+    "hex": "#FF9EC4",
+    "image": "resources/Ceramic/3149.jpeg",
+    "stock": "in",
+    "range": "on-glaze"
+  },
+  {
+    "name": "Red",
+    "code": "3130",
+    "hex": "#E2242D",
+    "image": "resources/Ceramic/3130.jpeg",
+    "stock": "in",
+    "range": "on-glaze"
+  },
+  {
+    "name": "Dark Red",
+    "code": "3155",
+    "hex": "#8B0000",
+    "image": null,
+    "stock": "in",
+    "range": "on-glaze"
+  },
+  {
+    "name": "Orange",
+    "code": "3181",
+    "hex": "#FF7A19",
+    "image": "resources/Ceramic/3181.jpeg",
+    "stock": "in",
+    "range": "on-glaze"
+  },
+  {
+    "name": "Yellow",
+    "code": "3241",
+    "hex": "#FFF200",
+    "image": "resources/Ceramic/3241.jpeg",
+    "stock": "in",
+    "range": "on-glaze"
+  },
+  {
+    "name": "Pumpkin yellow",
+    "code": "3245",
+    "hex": "#FBD165",
+    "image": "resources/Ceramic/3245.jpeg",
+    "stock": "in",
+    "range": "on-glaze"
+  },
+  {
+    "name": "Opaque White",
+    "code": "3320",
+    "hex": "#FAFAFA",
+    "image": "resources/Ceramic/8340.jpeg",
+    "stock": "in",
+    "range": "on-glaze"
+  },
+  {
+    "name": "Mixing White",
+    "code": "3366",
+    "hex": "#FDFDFD",
+    "image": "resources/Ceramic/8340.jpeg",
+    "stock": "in",
+    "range": "on-glaze"
+  },
+  {
+    "name": "Green",
+    "code": "3418",
+    "hex": "#4BBF6B",
+    "image": null,
+    "stock": "in",
+    "range": "on-glaze"
+  },
+  {
+    "name": "Yellow green",
+    "code": "3425",
+    "hex": "#72E41B",
+    "image": "resources/Ceramic/3425.jpeg",
+    "stock": "in",
+    "range": "on-glaze"
+  },
+  {
+    "name": "Teal green",
+    "code": "3470",
+    "hex": "#2A9D8F",
+    "image": "resources/Ceramic/3470.jpeg",
+    "stock": "in",
+    "range": "on-glaze"
+  },
+  {
+    "name": "Green",
+    "code": "3471",
+    "hex": "#2F8F2F",
+    "image": "resources/Ceramic/3470.jpeg",
+    "stock": "in",
+    "range": "on-glaze"
+  },
+  {
+    "name": "Turquoise blue",
+    "code": "3536",
+    "hex": "#2ACCCB",
+    "image": "resources/Ceramic/3536.jpeg",
+    "stock": "in",
+    "range": "on-glaze"
+  },
+  {
+    "name": "Blue",
+    "code": "3541",
+    "hex": "#2A55FF",
+    "image": "resources/Ceramic/3541.jpeg",
+    "stock": "in",
+    "range": "on-glaze"
+  },
+  {
+    "name": "Sky Blue",
+    "code": "3581",
+    "hex": "#87CEEB",
+    "image": "resources/Ceramic/3581.jpeg",
+    "stock": "in",
+    "range": "on-glaze"
+  },
+  {
+    "name": "Choco. Brown",
+    "code": "3620",
+    "hex": "#4D292D",
+    "image": "resources/Ceramic/chocobrown.jpeg",
+    "stock": "in",
+    "range": "on-glaze"
+  },
+  {
+    "name": "Light brown",
+    "code": "3668",
+    "hex": "#B88A55",
+    "image": "resources/Ceramic/3668.jpeg",
+    "stock": "in",
+    "range": "on-glaze"
+  },
+  {
+    "name": "Red brown",
+    "code": "3670",
+    "hex": "#8B4513",
+    "image": null,
+    "stock": "in",
+    "range": "on-glaze"
+  },
+  {
+    "name": "Black",
+    "code": "3737",
+    "hex": "#000000",
+    "image": "resources/Ceramic/3737.jpeg",
+    "stock": "in",
+    "range": "on-glaze"
+  },
+  {
+    "name": "Grey",
+    "code": "3783",
+    "hex": "#B0B0B0",
+    "image": "resources/Ceramic/3783.jpeg",
+    "stock": "in",
+    "range": "on-glaze"
+  },
+  {
+    "name": "Cyan blue",
+    "code": "SF58",
+    "hex": "#1BC4F5",
+    "image": "resources/Ceramic/3536.jpeg",
+    "stock": "in",
+    "range": "on-glaze"
+  },
+  {
+    "name": "Black",
+    "code": "SF77",
+    "hex": "#000000",
+    "image": "resources/Ceramic/3737.jpeg",
+    "stock": "in",
+    "range": "on-glaze"
+  },
+  {
+    "name": "Flux (normal)",
+    "code": "3000",
+    "hex": "#E0E0E0",
+    "image": "resources/Ceramic/8340.jpeg",
+    "stock": "in",
+    "range": "on-glaze"
+  },
+  {
+    "name": "Flux (cadmium)",
+    "code": "3100",
+    "hex": "#C9C9C9",
+    "image": "resources/Ceramic/8340.jpeg",
+    "stock": "in",
+    "range": "on-glaze"
+  },
+  {
+    "name": "Flux (cover coating)",
+    "code": "3955",
+    "hex": "#D7D7D7",
+    "image": "resources/Ceramic/8340.jpeg",
+    "stock": "in",
+    "range": "on-glaze"
+  }
+]

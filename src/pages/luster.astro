@@ -1,0 +1,11 @@
+---
+import CataloguePage from '../components/CataloguePage.astro';
+import items from '../data/luster.json';
+---
+
+<CataloguePage
+  line="luster"
+  items={items}
+  description="Liquid lustre colours for ceramic and glass: bronze, mother of pearl, steel grey, rose pink and more, including gold-based lustres. Made in Agra since 1975."
+  firingFor={(i) => (i.range === 'medium' ? 'Oil base' : '750 to 850°C')}
+/>

@@ -1,0 +1,357 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+import umesh from '../assets/resources/base-image/umesh.jpg';
+import hemant from '../assets/resources/base-image/hemant.jpg';
+
+const journey = [
+  {
+    year: '1975',
+    name: 'Spectrum India',
+    text: 'Founded as one of the early makers of lustre colours and decorative materials for the Indian ceramic industry.',
+  },
+  {
+    year: '2001',
+    name: 'Vijay Enterprises',
+    text: 'Wider product range, refined formulations, and a trusted supplier to ceramic and glass manufacturers across India.',
+  },
+  {
+    year: '2025',
+    name: `${site.nameHindi} Vijay Enterprises`,
+    text: 'A renewed identity carrying forward five decades of expertise and customer trust.',
+  },
+];
+
+const serve = ['Ceramic manufacturers', 'Glassware producers', 'Decorative ware makers', 'Giftware and premium tableware brands'];
+const values = ['Consistent product quality', 'Reliable firing performance', 'Technical support and guidance', 'Ethical business practice', 'Long-term partnerships'];
+---
+
+<Base
+  title="About us"
+  description="From Spectrum India in 1975 to Shri Vijay Enterprises today: five decades of lustre colours and liquid gold, founded by IIT Bombay metallurgist Late Mr. Umesh Agarwal."
+>
+  <section class="wrap intro">
+    <h1 data-reveal>Our story</h1>
+    <p class="lede" data-reveal style="--i:1">
+      Three names, one family, and the same promise since 1975: colours that fire the way you expect them to.
+    </p>
+  </section>
+
+  <!-- Video facade: loads YouTube only when played -->
+  <section class="wrap">
+    <div class="bezel" data-reveal>
+      <div class="plate video" data-video={site.youtube}>
+        <img src={`https://i.ytimg.com/vi/${site.youtube}/hqdefault.jpg`} alt="" loading="lazy" decoding="async" />
+        <button class="play" type="button" aria-label="Play video: Shri Vijay Enterprises, decades of legacy">
+          <Icon name="ph:play-fill" aria-hidden="true" />
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap section journey" aria-labelledby="journey-h">
+    <h2 id="journey-h" data-reveal>Our journey</h2>
+    <ol class="steps">
+      {
+        journey.map((j, i) => (
+          <li class="step" data-reveal style={`--i:${i}`}>
+            <span class="step-year num">{j.year}</span>
+            <h3>{j.name}</h3>
+            <p>{j.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="people-sec" aria-labelledby="people-h">
+    <div class="wrap section">
+      <h2 id="people-h" data-reveal>The people behind it</h2>
+      <div class="people">
+        <figure class="person" data-reveal>
+          <div class="bezel"><div class="plate"><Image src={umesh} alt="Late Mr. Umesh Agarwal" widths={[320, 520]} sizes="(max-width: 760px) 80vw, 26vw" /></div></div>
+          <figcaption>
+            <strong>Late Mr. Umesh Agarwal</strong>
+            <span>Founder, metallurgical engineer (IIT Bombay). Laid the technical foundation of Spectrum India in 1975.</span>
+          </figcaption>
+        </figure>
+        <figure class="person" data-reveal style="--i:1">
+          <div class="bezel"><div class="plate"><Image src={hemant} alt="Mr. Hemant Agarwal" widths={[320, 520]} sizes="(max-width: 760px) 80vw, 26vw" /></div></div>
+          <figcaption>
+            <strong>Mr. Hemant Agarwal</strong>
+            <span>Managing Director. Over 25 years in colour formulation, firing behaviour and quality control.</span>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap section trust">
+    <div class="trust-col" data-reveal>
+      <h2>Who we work with</h2>
+      <ul class="tags">{serve.map((s) => <li>{s}</li>)}</ul>
+    </div>
+    <div class="trust-col" data-reveal style="--i:1">
+      <h2>Why they stay</h2>
+      <ul class="ticks">{values.map((v) => <li><Icon name="ph:check" aria-hidden="true" /> {v}</li>)}</ul>
+    </div>
+  </section>
+
+  <section class="wrap promise">
+    <blockquote data-reveal>
+      <p>We don't just supply colours. We supply consistency, reliability and a legacy of craftsmanship built since 1975.</p>
+      <footer>Our promise</footer>
+    </blockquote>
+  </section>
+</Base>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-video]').forEach((box) => {
+    box.querySelector('button')?.addEventListener('click', () => {
+      const f = document.createElement('iframe');
+      f.src = `https://www.youtube-nocookie.com/embed/${box.dataset.video}?autoplay=1&rel=0`;
+      f.title = 'Shri Vijay Enterprises, decades of legacy';
+      f.allow = 'autoplay; encrypted-media; picture-in-picture';
+      f.allowFullscreen = true;
+      box.replaceChildren(f);
+    });
+  });
+</script>
+
+<style>
+  .intro {
+    display: grid;
+    gap: 20px;
+    padding-block: clamp(40px, 6vw, 80px) clamp(32px, 4vw, 48px);
+  }
+
+  .video {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: var(--ink);
+  }
+
+  .video img,
+  .video :global(iframe) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 0;
+  }
+
+  .play {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 88px;
+    height: 88px;
+    border-radius: 999px;
+    border: 0;
+    display: grid;
+    place-items: center;
+    background: rgb(247 244 238 / 0.92);
+    color: #1c1a17;
+    cursor: pointer;
+    box-shadow: 0 18px 40px -12px rgb(0 0 0 / 0.5);
+    transition: transform 0.4s var(--ease);
+  }
+
+  .play:hover {
+    transform: scale(1.06);
+  }
+
+  .play :global(svg) {
+    width: 32px;
+    height: 32px;
+    transform: translateX(2px);
+  }
+
+  .journey h2 {
+    margin-bottom: clamp(32px, 4vw, 56px);
+  }
+
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .step {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: 12px;
+    padding: 32px 32px 0 0;
+  }
+
+  .step::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 0;
+    width: 11px;
+    height: 11px;
+    border-radius: 99px;
+    background: var(--gold);
+  }
+
+  .step-year {
+    font-family: var(--font-display);
+    font-size: clamp(2.6rem, 4vw, 3.6rem);
+    font-weight: 600;
+    line-height: 1;
+    color: var(--gold-ink);
+  }
+
+  .step p {
+    color: var(--ink-2);
+    max-width: 34ch;
+  }
+
+  .people-sec {
+    background: var(--surface-2);
+  }
+
+  .people-sec h2 {
+    margin-bottom: clamp(32px, 4vw, 56px);
+  }
+
+  .people {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 360px));
+    gap: clamp(24px, 5vw, 72px);
+  }
+
+  .person {
+    margin: 0;
+    display: grid;
+    gap: 20px;
+  }
+
+  .person:nth-child(2) {
+    margin-top: 64px;
+  }
+
+  .person .plate :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+
+  .person figcaption {
+    display: grid;
+    gap: 6px;
+  }
+
+  .person strong {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 600;
+  }
+
+  .person span {
+    color: var(--ink-2);
+  }
+
+  .trust {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(40px, 6vw, 96px);
+  }
+
+  .trust h2 {
+    margin-bottom: 24px;
+  }
+
+  .tags {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .tags li {
+    padding: 10px 18px;
+    border-radius: 999px;
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+
+  .ticks {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 14px;
+    font-size: 1.08rem;
+  }
+
+  .ticks li {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+  }
+
+  .ticks :global(svg) {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    color: var(--gold-ink);
+    transform: translateY(3px);
+  }
+
+  .promise {
+    padding-bottom: clamp(24px, 4vw, 48px);
+  }
+
+  blockquote {
+    margin: 0;
+    padding: clamp(40px, 7vw, 88px) 0;
+    border-top: 1px solid var(--line);
+  }
+
+  blockquote p {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(1.9rem, 3.4vw, 3rem);
+    font-weight: 600;
+    line-height: 1.18;
+    max-width: 26ch;
+  }
+
+  blockquote footer {
+    margin-top: 20px;
+    color: var(--muted);
+  }
+
+  @media (max-width: 760px) {
+    .steps {
+      grid-template-columns: 1fr;
+      border-top: 0;
+      border-left: 1px solid var(--line-strong);
+      gap: 32px;
+    }
+    .step {
+      padding: 0 0 0 24px;
+    }
+    .step::before {
+      top: 8px;
+      left: -6px;
+    }
+    .people,
+    .trust {
+      grid-template-columns: 1fr;
+    }
+    .person:nth-child(2) {
+      margin-top: 0;
+    }
+  }
+</style>

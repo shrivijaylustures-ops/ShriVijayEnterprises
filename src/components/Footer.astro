@@ -1,0 +1,142 @@
+---
+import { Icon } from 'astro-icon/components';
+import site from '../data/site.json';
+import { lines } from '../data/lines';
+import { waLink } from '../lib/links';
+const year = new Date().getFullYear();
+---
+
+<footer class="foot">
+  <div class="wrap foot-grid">
+    <div class="foot-brand">
+      <p class="foot-name"><span lang="hi">{site.nameHindi}</span> Vijay Enterprises</p>
+      <p class="muted">Lustre colours, liquid gold and ceramic colours for glass and ceramic decoration. {site.tagline}.</p>
+      <a class="btn foot-cta" href={waLink()} target="_blank" rel="noopener">
+        WhatsApp us <span class="btn-icon"><Icon name="ph:whatsapp-logo" aria-hidden="true" /></span>
+      </a>
+    </div>
+
+    <div>
+      <h2 class="foot-h">Products</h2>
+      <ul class="foot-list">
+        {lines.map((l) => <li><a href={l.href}>{l.short}</a></li>)}
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="foot-h">Reach us</h2>
+      <ul class="foot-list">
+        {site.phones.map((p) => <li><a href={`tel:${p.tel}`} class="num">{p.display}</a></li>)}
+        {site.emails.map((e) => <li><a href={`mailto:${e}`}>{e}</a></li>)}
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="foot-h">Visit</h2>
+      <address class="foot-addr">
+        {site.address.line1}<br />{site.address.line2}<br />{site.address.region}<br />{site.address.country}
+      </address>
+      <a class="link-arrow" href={site.mapsLink} target="_blank" rel="noopener">Directions <Icon name="ph:arrow-up-right" aria-hidden="true" /></a>
+    </div>
+  </div>
+
+  <div class="wrap foot-base">
+    <p>&copy; {year} <span lang="hi">{site.nameHindi}</span> Vijay Enterprises, Agra</p>
+    <p><a href="/aboutus.html">About us</a> <a href="/contact.html">Contact us</a></p>
+  </div>
+</footer>
+
+<style>
+  .foot {
+    margin-top: clamp(48px, 8vw, 96px);
+    padding-top: clamp(56px, 7vw, 88px);
+    border-top: 1px solid var(--line);
+    background: var(--surface-2);
+  }
+
+  .foot-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1.2fr 1.2fr;
+    gap: 40px;
+  }
+
+  .foot-name {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .foot-brand .muted {
+    max-width: 36ch;
+    margin-bottom: 24px;
+  }
+
+  .foot-h {
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .foot-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+  }
+
+  .foot-list a {
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+
+  .foot-list a:hover {
+    text-decoration: underline;
+  }
+
+  .foot-addr {
+    font-style: normal;
+    color: var(--ink-2);
+    margin-bottom: 16px;
+  }
+
+  .foot-base {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 56px;
+    padding-block: 24px 32px;
+    border-top: 1px solid var(--line);
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  .foot-base a {
+    margin-left: 20px;
+    text-decoration: none;
+  }
+
+  @media (max-width: 900px) {
+    .foot-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .foot-brand {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .foot-grid {
+      grid-template-columns: 1fr;
+    }
+    .foot-base a {
+      margin: 0 20px 0 0;
+    }
+  }
+</style>

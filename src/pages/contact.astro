@@ -1,0 +1,211 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+import { mailLink, waLink } from '../lib/links';
+---
+
+<Base
+  title="Contact us"
+  description="Contact Shri Vijay Enterprises, Kamla Nagar, Agra. WhatsApp or call +91 98971 35970 for product enquiries, bulk orders and technical guidance."
+>
+  <section class="wrap intro">
+    <h1 data-reveal>Contact us</h1>
+    <p class="lede" data-reveal style="--i:1">
+      Product enquiries, bulk orders or help with a firing problem. Mention the product code and quantity so we can answer in one reply.
+    </p>
+  </section>
+
+  <section class="wrap ways">
+    <a class="way way-main" href={waLink()} target="_blank" rel="noopener" data-reveal>
+      <Icon name="ph:whatsapp-logo" aria-hidden="true" class="way-icon" />
+      <span class="way-title">WhatsApp</span>
+      <span class="way-value num">{site.phones[0].display}</span>
+      <span class="way-hint">Fastest way to reach us. Photos of samples welcome.</span>
+    </a>
+
+    <div class="way" data-reveal style="--i:1">
+      <Icon name="ph:phone" aria-hidden="true" class="way-icon" />
+      <span class="way-title">Call</span>
+      {site.phones.map((p) => <a class="way-value num" href={`tel:${p.tel}`}>{p.display} <span class="way-tag">{p.label}</span></a>)}
+    </div>
+
+    <div class="way" data-reveal style="--i:2">
+      <Icon name="ph:envelope-simple" aria-hidden="true" class="way-icon" />
+      <span class="way-title">Email</span>
+      <a class="way-value way-email" href={mailLink()}>{site.emails[0]}</a>
+      {site.emails.slice(1).map((e) => <a class="way-value way-email" href={`mailto:${e}`}>{e}</a>)}
+    </div>
+
+    <div class="way" data-reveal style="--i:3">
+      <Icon name="ph:clock" aria-hidden="true" class="way-icon" />
+      <span class="way-title">Hours</span>
+      <span class="way-value">{site.hours}</span>
+    </div>
+  </section>
+
+  <section class="wrap visit">
+    <div class="visit-copy" data-reveal>
+      <h2>Visit the works</h2>
+      <address>
+        <strong><span lang="hi">{site.nameHindi}</span> Vijay Enterprises</strong><br />
+        {site.address.line1}<br />{site.address.line2}<br />{site.address.region}<br />{site.address.country}
+      </address>
+      <a class="btn btn-quiet" href={site.mapsLink} target="_blank" rel="noopener">
+        Get directions <span class="btn-icon"><Icon name="ph:arrow-up-right" aria-hidden="true" /></span>
+      </a>
+    </div>
+    <div class="bezel map" data-reveal style="--i:1">
+      <div class="plate">
+        <iframe src={site.mapsEmbed} title="Map showing Shri Vijay Enterprises in Kamla Nagar, Agra" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .intro {
+    display: grid;
+    gap: 20px;
+    padding-block: clamp(40px, 6vw, 80px) clamp(32px, 4vw, 56px);
+  }
+
+  .ways {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1.25fr 1fr;
+    gap: 16px;
+  }
+
+  .way {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 28px;
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px var(--line);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .way-main {
+    background: var(--ink);
+    color: var(--on-ink);
+    box-shadow: var(--shadow);
+    transition: transform 0.5s var(--ease);
+  }
+
+  .way-main:hover {
+    transform: translateY(-3px);
+  }
+
+  .way-main .way-hint {
+    color: color-mix(in srgb, var(--on-ink) 75%, transparent);
+  }
+
+  :global(.way-icon) {
+    width: 28px;
+    height: 28px;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .way-title {
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .way-main .way-title {
+    color: var(--gold);
+  }
+
+  .way-value {
+    font-family: var(--font-display);
+    font-size: 1.45rem;
+    font-weight: 600;
+    line-height: 1.25;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+
+  .way-main .way-value {
+    font-size: 1.9rem;
+  }
+
+  a.way-value:hover {
+    color: var(--gold-ink);
+  }
+
+  .way-main:hover .way-value {
+    color: inherit;
+  }
+
+  .way-email {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+  }
+
+  .way-tag {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--muted);
+    margin-left: 6px;
+  }
+
+  .way-hint {
+    margin-top: auto;
+    padding-top: 12px;
+    font-size: 0.95rem;
+  }
+
+  .visit {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: clamp(32px, 5vw, 72px);
+    align-items: center;
+    padding-block: clamp(64px, 9vw, 120px) 24px;
+  }
+
+  .visit-copy {
+    display: grid;
+    justify-items: start;
+    gap: 24px;
+  }
+
+  address {
+    font-style: normal;
+    color: var(--ink-2);
+    font-size: 1.08rem;
+    line-height: 1.7;
+  }
+
+  address strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .map iframe {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border: 0;
+  }
+
+  @media (max-width: 1000px) {
+    .ways {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .ways,
+    .visit {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.shrivijayenterprises.in/sitemap-index.xml

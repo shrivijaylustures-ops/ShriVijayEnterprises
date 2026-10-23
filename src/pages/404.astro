@@ -1,0 +1,37 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Page not found" description="This page does not exist.">
+  <section class="wrap holder">
+    <p class="code num">404</p>
+    <h1>This page is not on the shelf</h1>
+    <p class="lede">The link may be old. Our products and contact details are one click away.</p>
+    <div class="row">
+      <a class="btn" href="/products.html">View products <span class="btn-icon"><Icon name="ph:arrow-up-right" aria-hidden="true" /></span></a>
+      <a class="btn btn-quiet" href="/">Home <span class="btn-icon"><Icon name="ph:house" aria-hidden="true" /></span></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .holder {
+    display: grid;
+    justify-items: start;
+    gap: 20px;
+    padding-block: clamp(64px, 10vw, 140px);
+  }
+  .code {
+    font-family: var(--font-display);
+    font-size: clamp(4rem, 10vw, 8rem);
+    font-weight: 600;
+    line-height: 0.9;
+    color: var(--gold-ink);
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+</style>

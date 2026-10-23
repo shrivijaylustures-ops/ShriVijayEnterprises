@@ -1,0 +1,590 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+import { lineById } from '../data/lines';
+import { waLink } from '../lib/links';
+import heroImg from '../assets/resources/base-image/image-front.jpg';
+import goldCup from '../assets/resources/Gold/LiquidGoldCup.jpg';
+import lustreImg from '../assets/resources/Luster/Pink.jpg';
+import ceramicImg from '../assets/resources/Ceramic/CeramicColor.png';
+import founder from '../assets/resources/base-image/umesh.jpg';
+
+// Firing guide: where each range sits on the kiln temperature scale.
+const scale = { min: 450, max: 1200 };
+const pos = (t: number) => ((t - scale.min) / (scale.max - scale.min)) * 100;
+const firing = [
+  { label: 'Glass colours', min: 500, max: 560, href: '/ceramic.html' },
+  { label: 'Liquid gold & platinum', min: 500, max: 830, href: '/gold.html' },
+  { label: 'Lustre colours', min: 750, max: 850, href: '/luster.html' },
+  { label: 'On-glaze ceramic colours', min: 760, max: 830, href: '/ceramic.html' },
+  { label: 'In-glaze colours', min: 1050, max: 1150, href: '/inglaze.html' },
+];
+const ticks = [500, 600, 700, 800, 900, 1000, 1100];
+---
+
+<Base
+  title="Lustre colours, liquid gold & ceramic colours, Agra"
+  description="Manufacturers of liquid lustre colours, liquid gold and platinum, and importers of ceramic and glass colours. Serving ceramic and glass decorators across India since 1975."
+>
+  <!-- Hero: asymmetric split, text left, layered photographs right -->
+  <section class="wrap hero">
+    <div class="hero-copy">
+      <span class="eyebrow" data-reveal>Since 1975, Agra</span>
+      <h1 data-reveal style="--i:1">Lustre colours and liquid gold for the kiln</h1>
+      <p class="lede" data-reveal style="--i:2">
+        Made for ceramic and glass decorators across India. Consistent shades, firing after firing.
+      </p>
+      <div class="hero-ctas" data-reveal style="--i:3">
+        <a class="btn" href="/products.html">View products <span class="btn-icon"><Icon name="ph:arrow-up-right" aria-hidden="true" /></span></a>
+        <a class="btn btn-quiet" href={waLink()} target="_blank" rel="noopener">
+          WhatsApp us <span class="btn-icon"><Icon name="ph:whatsapp-logo" aria-hidden="true" /></span>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-art" data-reveal style="--i:2">
+      <div class="bezel hero-main">
+        <div class="plate">
+          <Image src={heroImg} alt="Porcelain cups and jugs finished with gold rims and pearl lustre" widths={[480, 760, 1100]} sizes="(max-width: 900px) 100vw, 46vw" loading="eager" fetchpriority="high" />
+        </div>
+      </div>
+      <div class="bezel hero-small">
+        <div class="plate">
+          <Image src={goldCup} alt="Two espresso cups with 7% and 10% liquid gold rims, labelled test pieces" widths={[320, 560]} sizes="240px" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Facts: plain band, large numerals, no cards -->
+  <section class="facts">
+    <div class="wrap facts-row">
+      <div class="fact" data-reveal><span class="fact-n num">1975</span><span class="fact-l">Started as Spectrum India by a metallurgical engineer from IIT Bombay</span></div>
+      <div class="fact" data-reveal style="--i:1"><span class="fact-n num">7 to 12%</span><span class="fact-l">Liquid gold purity grades, plus custom formulations</span></div>
+      <div class="fact" data-reveal style="--i:2"><span class="fact-n num">500 to 1150°C</span><span class="fact-l">Firing range covered, from glassware to in-glaze ceramic</span></div>
+    </div>
+  </section>
+
+  <!-- Ranges: asymmetric bento, four cells for four ranges -->
+  <section class="wrap section ranges" aria-labelledby="ranges-h">
+    <h2 id="ranges-h" class="ranges-h" data-reveal>Four ranges, one standard of finish</h2>
+    <div class="bento">
+      <a class="tile tile-gold" href="/gold.html" data-reveal>
+        <Image src={goldCup} alt="" widths={[600, 900]} sizes="(max-width: 900px) 100vw, 50vw" class="tile-img" />
+        <div class="tile-copy on-image">
+          <h3>{lineById.gold.title}</h3>
+          <p>{lineById.gold.summary}</p>
+          <span class="tile-link">Browse grades <Icon name="ph:arrow-right" aria-hidden="true" /></span>
+        </div>
+      </a>
+      <a class="tile tile-lustre" href="/luster.html" data-reveal style="--i:1">
+        <Image src={lustreImg} alt="" widths={[400, 700]} sizes="(max-width: 900px) 100vw, 25vw" class="tile-img" />
+        <div class="tile-copy on-image">
+          <h3>{lineById.luster.short}</h3>
+          <span class="tile-link num">{lineById.luster.firing} <Icon name="ph:arrow-right" aria-hidden="true" /></span>
+        </div>
+      </a>
+      <a class="tile tile-ceramic" href="/ceramic.html" data-reveal style="--i:2">
+        <Image src={ceramicImg} alt="" widths={[400, 700]} sizes="(max-width: 900px) 100vw, 25vw" class="tile-img" />
+        <div class="tile-copy on-image">
+          <h3>{lineById.ceramic.short}</h3>
+          <span class="tile-link num">{lineById.ceramic.firing} <Icon name="ph:arrow-right" aria-hidden="true" /></span>
+        </div>
+      </a>
+      <a class="tile tile-inglaze" href="/inglaze.html" data-reveal style="--i:3">
+        <div class="tile-copy">
+          <h3>{lineById.inglaze.title}</h3>
+          <p>{lineById.inglaze.summary}</p>
+          <span class="tile-link num">{lineById.inglaze.firing} <Icon name="ph:arrow-right" aria-hidden="true" /></span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- Firing guide: a real temperature scale, the most useful thing a buyer can check -->
+  <section class="firing-sec" aria-labelledby="firing-h">
+    <div class="wrap section">
+      <span class="eyebrow" data-reveal>Firing guide</span>
+      <h2 id="firing-h" data-reveal style="--i:1">Pick a range by kiln temperature</h2>
+      <div class="chart" data-reveal style="--i:2">
+        <ul class="bars">
+          {
+            firing.map((f) => (
+              <li class="bar-row">
+                <a href={f.href} class="bar-label">{f.label}</a>
+                <div class="bar-track">
+                  <span class="bar" style={`left:${pos(f.min)}%;width:${pos(f.max) - pos(f.min)}%`}>
+                    <span class="bar-val num">{f.min} to {f.max}°C</span>
+                  </span>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+        <div class="axis" aria-hidden="true">
+          <span class="axis-spacer"></span>
+          <div class="axis-track">
+            {ticks.map((t) => <span class="tick num" style={`left:${pos(t)}%`}>{t}°</span>)}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Heritage: portrait + story, single split -->
+  <section class="wrap section heritage">
+    <div class="bezel heritage-photo" data-reveal>
+      <div class="plate">
+        <Image src={founder} alt="Late Mr. Umesh Agarwal, founder" widths={[360, 600]} sizes="(max-width: 900px) 70vw, 30vw" />
+      </div>
+    </div>
+    <div class="heritage-copy">
+      <h2 data-reveal>Fifty years of getting the shade right</h2>
+      <p class="lede" data-reveal style="--i:1">
+        Late Mr. Umesh Agarwal, a metallurgical engineer from IIT Bombay, founded Spectrum India in 1975. Today Mr. Hemant Agarwal leads
+        formulation and quality control, with every batch checked for viscosity, coverage and firing behaviour.
+      </p>
+      <ol class="timeline" data-reveal style="--i:2">
+        <li><span class="num">1975</span> Spectrum India</li>
+        <li><span class="num">2001</span> Vijay Enterprises</li>
+        <li><span class="num">2025</span> <span lang="hi">{site.nameHindi}</span> Vijay Enterprises</li>
+      </ol>
+      <a class="link-arrow" href="/aboutus.html" data-reveal style="--i:3">Our story <Icon name="ph:arrow-right" aria-hidden="true" /></a>
+    </div>
+  </section>
+
+  <!-- Closing call: one contact intent, WhatsApp; phone as the alternative -->
+  <section class="wrap closing">
+    <div class="closing-inner" data-reveal>
+      <h2>Need a shade matched or a bulk quote?</h2>
+      <p class="lede">Send us the code, a photo or a fired sample and we will help you match it.</p>
+      <div class="hero-ctas">
+        <a class="btn" href={waLink()} target="_blank" rel="noopener">WhatsApp us <span class="btn-icon"><Icon name="ph:whatsapp-logo" aria-hidden="true" /></span></a>
+        <a class="btn btn-quiet" href={`tel:${site.phones[0].tel}`}>Call {site.phones[0].display} <span class="btn-icon"><Icon name="ph:phone" aria-hidden="true" /></span></a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* Hero */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 1.05fr;
+    align-items: center;
+    gap: clamp(32px, 6vw, 88px);
+    min-height: calc(100dvh - var(--nav-h));
+    padding-block: clamp(32px, 5vw, 64px);
+  }
+
+  .hero-copy {
+    display: grid;
+    gap: 24px;
+    justify-items: start;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.8rem, 5.6vw, 5rem);
+    line-height: 1.02;
+  }
+
+  .hero-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .hero-art {
+    position: relative;
+    padding-bottom: 48px;
+  }
+
+  .hero-main .plate :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 4.4;
+    object-fit: cover;
+  }
+
+  .hero-small {
+    position: absolute;
+    left: -56px;
+    bottom: 0;
+    width: 44%;
+    transform: rotate(-3deg);
+  }
+
+  .hero-small .plate :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    object-position: 30% 50%;
+  }
+
+  /* Facts */
+  .facts {
+    border-block: 1px solid var(--line);
+  }
+
+  .facts-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .fact {
+    display: grid;
+    gap: 10px;
+    padding: clamp(28px, 4vw, 48px) clamp(16px, 3vw, 40px);
+  }
+
+  .fact + .fact {
+    border-left: 1px solid var(--line);
+  }
+
+  .fact:first-child {
+    padding-left: 0;
+  }
+
+  .fact-n {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 4vw, 3.6rem);
+    font-weight: 600;
+    line-height: 1;
+    color: var(--gold-ink);
+  }
+
+  .fact-l {
+    color: var(--ink-2);
+    max-width: 30ch;
+  }
+
+  /* Ranges bento */
+  .ranges-h {
+    max-width: 18ch;
+    margin-bottom: clamp(32px, 4vw, 56px);
+  }
+
+  .bento {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1fr;
+    grid-template-rows: repeat(2, minmax(260px, auto));
+    gap: 16px;
+  }
+
+  .tile {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: 260px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--ink);
+    background: var(--surface-2);
+    box-shadow: inset 0 0 0 1px var(--line);
+    isolation: isolate;
+  }
+
+  .tile-gold {
+    grid-row: span 2;
+  }
+
+  .tile-inglaze {
+    grid-column: span 2;
+    background:
+      radial-gradient(80% 140% at 100% 100%, color-mix(in srgb, #2f6d8a 38%, transparent), transparent 60%),
+      radial-gradient(60% 120% at 70% 0%, color-mix(in srgb, #8a3b2a 30%, transparent), transparent 65%),
+      var(--surface-2);
+  }
+
+  .tile :global(.tile-img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+    transition: transform 1.2s var(--ease);
+  }
+
+  .tile:hover :global(.tile-img) {
+    transform: scale(1.04);
+  }
+
+  .tile-copy {
+    display: grid;
+    gap: 10px;
+    padding: clamp(20px, 2.4vw, 32px);
+    max-width: 52ch;
+  }
+
+  .tile-copy.on-image {
+    width: 100%;
+    max-width: none;
+    color: #f7f4ee;
+  }
+
+  .tile-copy.on-image::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(to top, rgb(20 16 10 / 0.88) 0%, rgb(20 16 10 / 0.55) 40%, rgb(20 16 10 / 0) 75%);
+  }
+
+  .tile-copy p {
+    max-width: 44ch;
+  }
+
+  .on-image p {
+    color: rgb(247 244 238 / 0.85);
+  }
+
+  .tile-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
+
+  .tile-link :global(svg) {
+    width: 18px;
+    height: 18px;
+    transition: transform 0.4s var(--ease);
+  }
+
+  .tile:hover .tile-link :global(svg) {
+    transform: translateX(4px);
+  }
+
+  /* Firing guide */
+  .firing-sec {
+    background: var(--surface-2);
+  }
+
+  .firing-sec h2 {
+    margin: 12px 0 clamp(32px, 4vw, 56px);
+    max-width: 20ch;
+  }
+
+  .chart {
+    --label: 220px;
+  }
+
+  .bars {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 14px;
+  }
+
+  .bar-row {
+    display: grid;
+    grid-template-columns: var(--label) 1fr;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .bar-label {
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .bar-label:hover {
+    color: var(--gold-ink);
+  }
+
+  .bar-track {
+    position: relative;
+    height: 44px;
+  }
+
+  .bar {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    min-width: 8px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, color-mix(in srgb, var(--gold) 70%, transparent), var(--gold));
+  }
+
+  .bar-val {
+    position: absolute;
+    left: calc(100% + 12px);
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    font-size: 0.88rem;
+    color: var(--ink-2);
+  }
+
+  .bar-row:last-child .bar-val {
+    left: auto;
+    right: calc(100% + 12px);
+  }
+
+  .axis {
+    display: grid;
+    grid-template-columns: var(--label) 1fr;
+    gap: 20px;
+    margin-top: 16px;
+  }
+
+  .axis-track {
+    position: relative;
+    height: 24px;
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .tick {
+    position: absolute;
+    top: 6px;
+    transform: translateX(-50%);
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  /* Heritage */
+  .heritage {
+    display: grid;
+    grid-template-columns: 0.75fr 1fr;
+    gap: clamp(32px, 6vw, 96px);
+    align-items: center;
+  }
+
+  .heritage-photo {
+    max-width: 420px;
+    transform: rotate(-1.5deg);
+  }
+
+  .heritage-photo .plate :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    filter: grayscale(0.15) sepia(0.12);
+  }
+
+  .heritage-copy {
+    display: grid;
+    gap: 24px;
+    justify-items: start;
+  }
+
+  .timeline {
+    list-style: none;
+    margin: 8px 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 36px;
+    color: var(--ink-2);
+  }
+
+  .timeline .num {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--gold-ink);
+    line-height: 1.1;
+  }
+
+  /* Closing */
+  .closing {
+    padding-bottom: clamp(24px, 4vw, 48px);
+  }
+
+  .closing-inner {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: 20px;
+    padding: clamp(48px, 8vw, 104px) clamp(20px, 4vw, 48px);
+    border-radius: calc(var(--radius) + 8px);
+    background:
+      radial-gradient(70% 120% at 50% 0%, var(--gold-soft), transparent 70%),
+      var(--surface);
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+
+  .closing-inner h2 {
+    max-width: 20ch;
+  }
+
+  .closing-inner .hero-ctas {
+    justify-content: center;
+  }
+
+  /* Tablet and phone */
+  @media (max-width: 900px) {
+    .hero {
+      grid-template-columns: 1fr;
+      min-height: 0;
+    }
+    .hero-art {
+      padding-bottom: 0;
+    }
+    .hero-small {
+      display: none;
+    }
+    .hero-main .plate :global(img) {
+      aspect-ratio: 4 / 3;
+    }
+    .facts-row {
+      grid-template-columns: 1fr;
+    }
+    .fact {
+      padding-inline: 0;
+    }
+    .fact + .fact {
+      border-left: 0;
+      border-top: 1px solid var(--line);
+    }
+    .bento {
+      grid-template-columns: 1fr;
+      grid-template-rows: none;
+    }
+    .tile-gold,
+    .tile-inglaze {
+      grid-row: auto;
+      grid-column: auto;
+    }
+    .tile-gold {
+      min-height: 380px;
+    }
+    .heritage {
+      grid-template-columns: 1fr;
+    }
+    .heritage-photo {
+      max-width: 300px;
+      transform: none;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .chart {
+      --label: 1fr;
+    }
+    .bar-row,
+    .axis {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+    .axis-spacer {
+      display: none;
+    }
+    .bar-row {
+      padding-bottom: 6px;
+    }
+    .bar-track {
+      height: 30px;
+    }
+    .bar-val {
+      font-size: 0.8rem;
+    }
+  }
+</style>

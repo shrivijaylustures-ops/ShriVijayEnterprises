@@ -1,0 +1,414 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import emblem from '../assets/brand/emblem.png';
+import site from '../data/site.json';
+import { lines } from '../data/lines';
+import { waLink } from '../lib/links';
+
+const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/index';
+const isProducts = ['/products', ...lines.map((l) => l.href.replace('.html', ''))].includes(path);
+const current = (href: string) => (path === href.replace('.html', '') ? 'page' : undefined);
+---
+
+<header class="nav" data-nav>
+  <div class="wrap nav-row">
+    <a class="brand" href="/" aria-label={`${site.name}, home`}>
+      <Image src={emblem} alt="" width={44} height={44} loading="eager" class="brand-mark" />
+      <span class="brand-word">
+        <span class="brand-shri" lang="hi">{site.nameHindi}</span> Vijay Enterprises
+      </span>
+    </a>
+
+    <nav class="nav-links" aria-label="Main">
+      <div class="dd" data-dd>
+        <button class="nav-link dd-btn" aria-expanded="false" aria-controls="dd-products" data-current={isProducts ? 'true' : undefined}>
+          Products <Icon name="ph:caret-down" aria-hidden="true" />
+        </button>
+        <div class="dd-panel" id="dd-products">
+          <div class="dd-inner">
+            {
+              lines.map((l) => (
+                <a href={l.href} class="dd-item" aria-current={current(l.href)}>
+                  <span class="dd-title">{l.title}</span>
+                  <span class="dd-meta num">{l.firing}</span>
+                </a>
+              ))
+            }
+            <a href="/products.html" class="dd-all">All products overview</a>
+          </div>
+        </div>
+      </div>
+      <a class="nav-link" href="/aboutus.html" aria-current={current('/aboutus.html')}>About us</a>
+      <a class="nav-link" href="/contact.html" aria-current={current('/contact.html')}>Contact us</a>
+    </nav>
+
+    <a class="btn nav-cta" href={waLink()} target="_blank" rel="noopener">
+      WhatsApp us <span class="btn-icon"><Icon name="ph:whatsapp-logo" aria-hidden="true" /></span>
+    </a>
+
+    <button class="burger" aria-expanded="false" aria-controls="menu" aria-label="Open menu" data-burger>
+      <span></span><span></span>
+    </button>
+  </div>
+
+</header>
+
+  <div class="menu" id="menu" data-menu hidden>
+  <nav class="wrap menu-inner" aria-label="Mobile">
+    {
+      [...lines.map((l) => ({ href: l.href, label: l.short })), { href: '/aboutus.html', label: 'About us' }, { href: '/contact.html', label: 'Contact us' }].map(
+        (item, i) => (
+          <a href={item.href} class="menu-link" style={`--i:${i}`} aria-current={current(item.href)}>
+            {item.label}
+          </a>
+        ),
+      )
+    }
+    <a class="btn menu-cta" href={waLink()} target="_blank" rel="noopener" style="--i:7">
+      WhatsApp us <span class="btn-icon"><Icon name="ph:whatsapp-logo" aria-hidden="true" /></span>
+    </a>
+  </nav>
+</div>
+
+<script>
+  const nav = document.querySelector('[data-nav]')!;
+  const burger = nav.querySelector<HTMLButtonElement>('[data-burger]')!;
+  const menu = document.querySelector<HTMLElement>('[data-menu]')!;
+  const dd = nav.querySelector<HTMLElement>('[data-dd]')!;
+  const ddBtn = dd.querySelector<HTMLButtonElement>('button')!;
+
+  const setMenu = (open: boolean) => {
+    burger.setAttribute('aria-expanded', String(open));
+    burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    document.documentElement.classList.toggle('menu-open', open);
+    if (open) {
+      menu.hidden = false;
+      requestAnimationFrame(() => menu.classList.add('is-open'));
+    } else {
+      menu.classList.remove('is-open');
+      setTimeout(() => (menu.hidden = true), 350);
+    }
+  };
+  burger.addEventListener('click', () => setMenu(burger.getAttribute('aria-expanded') !== 'true'));
+
+  const setDd = (open: boolean) => ddBtn.setAttribute('aria-expanded', String(open));
+  ddBtn.addEventListener('click', () => setDd(ddBtn.getAttribute('aria-expanded') !== 'true'));
+  document.addEventListener('click', (e) => {
+    if (!dd.contains(e.target as Node)) setDd(false);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    setDd(false);
+    if (burger.getAttribute('aria-expanded') === 'true') {
+      setMenu(false);
+      burger.focus();
+    }
+  });
+
+  // Hairline under the nav once the page has scrolled (sentinel, not a scroll listener).
+  const sentinel = document.createElement('div');
+  sentinel.style.cssText = 'position:absolute;top:8px;height:1px;width:1px';
+  document.body.prepend(sentinel);
+  new IntersectionObserver(([e]) => nav.classList.toggle('is-stuck', !e.isIntersecting)).observe(sentinel);
+</script>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-nav);
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.4s var(--ease);
+  }
+
+  .nav:global(.is-stuck) {
+    border-bottom-color: var(--line);
+  }
+
+  .nav-row {
+    height: var(--nav-h);
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    margin-right: auto;
+  }
+
+  .brand-mark {
+    width: 40px;
+    height: 40px;
+  }
+
+  .brand-word {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: 0.005em;
+    white-space: nowrap;
+  }
+
+  .brand-shri {
+    color: var(--gold-ink);
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 1.1rem;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    border: 0;
+    background: none;
+    color: var(--ink-2);
+    font: 500 0.98rem/1 var(--font-body);
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      color 0.3s var(--ease),
+      background-color 0.3s var(--ease);
+  }
+
+  .nav-link:hover,
+  .nav-link[aria-current='page'],
+  .nav-link[data-current] {
+    color: var(--ink);
+    background: var(--gold-soft);
+  }
+
+  .nav-link :global(svg) {
+    width: 14px;
+    height: 14px;
+    transition: transform 0.3s var(--ease);
+  }
+
+  .dd {
+    position: relative;
+  }
+
+  .dd-btn[aria-expanded='true'] :global(svg) {
+    transform: rotate(180deg);
+  }
+
+  .dd-panel {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: -12px;
+    width: 340px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition:
+      opacity 0.3s var(--ease),
+      transform 0.4s var(--ease),
+      visibility 0.3s;
+  }
+
+  .dd-btn[aria-expanded='true'] + .dd-panel {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+
+  @media (hover: hover) {
+    .dd:hover .dd-panel {
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+    }
+    .dd-panel::before {
+      content: '';
+      position: absolute;
+      inset: -12px 0 auto;
+      height: 12px;
+    }
+  }
+
+  .dd-inner {
+    padding: 8px;
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow:
+      inset 0 0 0 1px var(--line),
+      var(--shadow);
+  }
+
+  .dd-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: var(--radius-inner);
+    text-decoration: none;
+    transition: background-color 0.25s var(--ease);
+  }
+
+  .dd-item:hover,
+  .dd-item[aria-current='page'] {
+    background: var(--gold-soft);
+  }
+
+  .dd-title {
+    font-weight: 500;
+  }
+
+  .dd-meta {
+    font-size: 0.82rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .dd-all {
+    display: block;
+    margin-top: 4px;
+    padding: 12px 14px;
+    border-top: 1px solid var(--line);
+    font-size: 0.92rem;
+    color: var(--gold-ink);
+    text-decoration: none;
+  }
+
+  .nav-cta {
+    min-height: 44px;
+    padding: 5px 5px 5px 18px;
+    font-size: 0.95rem;
+  }
+
+  .nav-cta .btn-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .burger {
+    display: none;
+    position: relative;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .burger span {
+    position: absolute;
+    left: 13px;
+    right: 13px;
+    height: 1.5px;
+    background: var(--ink);
+    transition: transform 0.45s var(--ease);
+  }
+
+  .burger span:first-child {
+    transform: translateY(-4px);
+  }
+
+  .burger span:last-child {
+    transform: translateY(4px);
+  }
+
+  .burger[aria-expanded='true'] span:first-child {
+    transform: rotate(45deg);
+  }
+
+  .burger[aria-expanded='true'] span:last-child {
+    transform: rotate(-45deg);
+  }
+
+  .menu {
+    position: fixed;
+    inset: var(--nav-h) 0 0;
+    z-index: var(--z-menu);
+    background: var(--bg);
+    opacity: 0;
+    transition: opacity 0.35s var(--ease);
+    overflow-y: auto;
+  }
+
+  .menu:global(.is-open) {
+    opacity: 1;
+  }
+
+  .menu-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-block: 32px 48px;
+  }
+
+  .menu-link {
+    font-family: var(--font-display);
+    font-size: 2.3rem;
+    font-weight: 600;
+    line-height: 1.25;
+    text-decoration: none;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--line);
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 0.6s var(--ease),
+      transform 0.6s var(--ease);
+    transition-delay: calc(60ms + var(--i) * 50ms);
+  }
+
+  .menu-link[aria-current='page'] {
+    color: var(--gold-ink);
+  }
+
+  .menu-cta {
+    align-self: flex-start;
+    margin-top: 28px;
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 0.6s var(--ease),
+      transform 0.6s var(--ease);
+    transition-delay: 0.45s;
+  }
+
+  .menu:global(.is-open) .menu-link,
+  .menu:global(.is-open) .menu-cta {
+    opacity: 1;
+    transform: none;
+  }
+
+  :global(html.menu-open) {
+    overflow: hidden;
+  }
+
+  @media (max-width: 960px) {
+    .nav-links,
+    .nav-cta {
+      display: none;
+    }
+    .burger {
+      display: block;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .brand-word {
+      font-size: 1.2rem;
+    }
+  }
+</style>

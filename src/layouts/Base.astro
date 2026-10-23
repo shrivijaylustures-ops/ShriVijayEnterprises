@@ -1,0 +1,135 @@
+---
+import '@fontsource/cormorant-garamond/500.css';
+import '@fontsource/cormorant-garamond/600.css';
+import '@fontsource/cormorant-garamond/600-italic.css';
+import '@fontsource-variable/outfit';
+import '../styles/global.css';
+import { Icon } from 'astro-icon/components';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import site from '../data/site.json';
+import { waLink } from '../lib/links';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+}
+
+const { title, description, image = '/icon-512.png' } = Astro.props;
+const fullTitle = Astro.url.pathname === '/' || Astro.url.pathname === '/index.html' ? `${site.name} | ${title}` : `${title} | ${site.name}`;
+const canonical = new URL(Astro.url.pathname === '/index.html' ? '/' : Astro.url.pathname, Astro.site);
+
+const business = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: `${site.nameHindi} Vijay Enterprises`,
+  alternateName: site.name,
+  url: Astro.site?.toString(),
+  telephone: site.phones[0].tel,
+  email: site.emails[0],
+  foundingDate: String(site.founded),
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.address.line1,
+    addressLocality: 'Agra',
+    addressRegion: 'Uttar Pradesh',
+    postalCode: '282005',
+    addressCountry: 'IN',
+  },
+  openingHours: 'Mo-Su 10:00-21:00',
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#14120f" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(image, Astro.site)} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <script type="application/ld+json" set:html={JSON.stringify(business)} />
+    <script is:inline>
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('js-motion');
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <Nav />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+
+    <a class="wa-float" href={waLink()} target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp">
+      <Icon name="ph:whatsapp-logo" aria-hidden="true" />
+    </a>
+
+    <script>
+      const els = document.querySelectorAll<HTMLElement>('[data-reveal]');
+      if (document.documentElement.classList.contains('js-motion') && 'IntersectionObserver' in window) {
+        const io = new IntersectionObserver(
+          (entries) =>
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                e.target.classList.add('is-in');
+                io.unobserve(e.target);
+              }
+            }),
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
+        );
+        els.forEach((el) => io.observe(el));
+      } else {
+        els.forEach((el) => el.classList.add('is-in'));
+      }
+    </script>
+
+    <style>
+      .wa-float {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        z-index: var(--z-float);
+        display: grid;
+        place-items: center;
+        width: 56px;
+        height: 56px;
+        border-radius: 999px;
+        background: var(--ink);
+        color: var(--on-ink);
+        box-shadow: var(--shadow);
+        transition: transform 0.4s var(--ease);
+      }
+
+      .wa-float:hover {
+        transform: translateY(-2px) scale(1.04);
+      }
+
+      .wa-float:active {
+        transform: scale(0.97);
+      }
+
+      .wa-float :global(svg) {
+        width: 26px;
+        height: 26px;
+      }
+
+      :global(html.menu-open) .wa-float {
+        opacity: 0;
+        pointer-events: none;
+      }
+    </style>
+  </body>
+</html>

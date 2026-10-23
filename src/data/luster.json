@@ -1,0 +1,135 @@
+[
+  {
+    "name": "Deep Orange",
+    "hex": "#FF7F24",
+    "image": "resources/Luster/Orange.jpg",
+    "stock": "in",
+    "range": "non-gold"
+  },
+  {
+    "name": "Golden Orange",
+    "hex": "#FFA64D",
+    "image": "resources/Luster/GoldenOrange.jpg",
+    "stock": "in",
+    "range": "non-gold"
+  },
+  {
+    "name": "Bronze",
+    "hex": "#CD7F32",
+    "image": "resources/Luster/Bronze.jpg",
+    "stock": "in",
+    "range": "non-gold"
+  },
+  {
+    "name": "Brown",
+    "hex": "#8B4513",
+    "image": "resources/Luster/Brown.jpg",
+    "stock": "in",
+    "range": "non-gold"
+  },
+  {
+    "name": "Steel Grey",
+    "hex": "#7F8C8D",
+    "image": "resources/Luster/SteelGrey.jpg",
+    "stock": "in",
+    "range": "non-gold"
+  },
+  {
+    "name": "Mother of Pearl (MOP)",
+    "hex": "#F0EAD6",
+    "image": "resources/Luster/MotherofPearl.jpg",
+    "stock": "in",
+    "range": "non-gold"
+  },
+  {
+    "name": "Coffee Brown",
+    "hex": "#4B3621",
+    "image": "resources/Luster/CoffeeBrown.jpg",
+    "stock": "in",
+    "range": "non-gold"
+  },
+  {
+    "name": "Olive Green",
+    "hex": "#708238",
+    "image": "resources/Luster/OliveGreen.jpg",
+    "stock": "in",
+    "range": "non-gold"
+  },
+  {
+    "name": "Lemon Yellow",
+    "hex": "#FFF44F",
+    "image": "resources/Luster/Yellow.jpg",
+    "stock": "in",
+    "range": "non-gold"
+  },
+  {
+    "name": "Golden Yellow",
+    "hex": "#FFF44F",
+    "image": "resources/Luster/GoldenYellow.jpg",
+    "stock": "in",
+    "range": "non-gold"
+  },
+  {
+    "name": "Amla Green",
+    "hex": "#6BAA2D",
+    "image": "resources/Luster/AmlaGreen.jpg",
+    "stock": "in",
+    "range": "gold-based"
+  },
+  {
+    "name": "Parrot Green",
+    "hex": "#3CB043",
+    "image": "resources/Luster/ParrotGreen.jpg",
+    "stock": "in",
+    "range": "gold-based"
+  },
+  {
+    "name": "Rose Pink",
+    "hex": "#FF66CC",
+    "image": "resources/Luster/Pink.jpg",
+    "stock": "in",
+    "range": "gold-based"
+  },
+  {
+    "name": "Blue",
+    "hex": "#1E90FF",
+    "image": "resources/Luster/Blue.jpg",
+    "stock": "in",
+    "range": "gold-based"
+  },
+  {
+    "name": "Green Deep",
+    "hex": "#004526",
+    "image": null,
+    "stock": "in",
+    "range": "gold-based"
+  },
+  {
+    "name": "Turquoise Blue",
+    "hex": "#30D5C8",
+    "image": null,
+    "stock": "in",
+    "range": "gold-based"
+  },
+  {
+    "name": "Medium (Oil Base)",
+    "hex": "#C8C8C8",
+    "image": null,
+    "stock": "in",
+    "range": "medium"
+  },
+  {
+    "name": "Sky Blue",
+    "hex": "#87CEEB",
+    "image": null,
+    "stock": "in",
+    "range": "gold-based"
+  },
+  {
+    "name": "Golden",
+    "hex": "#FFD700",
+    "image": null,
+    "stock": "in",
+    "range": "non-gold"
+  }
+]

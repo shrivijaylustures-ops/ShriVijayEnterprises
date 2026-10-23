@@ -1,0 +1,339 @@
+/*
+  Shri Vijay Enterprises design system.
+  Heritage palette: porcelain, ink and one accent, burnished gold (gold is the product, so it earns the accent).
+  Shape rule: containers 20px outer / 14px inner (double bezel), interactive controls are full pills.
+  Layers: --z-nav 20, --z-menu 30, --z-float 25, --z-grain 40.
+*/
+
+:root {
+  color-scheme: light dark;
+
+  --bg: #f7f4ee;
+  --surface: #fffdf9;
+  --surface-2: #efe9df;
+  --ink: #1c1a17;
+  --ink-2: #48433c;
+  --muted: #6b645a;
+  --line: rgb(28 26 23 / 0.12);
+  --line-strong: rgb(28 26 23 / 0.22);
+  --gold: #a8863a;
+  --gold-ink: #7a5f22;
+  --gold-soft: rgb(168 134 58 / 0.12);
+  --on-ink: #f7f4ee;
+  --shadow: 0 1px 2px rgb(70 52 20 / 0.06), 0 18px 40px -18px rgb(70 52 20 / 0.22);
+  --ok: #3f6b3a;
+  --warn: #8a5a12;
+  --out: #8b3a2f;
+
+  --font-display: 'Cormorant Garamond', 'Iowan Old Style', Georgia, serif;
+  --font-body: 'Outfit Variable', 'Segoe UI', system-ui, sans-serif;
+
+  --radius: 20px;
+  --radius-inner: 14px;
+  --gutter: clamp(16px, 4vw, 40px);
+  --max: 1280px;
+  --nav-h: 68px;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-soft: cubic-bezier(0.32, 0.72, 0, 1);
+
+  --z-nav: 20;
+  --z-float: 25;
+  --z-menu: 30;
+  --z-grain: 40;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14120f;
+    --surface: #1c1915;
+    --surface-2: #26221d;
+    --ink: #eee8dd;
+    --ink-2: #cdc5b8;
+    --muted: #a0978a;
+    --line: rgb(238 232 221 / 0.12);
+    --line-strong: rgb(238 232 221 / 0.24);
+    --gold: #cfae62;
+    --gold-ink: #dcbd77;
+    --gold-soft: rgb(207 174 98 / 0.14);
+    --on-ink: #14120f;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 18px 40px -18px rgb(0 0 0 / 0.6);
+    --ok: #8fbf86;
+    --warn: #e0b064;
+    --out: #e08f80;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--nav-h) + 16px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  font-variant-numeric: lining-nums;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Paper grain: fixed, non-interactive, so it never repaints while scrolling. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-grain);
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+img,
+svg,
+video,
+iframe {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-variant-numeric: lining-nums;
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: clamp(2.6rem, 5.4vw, 4.6rem);
+}
+
+h2 {
+  font-size: clamp(2rem, 3.6vw, 3.1rem);
+}
+
+h3 {
+  font-size: clamp(1.45rem, 2vw, 1.8rem);
+}
+
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+a {
+  color: inherit;
+  text-decoration-color: var(--gold);
+  text-underline-offset: 0.2em;
+}
+
+::selection {
+  background: var(--gold);
+  color: var(--on-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.skip {
+  position: absolute;
+  left: 16px;
+  top: -60px;
+  z-index: var(--z-menu);
+  background: var(--ink);
+  color: var(--on-ink);
+  padding: 10px 16px;
+  border-radius: 999px;
+}
+
+.skip:focus {
+  top: 12px;
+}
+
+.wrap {
+  width: 100%;
+  max-width: var(--max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  padding-block: clamp(72px, 10vw, 136px);
+}
+
+.lede {
+  font-size: clamp(1.1rem, 1.4vw, 1.25rem);
+  color: var(--ink-2);
+  max-width: 58ch;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-ink);
+}
+
+.num {
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+/* Buttons: full pills, one primary style, one quiet style. */
+.btn {
+  --btn-bg: var(--ink);
+  --btn-fg: var(--on-ink);
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 8px 8px 22px;
+  min-height: 52px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font: 500 1rem/1 var(--font-body);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    transform 0.4s var(--ease),
+    background-color 0.3s var(--ease),
+    box-shadow 0.4s var(--ease);
+}
+
+.btn:hover {
+  box-shadow: 0 10px 24px -12px rgb(70 52 20 / 0.5);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn .btn-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.12);
+  transition: transform 0.45s var(--ease);
+}
+
+.btn:hover .btn-icon {
+  transform: translate(2px, -1px) scale(1.05);
+}
+
+.btn-quiet {
+  --btn-bg: transparent;
+  --btn-fg: var(--ink);
+  border-color: var(--line-strong);
+}
+
+.btn-quiet .btn-icon {
+  background: var(--gold-soft);
+  color: var(--gold-ink);
+}
+
+.btn-quiet:hover {
+  background: var(--surface);
+}
+
+.btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--ink);
+  border-bottom: 1px solid var(--gold);
+  padding-bottom: 2px;
+}
+
+.link-arrow svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.4s var(--ease);
+}
+
+.link-arrow:hover svg {
+  transform: translateX(3px);
+}
+
+/* Double-bezel container: a tray with a plate inside. */
+.bezel {
+  padding: 6px;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.bezel > .plate {
+  border-radius: var(--radius-inner);
+  background: var(--surface);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.5),
+    var(--shadow);
+  overflow: hidden;
+}
+
+/* Scroll reveal. Content is visible by default; the script only opts in when motion is allowed. */
+.js-motion [data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.9s var(--ease),
+    transform 0.9s var(--ease);
+  transition-delay: calc(var(--i, 0) * 80ms);
+}
+
+.js-motion [data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

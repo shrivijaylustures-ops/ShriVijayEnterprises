@@ -1,0 +1,23 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Gallery" description="Finished ceramic and glassware decorated with our lustre colours, liquid gold and ceramic colours.">
+  <section class="wrap holder">
+    <h1 data-reveal>Gallery</h1>
+    <p class="lede" data-reveal style="--i:1">
+      We are collecting photographs of finished ware decorated with our colours. Until then, every product page shows the shades themselves.
+    </p>
+    <a class="btn" href="/products.html" data-reveal style="--i:2">View products <span class="btn-icon"><Icon name="ph:arrow-up-right" aria-hidden="true" /></span></a>
+  </section>
+</Base>
+
+<style>
+  .holder {
+    display: grid;
+    justify-items: start;
+    gap: 24px;
+    padding-block: clamp(64px, 10vw, 140px);
+  }
+</style>
