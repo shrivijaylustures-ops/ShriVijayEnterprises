@@ -12,10 +12,23 @@ here="$(cd "$(dirname "$0")" && pwd)"
 repo="$(dirname "$here")"
 venv="${XDG_DATA_HOME:-$HOME/.local/share}/sve-editor/venv"
 
-if [ ! -x "$venv/bin/python" ]; then
+# Set up (or repair) a private Python environment with Pillow. Uses uv if present, else python3 -m venv.
+if ! "$venv/bin/python" -c "import PIL" 2>/dev/null; then
   echo "Setting up the editor (first run only)..."
-  python3 -m venv "$venv"
-  "$venv/bin/pip" install --quiet -r "$here/requirements.txt"
+  rm -rf "$venv"
+  uv="$(command -v uv || true)"
+  [ -z "$uv" ] && [ -x "$HOME/.local/bin/uv" ] && uv="$HOME/.local/bin/uv"
+  if [ -n "$uv" ]; then
+    "$uv" venv --quiet "$venv"
+    "$uv" pip install --quiet --python "$venv/bin/python" -r "$here/requirements.txt"
+  elif python3 -m venv "$venv" 2>/dev/null; then
+    "$venv/bin/pip" install --quiet -r "$here/requirements.txt"
+  else
+    rm -rf "$venv"
+    echo "Python's venv module is missing. Install it once with:  sudo apt install python3-venv"
+    echo "(or install uv:  curl -LsSf https://astral.sh/uv/install.sh | sh)"
+    exit 1
+  fi
 fi
 
 args=()
