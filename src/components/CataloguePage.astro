@@ -7,6 +7,7 @@ import OtherRanges from './OtherRanges.astro';
 import { lineById, type LineId } from '../data/lines';
 import { goldProducts, shadesFor } from '../lib/shades';
 import { waLink } from '../lib/links';
+import { ORG_ID, breadcrumbs } from '../lib/schema';
 
 interface Props {
   line: LineId;
@@ -17,11 +18,44 @@ interface Props {
 const { line: id, description, noun = 'shades' } = Astro.props;
 const line = lineById[id];
 const notes = line.notes;
+
 const shades = await shadesFor(id);
 const goldCount = id === 'gold' ? (await goldProducts()).length : 0;
+
+// Every product on this page, for search engines and AI tools.
+const SITE = 'https://www.shrivijayenterprises.in';
+const productList = {
+  '@type': 'ItemList',
+  name: line.title,
+  numberOfItems: shades.length,
+  itemListElement: shades.map((s, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    item: {
+      '@type': 'Product',
+      name: s.code && id !== 'gold' ? `${s.code} ${s.name}` : s.code ? `${s.name} ${s.code}` : s.name,
+      ...(s.code && id !== 'gold' ? { sku: s.code } : {}),
+      category: `${line.title}${s.rangeLabel ? `, ${s.rangeLabel}` : ''}`,
+      description: `${line.short} for ${s.firing === 'Oil base' ? 'use with ceramic colours (oil base medium)' : `firing at ${s.firing}`}.`,
+      ...(s.img ? { image: SITE + s.img } : {}),
+      url: `${SITE}${s.href}`,
+      brand: { '@id': ORG_ID },
+      manufacturer: { '@id': ORG_ID },
+      additionalProperty: [{ '@type': 'PropertyValue', name: 'Availability', value: s.stock === 'in' ? 'In stock' : s.stock === 'low' ? 'Low stock' : 'On order' }],
+    },
+  })),
+};
+const pageSchema = [
+  breadcrumbs([
+    { name: 'Home', path: '/' },
+    { name: 'Products', path: '/products' },
+    { name: line.title, path: line.href },
+  ]),
+  ...(shades.length ? [productList] : []),
+];
 ---
 
-<Base title={line.title} description={description}>
+<Base title={line.title} description={description} schema={pageSchema}>
   <section class="wrap head">
     <a class="back" href="/products"><Icon name="ph:arrow-left" aria-hidden="true" /> All products</a>
     <div class="head-grid">

@@ -9,40 +9,24 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import site from '../data/site.json';
 import { waLink } from '../lib/links';
+import { businessSchema, websiteSchema } from '../lib/schema';
 
 interface Props {
   title: string;
   description: string;
   image?: string;
+  /** Extra schema.org objects for this page. */
+  schema?: object[];
 }
 
-const { title, description, image = '/og.png' } = Astro.props;
+const { title, description, image = '/og.png', schema = [] } = Astro.props;
 const fullTitle = Astro.url.pathname === '/' || Astro.url.pathname === '/index.html' ? `${site.name} | ${title}` : `${title} | ${site.name}`;
 // Clean URLs (/aboutus, not /aboutus.html): Cloudflare Pages serves pages without the extension.
 const cleanPath = Astro.url.pathname.replace(/(index)?\.html$/, '').replace(/(.)\/$/, '$1') || '/';
 const canonical = new URL(cleanPath, Astro.site);
 
-const business = {
-  '@context': 'https://schema.org',
-  '@type': 'LocalBusiness',
-  name: `${site.nameHindi} Vijay Enterprises`,
-  alternateName: site.name,
-  url: Astro.site?.toString(),
-  logo: new URL('/brand/emblem.svg', Astro.site).toString(),
-  image: new URL('/og.png', Astro.site).toString(),
-  telephone: site.phones[0].tel,
-  email: site.emails[0],
-  foundingDate: String(site.founded),
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: site.address.line1,
-    addressLocality: 'Agra',
-    addressRegion: 'Uttar Pradesh',
-    postalCode: '282005',
-    addressCountry: 'IN',
-  },
-  openingHours: 'Mo-Su 10:00-21:00',
-};
+// One graph per page: the business and website everywhere, plus anything the page adds (products, FAQ, breadcrumbs).
+const graph = { '@context': 'https://schema.org', '@graph': [businessSchema(), websiteSchema(), ...schema] };
 ---
 
 <!doctype html>
@@ -68,7 +52,7 @@ const business = {
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <script type="application/ld+json" set:html={JSON.stringify(business)} />
+    <script type="application/ld+json" set:html={JSON.stringify(graph)} />
     <script is:inline>
       (function () {
         var root = document.documentElement;

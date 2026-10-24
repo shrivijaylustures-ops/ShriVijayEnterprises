@@ -10,6 +10,8 @@ import ceramic from '../data/ceramic.json';
 import luster from '../data/luster.json';
 import gold from '../data/gold.json';
 import inglaze from '../data/inglaze.json';
+import site from '../data/site.json';
+import { breadcrumbs, faqSchema } from '../lib/schema';
 
 const ranges: { id: LineId; img?: ImageMetadata; count: number; unit?: string }[] = [
   {
@@ -36,9 +38,46 @@ const ranges: { id: LineId; img?: ImageMetadata; count: number; unit?: string }[
     unit: 'shades',
   },
 ];
+
+// Short answers to the questions buyers ask most. Built from the data files, so temperatures stay current.
+const r = lineById;
+const fixed = [...new Set(gold.map((g) => g.purity))].filter((x) => /\d/.test(x));
+const purities = fixed.length > 1 ? `${fixed.slice(0, -1).join(', ')} and ${fixed.at(-1)}` : fixed.join('');
+const faq = [
+  {
+    q: 'What firing temperature do your colours need?',
+    a: `Glass colours fire at 500 to 560°C, on-glaze ceramic colours at 760 to 830°C (third firing), lustre colours at ${r.luster.firing}, liquid gold and platinum at ${r.gold.firing}, and in-glaze colours at ${r.inglaze.firing}.`,
+  },
+  {
+    q: 'What purities of liquid gold do you make?',
+    a: `Liquid gold in ${purities} purity, and liquid platinum lustre. Other purities are made to order.`,
+  },
+  {
+    q: 'Do you have colours for glass as well as ceramics?',
+    a: 'Yes. Glass colours, lustres for glassware, and liquid gold and platinum for glass, alongside on-glaze and in-glaze colours for ceramics.',
+  },
+  {
+    q: 'Do you make gold-based lustres?',
+    a: 'Yes. Lustres come in standard and gold-based shades, and we also supply an oil-base medium for ceramic colours.',
+  },
+  {
+    q: 'Can I get a fired sample before ordering?',
+    a: 'Yes. Screens show colour only approximately, so ask us for a fired sample before a production order.',
+  },
+  {
+    q: 'How do I order or ask for a price?',
+    a: `Send the product code and quantity on WhatsApp or call ${site.phones[0].display}, or email ${site.emails[0]}.`,
+  },
+  {
+    q: 'Where are you based?',
+    a: `In ${site.address.line2}, ${site.address.region}, India. The business started in 1975 as Spectrum India and supplies ceramic and glass decorators across India.`,
+  },
+];
+const pageSchema = [breadcrumbs([{ name: 'Home', path: '/' }, { name: 'Products', path: '/products' }]), faqSchema(faq)];
 ---
 
 <Base
+  schema={pageSchema}
   title="Products"
   description={`Liquid gold and platinum lustre, liquid lustre colours, ceramic and glass colours and in-glaze colours. Firing ranges from ${Math.min(...lines.map((l) => l.min))} to ${Math.max(...lines.map((l) => l.max))}°C.`}
 >
@@ -86,9 +125,63 @@ const ranges: { id: LineId; img?: ImageMetadata; count: number; unit?: string }[
       })
     }
   </section>
+  <section class="wrap faq" aria-labelledby="faq-h">
+    <h2 id="faq-h" data-reveal>Common questions</h2>
+    <dl class="faq-list">
+      {
+        faq.map((f, i) => (
+          <div class="faq-row" data-reveal style={`--i:${i % 3}`}>
+            <dt>{f.q}</dt>
+            <dd>{f.a}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
 </Base>
 
 <style>
+  /* Questions and answers side by side: no accordions, everything readable at once. */
+  .faq {
+    padding-block: clamp(56px, 8vw, 104px) 24px;
+  }
+
+  .faq h2 {
+    margin-bottom: clamp(24px, 3vw, 40px);
+  }
+
+  .faq-list {
+    margin: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .faq-row {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+    gap: 12px 48px;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .faq-row dt {
+    font-family: var(--font-display);
+    font-size: 1.45rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .faq-row dd {
+    margin: 0;
+    color: var(--ink-2);
+    max-width: 62ch;
+  }
+
+  @media (max-width: 760px) {
+    .faq-row {
+      grid-template-columns: 1fr;
+    }
+  }
+
   .intro {
     display: grid;
     gap: 20px;
