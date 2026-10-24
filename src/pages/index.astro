@@ -3,7 +3,7 @@ import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
 import Base from '../layouts/Base.astro';
 import site from '../data/site.json';
-import { lineById } from '../data/lines';
+import { lineById, lines } from '../data/lines';
 import { waLink } from '../lib/links';
 import heroImg from '../assets/resources/base-image/image-front.jpg';
 import goldCup from '../assets/resources/Gold/LiquidGoldCup.jpg';
@@ -17,16 +17,19 @@ import platinum from '../assets/resources/Gold/Liquid Platinum(1).jpg';
 import blackMug from '../assets/resources/gallery/black-lustre-mug.jpg';
 
 // Firing guide: where each range sits on the kiln temperature scale.
-const scale = { min: 450, max: 1200 };
+const scale = { min: 450, max: 1300 };
 const pos = (t: number) => ((t - scale.min) / (scale.max - scale.min)) * 100;
 const firing = [
-  { label: 'Glass colours', min: 500, max: 560, href: '/ceramic.html?type=glass' },
-  { label: 'Liquid gold & platinum', min: 500, max: 830, href: '/gold.html' },
-  { label: 'Lustre colours', min: 750, max: 850, href: '/luster.html' },
-  { label: 'On-glaze ceramic colours', min: 760, max: 830, href: '/ceramic.html?type=on-glaze' },
-  { label: 'In-glaze colours', min: 1050, max: 1150, href: '/inglaze.html' },
+  { label: 'Glass colours', min: 500, max: 560, href: '/ceramic?type=glass' },
+  { label: 'Liquid gold & platinum', min: 500, max: 830, href: '/gold' },
+  { label: 'Lustre colours', min: 750, max: 850, href: '/luster' },
+  { label: 'On-glaze ceramic colours', min: 760, max: 830, href: '/ceramic?type=on-glaze' },
+  { label: 'In-glaze colours', min: lineById.inglaze.min, max: lineById.inglaze.max, href: '/inglaze' },
 ];
-const ticks = [500, 600, 700, 800, 900, 1000, 1100];
+const ticks = [500, 600, 700, 800, 900, 1000, 1100, 1200];
+// Overall firing range across all products, for the facts strip.
+const lowest = Math.min(...lines.map((l) => l.min));
+const highest = Math.max(...lines.map((l) => l.max));
 
 const works = [
   { img: packets, alt: 'Sample packets of ceramic colours, each labelled with shade and code', caption: 'Sample packets, labelled by shade and code' },
@@ -75,7 +78,7 @@ const works = [
     <div class="wrap facts-row">
       <div class="fact" data-reveal><span class="fact-n num">1975</span><span class="fact-l">Started as Spectrum India by a metallurgical engineer from IIT Bombay</span></div>
       <div class="fact" data-reveal style="--i:1"><span class="fact-n num">7 to 12%</span><span class="fact-l">Liquid gold purity grades, plus custom formulations</span></div>
-      <div class="fact" data-reveal style="--i:2"><span class="fact-n num">500 to 1150°C</span><span class="fact-l">Firing range covered, from glassware to in-glaze ceramic</span></div>
+      <div class="fact" data-reveal style="--i:2"><span class="fact-n num">{lowest} to {highest}°C</span><span class="fact-l">Firing range covered, from glassware to in-glaze ceramic</span></div>
     </div>
   </section>
 
@@ -83,7 +86,7 @@ const works = [
   <section class="wrap section ranges" aria-labelledby="ranges-h">
     <h2 id="ranges-h" class="ranges-h" data-reveal>Four ranges, one standard of finish</h2>
     <div class="bento">
-      <a class="tile tile-gold" href="/gold.html" data-reveal>
+      <a class="tile tile-gold" href="/gold" data-reveal>
         <Image src={goldCup} alt="" widths={[600, 900]} sizes="(max-width: 900px) 100vw, 50vw" class="tile-img" />
         <div class="tile-copy on-image">
           <h3>{lineById.gold.title}</h3>
@@ -91,21 +94,21 @@ const works = [
           <span class="tile-link">Browse grades <Icon name="ph:arrow-right" aria-hidden="true" /></span>
         </div>
       </a>
-      <a class="tile tile-lustre" href="/luster.html" data-reveal style="--i:1">
+      <a class="tile tile-lustre" href="/luster" data-reveal style="--i:1">
         <Image src={lustreImg} alt="" widths={[400, 700]} sizes="(max-width: 900px) 100vw, 25vw" class="tile-img" />
         <div class="tile-copy on-image">
           <h3>{lineById.luster.short}</h3>
           <span class="tile-link num">{lineById.luster.firing} <Icon name="ph:arrow-right" aria-hidden="true" /></span>
         </div>
       </a>
-      <a class="tile tile-ceramic" href="/ceramic.html" data-reveal style="--i:2">
+      <a class="tile tile-ceramic" href="/ceramic" data-reveal style="--i:2">
         <Image src={ceramicImg} alt="" widths={[400, 700]} sizes="(max-width: 900px) 100vw, 25vw" class="tile-img" />
         <div class="tile-copy on-image">
           <h3>{lineById.ceramic.short}</h3>
           <span class="tile-link num">{lineById.ceramic.firing} <Icon name="ph:arrow-right" aria-hidden="true" /></span>
         </div>
       </a>
-      <a class="tile tile-inglaze" href="/inglaze.html" data-reveal style="--i:3">
+      <a class="tile tile-inglaze" href="/inglaze" data-reveal style="--i:3">
         <div class="tile-copy">
           <h3>{lineById.inglaze.title}</h3>
           <p>{lineById.inglaze.summary}</p>
@@ -158,7 +161,7 @@ const works = [
   <section class="wrap section works-sec" aria-labelledby="works-h">
     <div class="sec-head sec-head-row">
       <h2 id="works-h" data-reveal>From our works</h2>
-      <a class="link-arrow" href="/gallery.html" data-reveal>See the gallery <Icon name="ph:arrow-right" aria-hidden="true" /></a>
+      <a class="link-arrow" href="/gallery" data-reveal>See the gallery <Icon name="ph:arrow-right" aria-hidden="true" /></a>
     </div>
     <div class="works" tabindex="0" aria-label="Photos from our works">
       {
@@ -194,7 +197,7 @@ const works = [
         <li><span class="num">2001</span> Vijay Enterprises</li>
         <li><span class="num">2025</span> <span lang="hi">{site.nameHindi}</span> Vijay Enterprises</li>
       </ol>
-      <a class="link-arrow" href="/aboutus.html" data-reveal style="--i:3">Our story <Icon name="ph:arrow-right" aria-hidden="true" /></a>
+      <a class="link-arrow" href="/aboutus" data-reveal style="--i:3">Our story <Icon name="ph:arrow-right" aria-hidden="true" /></a>
     </div>
   </section>
 

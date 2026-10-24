@@ -33,13 +33,13 @@ const current = (href: string) => (path === href.replace('.html', '') ? 'page' :
                 </a>
               ))
             }
-            <a href="/products.html" class="dd-all">All products overview</a>
+            <a href="/products" class="dd-all">All products overview</a>
           </div>
         </div>
       </div>
-      <a class="nav-link" href="/gallery.html" aria-current={current('/gallery.html')}>Gallery</a>
-      <a class="nav-link" href="/aboutus.html" aria-current={current('/aboutus.html')}>About us</a>
-      <a class="nav-link" href="/contact.html" aria-current={current('/contact.html')}>Contact us</a>
+      <a class="nav-link" href="/gallery" aria-current={current('/gallery')}>Gallery</a>
+      <a class="nav-link" href="/aboutus" aria-current={current('/aboutus')}>About us</a>
+      <a class="nav-link" href="/contact" aria-current={current('/contact')}>Contact us</a>
     </nav>
 
     <button class="theme-btn" type="button" data-theme-cycle aria-label="Colour theme: follows your device">
@@ -64,10 +64,10 @@ const current = (href: string) => (path === href.replace('.html', '') ? 'page' :
     {
       [
         ...lines.map((l) => ({ href: l.href, label: l.short })),
-        { href: '/products.html', label: 'All products' },
-        { href: '/gallery.html', label: 'Gallery' },
-        { href: '/aboutus.html', label: 'About us' },
-        { href: '/contact.html', label: 'Contact us' },
+        { href: '/products', label: 'All products' },
+        { href: '/gallery', label: 'Gallery' },
+        { href: '/aboutus', label: 'About us' },
+        { href: '/contact', label: 'Contact us' },
       ].map(
         (item, i) => (
           <a href={item.href} class="menu-link" style={`--i:${i}`} aria-current={current(item.href)}>

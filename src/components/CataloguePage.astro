@@ -12,18 +12,18 @@ interface Props {
   line: LineId;
   description: string;
   noun?: string;
-  notes?: string[];
 }
 
-const { line: id, description, noun = 'shades', notes = [] } = Astro.props;
+const { line: id, description, noun = 'shades' } = Astro.props;
 const line = lineById[id];
+const notes = line.notes;
 const shades = await shadesFor(id);
 const goldCount = id === 'gold' ? (await goldProducts()).length : 0;
 ---
 
 <Base title={line.title} description={description}>
   <section class="wrap head">
-    <a class="back" href="/products.html"><Icon name="ph:arrow-left" aria-hidden="true" /> All products</a>
+    <a class="back" href="/products"><Icon name="ph:arrow-left" aria-hidden="true" /> All products</a>
     <div class="head-grid">
       <h1 data-reveal>{line.title}</h1>
       <div class="head-side" data-reveal style="--i:1">

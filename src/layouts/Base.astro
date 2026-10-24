@@ -18,7 +18,9 @@ interface Props {
 
 const { title, description, image = '/og.png' } = Astro.props;
 const fullTitle = Astro.url.pathname === '/' || Astro.url.pathname === '/index.html' ? `${site.name} | ${title}` : `${title} | ${site.name}`;
-const canonical = new URL(Astro.url.pathname === '/index.html' ? '/' : Astro.url.pathname, Astro.site);
+// Clean URLs (/aboutus, not /aboutus.html): Cloudflare Pages serves pages without the extension.
+const cleanPath = Astro.url.pathname.replace(/(index)?\.html$/, '').replace(/(.)\/$/, '$1') || '/';
+const canonical = new URL(cleanPath, Astro.site);
 
 const business = {
   '@context': 'https://schema.org',

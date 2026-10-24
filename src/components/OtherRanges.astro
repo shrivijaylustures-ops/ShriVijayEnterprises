@@ -17,9 +17,9 @@ const shades = await allShades();
 const goldCount = (await goldProducts()).length;
 const images: Partial<Record<LineId, ImageMetadata>> = { gold: goldImg, luster: lustreImg, ceramic: ceramicImg };
 const count = (id: LineId) => {
-  if (id === 'gold') return `${goldCount} products`;
+  if (id === 'gold') return `${goldCount} ${goldCount === 1 ? 'product' : 'products'}`;
   const n = shades.filter((s) => s.line === id).length;
-  return n ? `${n} shades` : 'Being added';
+  return n ? `${n} ${n === 1 ? 'shade' : 'shades'}` : 'Being added';
 };
 const shown = lines.filter((l) => l.id !== exclude);
 ---

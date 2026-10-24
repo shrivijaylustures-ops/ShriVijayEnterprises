@@ -126,7 +126,7 @@ export default function Catalogue({ items, filters = [], noun = 'shades' }) {
       </div>
 
       <p className="cat-count num" aria-live="polite">
-        Showing {shown.length} of {items.length} {noun}
+        Showing {shown.length} of {items.length} {items.length === 1 ? noun.replace(/s$/, '') : noun}
       </p>
 
       {shown.length === 0 ? (

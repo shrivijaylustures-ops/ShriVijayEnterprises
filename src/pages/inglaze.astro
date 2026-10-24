@@ -11,8 +11,8 @@ import items from '../data/inglaze.json';
 import site from '../data/site.json';
 
 const line = lineById.inglaze;
-const description = 'High-temperature in-glaze ceramic colours (1050 to 1150°C) that fuse into the glaze for scratch resistance and lasting colour depth.';
-const ask = waLink('Hello, I would like to enquire about in-glaze colours (1050 to 1150°C). Shade or code needed: ');
+const description = `High-temperature in-glaze ceramic colours (${line.firing}) that fuse into the glaze for scratch resistance and lasting colour depth.`;
+const ask = waLink(`Hello, I would like to enquire about in-glaze colours (${line.firing}). Shade or code needed: `);
 ---
 
 {
@@ -21,7 +21,7 @@ const ask = waLink('Hello, I would like to enquire about in-glaze colours (1050 
   ) : (
     <Base title={line.title} description={description}>
       <section class="wrap head">
-        <a class="back" href="/products.html">
+        <a class="back" href="/products">
           <Icon name="ph:arrow-left" aria-hidden="true" /> All products
         </a>
         <span class="status" data-reveal>
@@ -55,7 +55,7 @@ const ask = waLink('Hello, I would like to enquire about in-glaze colours (1050 
               <strong>On-glaze</strong>
               <span class="num">Third firing, 760 to 830°C</span>
               Colour fires onto the surface of the glaze. Sharp shades and high gloss.
-              <a class="link-arrow" href="/ceramic.html?type=on-glaze">
+              <a class="link-arrow" href="/ceramic?type=on-glaze">
                 See on-glaze colours <Icon name="ph:arrow-right" aria-hidden="true" />
               </a>
             </figcaption>
@@ -70,7 +70,7 @@ const ask = waLink('Hello, I would like to enquire about in-glaze colours (1050 
             </div>
             <figcaption>
               <strong>In-glaze</strong>
-              <span class="num">1050 to 1150°C</span>
+              <span class="num">{line.firing}</span>
               Colour sinks into the glaze layer as it melts, so it is protected by the glaze itself.
             </figcaption>
           </figure>

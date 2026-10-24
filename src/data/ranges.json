@@ -1,0 +1,52 @@
+{
+  "gold": {
+    "title": "Liquid Gold & Platinum",
+    "short": "Liquid gold",
+    "firing": "500 to 830°C",
+    "min": 500,
+    "max": 830,
+    "summary": "Bright and burnished gold and platinum in 7%, 10%, 12% and custom purity, for glass and ceramic.",
+    "points": ["7%, 10%, 12% and custom purity", "Glass 500 to 600°C, ceramic 760 to 830°C", "Rich shine, streak-free application, high durability after firing"],
+    "notes": [
+      "Purity 7%, 10%, 12% or made to your specification.",
+      "For glass (500 to 600°C) and ceramic third firing (760 to 830°C).",
+      "Smooth, streak-free application and even colour at lower firing temperatures."
+    ]
+  },
+  "luster": {
+    "title": "Liquid Lustre Colours",
+    "short": "Lustre colours",
+    "firing": "750 to 850°C",
+    "min": 750,
+    "max": 850,
+    "summary": "Metallic and pearl lustres with stable viscosity and an even sheen across firing cycles.",
+    "points": ["Glassware 500 to 600°C", "Ceramicware third firing 760 to 830°C", "Stable viscosity, high coverage, consistent finish"],
+    "notes": [
+      "For glassware, 500 to 600°C: bright, reflective finish with clean firing.",
+      "For ceramicware, third firing 760 to 830°C: metallic sheen for decorative ware, giftware and tableware."
+    ]
+  },
+  "ceramic": {
+    "title": "Ceramic & Glass Colours",
+    "short": "Ceramic colours",
+    "firing": "500 to 830°C",
+    "min": 500,
+    "max": 830,
+    "summary": "Imported on-glaze and glass colours for third-firing decoration, with sharp shades and high gloss.",
+    "points": ["Glass colours 500 to 600°C", "On-glaze third firing 760 to 830°C, sharp shades and high gloss", "Imported for purity and firing consistency"],
+    "notes": [
+      "Glass colours, 500 to 600°C: smooth, even application on glassware with stable firing.",
+      "On-glaze colours, third firing 760 to 830°C: sharp shades and high gloss for overglaze decoration."
+    ]
+  },
+  "inglaze": {
+    "title": "In-Glaze Colours",
+    "short": "In-glaze colours",
+    "firing": "1150 to 1250°C",
+    "min": 1150,
+    "max": 1250,
+    "summary": "High-temperature colours that fuse into the glaze for scratch resistance and lasting depth.",
+    "points": ["1150 to 1250°C", "Fuses into the glaze layer", "Scratch resistance and thermal stability"],
+    "notes": []
+  }
+}

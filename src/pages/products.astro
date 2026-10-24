@@ -2,47 +2,45 @@
 import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
 import Base from '../layouts/Base.astro';
-import { lineById, type LineId } from '../data/lines';
+import { lineById, lines, type LineId } from '../data/lines';
 import ceramicImg from '../assets/resources/Ceramic/CeramicColor.png';
 import lustreImg from '../assets/resources/Luster/Pink.jpg';
 import goldImg from '../assets/resources/Gold/LiquidPlatinum.jpg';
 import ceramic from '../data/ceramic.json';
 import luster from '../data/luster.json';
 import gold from '../data/gold.json';
+import inglaze from '../data/inglaze.json';
 
-const ranges: { id: LineId; img?: ImageMetadata; count: number; unit?: string; points: string[] }[] = [
+const ranges: { id: LineId; img?: ImageMetadata; count: number; unit?: string }[] = [
   {
     id: 'gold',
     img: goldImg,
     count: new Set(gold.map((g) => g.name)).size,
     unit: 'products',
-    points: ['7%, 10%, 12% and custom purity', 'Glass 500 to 600°C, ceramic 760 to 830°C', 'Rich shine, streak-free application, high durability after firing'],
   },
   {
     id: 'luster',
     img: lustreImg,
     count: luster.length,
     unit: 'shades',
-    points: ['Glassware 500 to 600°C', 'Ceramicware third firing 760 to 830°C', 'Stable viscosity, high coverage, consistent finish'],
   },
   {
     id: 'ceramic',
     img: ceramicImg,
     count: ceramic.length,
     unit: 'shades',
-    points: ['Glass colours 500 to 600°C', 'On-glaze third firing 760 to 830°C, sharp shades and high gloss', 'Imported for purity and firing consistency'],
   },
   {
     id: 'inglaze',
-    count: 0,
-    points: ['1050 to 1150°C', 'Fuses into the glaze layer', 'Scratch resistance and thermal stability'],
+    count: inglaze.length,
+    unit: 'shades',
   },
 ];
 ---
 
 <Base
   title="Products"
-  description="Liquid gold and platinum lustre, liquid lustre colours, ceramic and glass colours and in-glaze colours. Firing ranges from 500 to 1150°C."
+  description={`Liquid gold and platinum lustre, liquid lustre colours, ceramic and glass colours and in-glaze colours. Firing ranges from ${Math.min(...lines.map((l) => l.min))} to ${Math.max(...lines.map((l) => l.max))}°C.`}
 >
   <section class="wrap intro">
     <h1 data-reveal>Products</h1>
@@ -68,11 +66,11 @@ const ranges: { id: LineId; img?: ImageMetadata; count: number; unit?: string; p
               <div class="range-body">
                 <div class="range-top">
                   <h2>{line.title}</h2>
-                  <span class="range-count num">{r.count ? `${r.count} ${r.unit}` : 'Being added'}</span>
+                  <span class="range-count num">{r.count ? `${r.count} ${r.count === 1 ? r.unit!.replace(/s$/, '') : r.unit}` : 'Being added'}</span>
                 </div>
                 <p class="range-summary">{line.summary}</p>
                 <ul class="range-points">
-                  {r.points.map((p) => (
+                  {line.points.map((p) => (
                     <li>
                       <Icon name="ph:check" aria-hidden="true" /> {p}
                     </li>
