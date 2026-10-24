@@ -107,14 +107,14 @@ def main() -> int:
         except KeyboardInterrupt:
             return 0
 
-    window = open_window(url, config.dir / 'window')
-    # Stay alive while the window is open. If we cannot track the window (a normal browser tab),
-    # stop after the page has gone quiet for a while. Unpublished work is already saved as a draft.
+    open_window(url, config.dir / 'window')
+    # Stay alive while the page is alive. The launched Edge process is NOT a reliable signal: Edge
+    # often hands the window to an already-running instance and exits at once, which used to shut the
+    # server down under an open window ("Failed to fetch"). The page sends a heartbeat every 20s.
+    # Unpublished work is already saved as a draft.
     while True:
         time.sleep(2)
-        if window is not None and window.poll() is not None:
-            break
-        if window is None and time.time() - editor.last_heartbeat > IDLE_LIMIT:
+        if time.time() - editor.last_heartbeat > IDLE_LIMIT:
             break
     httpd.shutdown()
     try:
