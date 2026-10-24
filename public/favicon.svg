@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Shri Vijay Enterprises emblem">
+  <!-- Redrawn from the original logo. Disc r100; leaves: two r40.7 quarter-circles on a square, 7.5 off the cross; blue r61.1 inside a white r64.8 ring. -->
+  <circle cx="100" cy="100" r="100" fill="#F0535B"/>
+  <path id="leaf" fill="#FFFFFF" d="M92.5 92.5V11.1A40.7 40.7 0 0 0 51.8 51.8A40.7 40.7 0 0 0 11.1 92.5Z"/>
+  <path id="quarter-ring" fill="#FFFFFF" d="M100 100V35.2A64.8 64.8 0 0 1 164.8 100Z"/>
+  <path id="quarter" fill="#5798DB" d="M100 100V38.9A61.1 61.1 0 0 1 161.1 100Z"/>
+  <g transform="rotate(180 100 100)">
+    <use href="#leaf"/>
+    <use href="#quarter-ring"/>
+    <use href="#quarter"/>
+  </g>
+  <path d="M100 0V200M0 100H200" stroke="#111111" stroke-width="2"/>
+</svg>

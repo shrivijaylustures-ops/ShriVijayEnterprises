@@ -48,7 +48,19 @@
 
 .chip-n {
   font-size: 0.8rem;
-  opacity: 0.7;
+  opacity: 0.85;
+}
+
+.tools-right {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.view-toggle {
+  display: flex;
+  gap: 6px;
 }
 
 .search {
@@ -80,7 +92,7 @@
   color: var(--muted);
 }
 
-.search input:focus {
+.search input:focus-visible {
   outline: none;
   border-color: var(--gold);
   box-shadow: 0 0 0 4px var(--gold-soft);
@@ -105,6 +117,8 @@
 .card {
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  scroll-margin-top: calc(var(--nav-h) + 16px);
   padding: 6px;
   border-radius: var(--radius);
   background: var(--surface-2);
@@ -114,6 +128,13 @@
 
 .card:hover {
   transform: translateY(-3px);
+}
+
+/* Opened from the home page shade card: highlight the product. */
+.card:target {
+  box-shadow:
+    inset 0 0 0 1px var(--line),
+    0 0 0 2px var(--gold);
 }
 
 .card-media {
@@ -229,19 +250,37 @@
   color: var(--out);
 }
 
+.card-note {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+/* Quiet outline button: sits on the card in both themes instead of a solid block. */
 .enquire {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  min-height: 40px;
+  min-height: 44px;
   padding: 0 16px;
   border-radius: 999px;
-  background: var(--ink);
-  color: var(--on-ink);
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  color: var(--ink);
   font-size: 0.9rem;
   font-weight: 500;
   text-decoration: none;
-  transition: transform 0.3s var(--ease);
+  white-space: nowrap;
+  transition:
+    background-color 0.3s var(--ease),
+    border-color 0.3s var(--ease),
+    transform 0.3s var(--ease);
+}
+
+.enquire:hover {
+  background: var(--gold-soft);
+  border-color: var(--gold);
 }
 
 .enquire:active {
@@ -251,6 +290,98 @@
 .enquire svg {
   width: 18px;
   height: 18px;
+  color: var(--gold-ink);
+}
+
+/* List view */
+.table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.table th {
+  text-align: left;
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: var(--muted);
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line-strong);
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+
+.table tr:last-child td {
+  border-bottom: 0;
+}
+
+.table tr:target td {
+  background: var(--gold-soft);
+}
+
+.table tr {
+  scroll-margin-top: calc(var(--nav-h) + 16px);
+}
+
+.t-shade {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.t-sw {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--surface-2);
+}
+
+.t-sw img,
+.t-sw .swatch {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  padding: 0;
+}
+
+.t-code {
+  color: var(--gold-ink);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.t-nowrap {
+  white-space: nowrap;
+}
+
+.table .enquire {
+  min-height: 40px;
+}
+
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
 .cat-empty {
@@ -271,18 +402,12 @@
 }
 
 @media (max-width: 640px) {
+  .tools-right,
   .search {
     width: 100%;
   }
-  .chips {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    margin-inline: calc(var(--gutter) * -1);
-    padding-inline: var(--gutter);
-    scrollbar-width: none;
-  }
   .chip {
-    flex: none;
+    padding: 0 14px;
   }
 }
 
@@ -327,8 +452,7 @@
     gap: 8px;
   }
   .enquire {
-    justify-content: center;
-    min-height: 38px;
+    min-height: 42px;
   }
   .swatch-code {
     font-size: 1.5rem;

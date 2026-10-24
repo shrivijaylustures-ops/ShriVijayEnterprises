@@ -42,8 +42,9 @@
   --z-grain: 40;
 }
 
+/* Dark palette: used when the device asks for dark (unless the visitor picked light), or when they pick dark. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
     --bg: #14120f;
     --surface: #1c1915;
     --surface-2: #26221d;
@@ -63,6 +64,30 @@
   }
 }
 
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #14120f;
+  --surface: #1c1915;
+  --surface-2: #26221d;
+  --ink: #eee8dd;
+  --ink-2: #cdc5b8;
+  --muted: #a0978a;
+  --line: rgb(238 232 221 / 0.12);
+  --line-strong: rgb(238 232 221 / 0.24);
+  --gold: #cfae62;
+  --gold-ink: #dcbd77;
+  --gold-soft: rgb(207 174 98 / 0.14);
+  --on-ink: #14120f;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 18px 40px -18px rgb(0 0 0 / 0.6);
+  --ok: #8fbf86;
+  --warn: #e0b064;
+  --out: #e08f80;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
 *,
 *::before,
 *::after {
@@ -72,6 +97,14 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-padding-top: calc(var(--nav-h) + 16px);
+  -webkit-tap-highlight-color: transparent;
+}
+
+a,
+button,
+input,
+summary {
+  touch-action: manipulation;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -277,6 +310,7 @@ a {
 }
 
 .link-arrow {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -285,6 +319,13 @@ a {
   color: var(--ink);
   border-bottom: 1px solid var(--gold);
   padding-bottom: 2px;
+}
+
+/* A larger invisible hit area, so the underline can stay tight to the text. */
+.link-arrow::after {
+  content: '';
+  position: absolute;
+  inset: -12px -6px;
 }
 
 .link-arrow svg {

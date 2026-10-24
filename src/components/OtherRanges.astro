@@ -1,0 +1,161 @@
+---
+// Photo tiles linking to the other product ranges. Same tile language as the home page bento.
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import { lines, type LineId } from '../data/lines';
+import { allShades, goldProducts } from '../lib/shades';
+import goldImg from '../assets/resources/Gold/LiquidGoldCup.jpg';
+import lustreImg from '../assets/resources/Luster/Pink.jpg';
+import ceramicImg from '../assets/resources/Ceramic/CeramicColor.png';
+
+interface Props {
+  exclude?: LineId;
+}
+
+const { exclude } = Astro.props;
+const shades = await allShades();
+const goldCount = (await goldProducts()).length;
+const images: Partial<Record<LineId, ImageMetadata>> = { gold: goldImg, luster: lustreImg, ceramic: ceramicImg };
+const count = (id: LineId) => {
+  if (id === 'gold') return `${goldCount} products`;
+  const n = shades.filter((s) => s.line === id).length;
+  return n ? `${n} shades` : 'Being added';
+};
+const shown = lines.filter((l) => l.id !== exclude);
+---
+
+<ul class="others">
+  {
+    shown.map((l, i) => (
+      <li data-reveal style={`--i:${i}`}>
+        <a href={l.href} class:list={['o-tile', { 'o-glaze': !images[l.id] }]}>
+          {images[l.id] && <Image src={images[l.id]!} alt="" widths={[400, 640]} sizes="(max-width: 820px) 100vw, 33vw" class="o-img" />}
+          <span class="o-copy">
+            <span class="o-title">{l.title}</span>
+            <span class="o-meta num">
+              {l.firing}, {count(l.id)}
+            </span>
+          </span>
+          <span class="o-go" aria-hidden="true">
+            <Icon name="ph:arrow-right" />
+          </span>
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .others {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .o-tile {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    aspect-ratio: 4 / 3;
+    padding: 20px;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: var(--surface-2);
+    box-shadow: inset 0 0 0 1px var(--line);
+    color: #f7f4ee;
+    text-decoration: none;
+  }
+
+  .o-tile :global(.o-img) {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.2s var(--ease);
+  }
+
+  .o-tile:hover :global(.o-img) {
+    transform: scale(1.05);
+  }
+
+  .o-tile::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(to top, rgb(20 16 10 / 0.85) 0%, rgb(20 16 10 / 0.45) 45%, rgb(20 16 10 / 0) 75%);
+  }
+
+  /* In-glaze has no photos yet. */
+  .o-glaze {
+    color: var(--ink);
+    background:
+      radial-gradient(80% 140% at 100% 100%, color-mix(in srgb, #2f6d8a 38%, transparent), transparent 60%),
+      radial-gradient(60% 120% at 70% 0%, color-mix(in srgb, #8a3b2a 30%, transparent), transparent 65%),
+      var(--surface-2);
+  }
+
+  .o-glaze::before {
+    display: none;
+  }
+
+  .o-copy {
+    display: grid;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .o-title {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 600;
+    line-height: 1.1;
+  }
+
+  .o-meta {
+    font-size: 0.92rem;
+    opacity: 0.85;
+  }
+
+  .o-go {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.14);
+    transition: transform 0.4s var(--ease);
+  }
+
+  .o-glaze .o-go {
+    background: var(--gold-soft);
+    color: var(--gold-ink);
+  }
+
+  .o-go :global(svg) {
+    width: 20px;
+    height: 20px;
+  }
+
+  .o-tile:hover .o-go {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 820px) {
+    .others {
+      grid-template-columns: 1fr;
+    }
+    .o-tile {
+      aspect-ratio: 16 / 9;
+    }
+  }
+</style>

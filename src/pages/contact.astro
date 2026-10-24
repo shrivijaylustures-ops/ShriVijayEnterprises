@@ -88,10 +88,13 @@ import { mailLink, waLink } from '../lib/links';
     color: inherit;
   }
 
+  /* Always a dark ink card, so it never turns into a pale block in dark mode. */
   .way-main {
-    background: var(--ink);
-    color: var(--on-ink);
-    box-shadow: var(--shadow);
+    background: #1c1a17;
+    color: #f7f4ee;
+    box-shadow:
+      inset 0 0 0 1px var(--line),
+      var(--shadow);
     transition: transform 0.5s var(--ease);
   }
 
@@ -100,7 +103,7 @@ import { mailLink, waLink } from '../lib/links';
   }
 
   .way-main .way-hint {
-    color: color-mix(in srgb, var(--on-ink) 75%, transparent);
+    color: rgb(247 244 238 / 0.78);
   }
 
   :global(.way-icon) {
@@ -119,10 +122,12 @@ import { mailLink, waLink } from '../lib/links';
   }
 
   .way-main .way-title {
-    color: var(--gold);
+    color: #cfae62;
   }
 
   .way-value {
+    display: block;
+    padding-block: 8px;
     font-family: var(--font-display);
     font-size: 1.45rem;
     font-weight: 600;
@@ -144,6 +149,7 @@ import { mailLink, waLink } from '../lib/links';
   }
 
   .way-email {
+    padding-block: 12px;
     font-family: var(--font-body);
     font-size: 1rem;
     font-weight: 500;

@@ -1,0 +1,181 @@
+---
+// Home page shade card: a physical-looking card of real product photos. Each chip opens that product in its catalogue.
+import site from '../data/site.json';
+import { allShades, featuredShades, type Shade } from '../lib/shades';
+
+const all = await allShades();
+const featured = await featuredShades();
+
+// Fill up to 24 chips: the hand-picked ones first, then other products with their own photo, alternating ranges.
+const taken = new Set(featured.map((s) => s.id));
+const seenPhoto = new Set(featured.map((s) => s.chip));
+const rest = all.filter((s) => s.chip && !s.photoNote && !taken.has(s.id) && s.line !== 'gold');
+const byLine = [rest.filter((s) => s.line === 'ceramic'), rest.filter((s) => s.line === 'luster')];
+const extra: Shade[] = [];
+for (let i = 0; extra.length < 24 - featured.length && (byLine[0].length || byLine[1].length); i++) {
+  const next = byLine[i % 2].shift() ?? byLine[(i + 1) % 2].shift();
+  if (next && !seenPhoto.has(next.chip)) {
+    seenPhoto.add(next.chip);
+    extra.push(next);
+  }
+}
+const chips = [...featured, ...extra];
+const label = (s: Shade) => (s.line === 'ceramic' ? s.code : s.name.replace(/^Liquid /, ''));
+---
+
+<div class="sc-tray" data-reveal>
+  <figure class="sc">
+    <div class="sc-head">
+      <img src="/brand/emblem.svg" alt="" width="28" height="28" />
+      <span class="sc-brand" translate="no"><span lang="hi">{site.nameHindi}</span> Vijay Enterprises</span>
+      <span class="sc-title">Shade card</span>
+    </div>
+    <ul class="sc-grid">
+      {
+        chips.map((s, i) => (
+          <li class:list={[{ 'sc-12': i >= 12, 'sc-18': i >= 18 }]}>
+            <a href={s.href} aria-label={`${s.name}${s.line === 'ceramic' && s.code ? ` ${s.code}` : ''}, ${s.firing}`}>
+              <img src={s.chip} alt="" width="280" height="280" loading="lazy" decoding="async" />
+              <span class="sc-code num" translate="no">
+                {label(s)}
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <figcaption class="sc-foot">
+      <span class="num">{all.length} shades and grades in the catalogue</span>
+      <span>Tap a shade to open it</span>
+    </figcaption>
+  </figure>
+</div>
+
+<style>
+  .sc-tray {
+    padding: 8px;
+    border-radius: calc(var(--radius) + 4px);
+    background: var(--surface-2);
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+
+  .sc {
+    margin: 0;
+    padding: clamp(16px, 2.4vw, 28px);
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.5),
+      var(--shadow);
+  }
+
+  .sc-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 14px;
+    margin-bottom: 18px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .sc-brand {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 600;
+  }
+
+  .sc-title {
+    margin-left: auto;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold-ink);
+  }
+
+  .sc-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 16px 12px;
+  }
+
+  .sc-grid a {
+    display: block;
+    text-decoration: none;
+    border-radius: 12px;
+  }
+
+  .sc-grid img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: inset 0 0 0 1px var(--line);
+    transition:
+      transform 0.5s var(--ease),
+      box-shadow 0.5s var(--ease);
+  }
+
+  .sc-grid a:hover img {
+    transform: translateY(-4px) rotate(-1deg);
+    box-shadow: var(--shadow);
+  }
+
+  .sc-code {
+    display: block;
+    padding-top: 8px;
+    font-size: 0.86rem;
+    font-weight: 500;
+    color: var(--ink-2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .sc-foot {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin-top: 20px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    font-size: 0.88rem;
+    color: var(--muted);
+  }
+
+  @media (max-width: 1100px) {
+    .sc-grid {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+    .sc-18 {
+      display: none;
+    }
+  }
+
+  /* Phones: 12 large chips instead of 24 tiny ones. */
+  @media (max-width: 640px) {
+    .sc-tray {
+      padding: 5px;
+    }
+    .sc {
+      padding: 12px;
+    }
+    .sc-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px 8px;
+    }
+    .sc-12 {
+      display: none;
+    }
+    .sc-brand {
+      font-size: 1.1rem;
+    }
+    .sc-title {
+      display: none;
+    }
+  }
+</style>

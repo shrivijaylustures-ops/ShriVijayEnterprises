@@ -1,12 +1,14 @@
 ---
 import CataloguePage from '../components/CataloguePage.astro';
-import items from '../data/gold.json';
 ---
 
 <CataloguePage
   line="gold"
-  items={items}
   noun="grades"
   description="Liquid gold and platinum lustre in 7%, 10%, 12% and custom purity for glass (500 to 600°C) and ceramic third firing (760 to 830°C)."
-  firingFor={() => '500 to 830°C'}
+  notes={[
+    'Purity 7%, 10%, 12% or made to your specification.',
+    'For glass (500 to 600°C) and ceramic third firing (760 to 830°C).',
+    'Smooth, streak-free application and even colour at lower firing temperatures.',
+  ]}
 />

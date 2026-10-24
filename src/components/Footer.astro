@@ -9,7 +9,9 @@ const year = new Date().getFullYear();
 <footer class="foot">
   <div class="wrap foot-grid">
     <div class="foot-brand">
-      <p class="foot-name"><span lang="hi">{site.nameHindi}</span> Vijay Enterprises</p>
+      <p class="foot-name" translate="no">
+        <img src="/brand/emblem.svg" alt="" width="40" height="40" /><span><span lang="hi">{site.nameHindi}</span> Vijay Enterprises</span>
+      </p>
       <p class="muted">Lustre colours, liquid gold and ceramic colours for glass and ceramic decoration. {site.tagline}.</p>
       <a class="btn foot-cta" href={waLink()} target="_blank" rel="noopener">
         WhatsApp us <span class="btn-icon"><Icon name="ph:whatsapp-logo" aria-hidden="true" /></span>
@@ -61,6 +63,9 @@ const year = new Date().getFullYear();
   }
 
   .foot-name {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     font-family: var(--font-display);
     font-size: 1.8rem;
     font-weight: 600;

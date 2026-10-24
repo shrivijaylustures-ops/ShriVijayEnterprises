@@ -1,7 +1,5 @@
 ---
-import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
-import emblem from '../assets/brand/emblem.png';
 import site from '../data/site.json';
 import { lines } from '../data/lines';
 import { waLink } from '../lib/links';
@@ -14,8 +12,8 @@ const current = (href: string) => (path === href.replace('.html', '') ? 'page' :
 <header class="nav" data-nav>
   <div class="wrap nav-row">
     <a class="brand" href="/" aria-label={`${site.name}, home`}>
-      <Image src={emblem} alt="" width={44} height={44} loading="eager" class="brand-mark" />
-      <span class="brand-word">
+      <img src="/brand/emblem.svg" alt="" width="40" height="40" class="brand-mark" />
+      <span class="brand-word" translate="no">
         <span class="brand-shri" lang="hi">{site.nameHindi}</span> Vijay Enterprises
       </span>
     </a>
@@ -39,9 +37,16 @@ const current = (href: string) => (path === href.replace('.html', '') ? 'page' :
           </div>
         </div>
       </div>
+      <a class="nav-link" href="/gallery.html" aria-current={current('/gallery.html')}>Gallery</a>
       <a class="nav-link" href="/aboutus.html" aria-current={current('/aboutus.html')}>About us</a>
       <a class="nav-link" href="/contact.html" aria-current={current('/contact.html')}>Contact us</a>
     </nav>
+
+    <button class="theme-btn" type="button" data-theme-cycle aria-label="Colour theme: follows your device">
+      <Icon name="ph:circle-half-tilt" class="t-auto" aria-hidden="true" />
+      <Icon name="ph:sun" class="t-light" aria-hidden="true" />
+      <Icon name="ph:moon" class="t-dark" aria-hidden="true" />
+    </button>
 
     <a class="btn nav-cta" href={waLink()} target="_blank" rel="noopener">
       WhatsApp us <span class="btn-icon"><Icon name="ph:whatsapp-logo" aria-hidden="true" /></span>
@@ -57,7 +62,13 @@ const current = (href: string) => (path === href.replace('.html', '') ? 'page' :
   <div class="menu" id="menu" data-menu hidden>
   <nav class="wrap menu-inner" aria-label="Mobile">
     {
-      [...lines.map((l) => ({ href: l.href, label: l.short })), { href: '/aboutus.html', label: 'About us' }, { href: '/contact.html', label: 'Contact us' }].map(
+      [
+        ...lines.map((l) => ({ href: l.href, label: l.short })),
+        { href: '/products.html', label: 'All products' },
+        { href: '/gallery.html', label: 'Gallery' },
+        { href: '/aboutus.html', label: 'About us' },
+        { href: '/contact.html', label: 'Contact us' },
+      ].map(
         (item, i) => (
           <a href={item.href} class="menu-link" style={`--i:${i}`} aria-current={current(item.href)}>
             {item.label}
@@ -65,9 +76,14 @@ const current = (href: string) => (path === href.replace('.html', '') ? 'page' :
         ),
       )
     }
-    <a class="btn menu-cta" href={waLink()} target="_blank" rel="noopener" style="--i:7">
+    <a class="btn menu-cta" href={waLink()} target="_blank" rel="noopener" style="--i:9">
       WhatsApp us <span class="btn-icon"><Icon name="ph:whatsapp-logo" aria-hidden="true" /></span>
     </a>
+    <div class="menu-theme" role="group" aria-label="Colour theme" style="--i:10">
+      <button type="button" data-theme-set="auto">Device</button>
+      <button type="button" data-theme-set="light">Light</button>
+      <button type="button" data-theme-set="dark">Dark</button>
+    </div>
   </nav>
 </div>
 
@@ -106,6 +122,32 @@ const current = (href: string) => (path === href.replace('.html', '') ? 'page' :
     }
   });
 
+  // Colour theme: auto (device setting), light or dark. Saved per visitor.
+  type Mode = 'auto' | 'light' | 'dark';
+  const root = document.documentElement;
+  const cycleBtn = document.querySelector<HTMLButtonElement>('[data-theme-cycle]')!;
+  const setBtns = document.querySelectorAll<HTMLButtonElement>('[data-theme-set]');
+  const labels: Record<Mode, string> = { auto: 'follows your device', light: 'light', dark: 'dark' };
+  const bg: Record<'light' | 'dark', string> = { light: '#f7f4ee', dark: '#14120f' };
+  const current = (): Mode => (root.dataset.theme === 'light' || root.dataset.theme === 'dark' ? root.dataset.theme : 'auto');
+  const apply = (mode: Mode) => {
+    if (mode === 'auto') delete root.dataset.theme;
+    else root.dataset.theme = mode;
+    try {
+      mode === 'auto' ? localStorage.removeItem('sve-theme') : localStorage.setItem('sve-theme', mode);
+    } catch {}
+    document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]').forEach((m) => {
+      m.content = mode === 'auto' ? (m.media.includes('dark') ? bg.dark : bg.light) : bg[mode];
+    });
+    cycleBtn.dataset.mode = mode;
+    cycleBtn.setAttribute('aria-label', `Colour theme: ${labels[mode]}. Change theme`);
+    setBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.themeSet === mode)));
+  };
+  apply(current());
+  const order: Mode[] = ['auto', 'light', 'dark'];
+  cycleBtn.addEventListener('click', () => apply(order[(order.indexOf(current()) + 1) % order.length]));
+  setBtns.forEach((b) => b.addEventListener('click', () => apply(b.dataset.themeSet as Mode)));
+
   // Hairline under the nav once the page has scrolled (sentinel, not a scroll listener).
   const sentinel = document.createElement('div');
   sentinel.style.cssText = 'position:absolute;top:8px;height:1px;width:1px';
@@ -137,6 +179,7 @@ const current = (href: string) => (path === href.replace('.html', '') ? 'page' :
   }
 
   .brand {
+    min-height: 44px;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -334,7 +377,79 @@ const current = (href: string) => (path === href.replace('.html', '') ? 'page' :
     transform: rotate(-45deg);
   }
 
+  .theme-btn {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    flex: none;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    transition:
+      background-color 0.3s var(--ease),
+      transform 0.3s var(--ease);
+  }
+
+  .theme-btn:hover {
+    background: var(--gold-soft);
+  }
+
+  .theme-btn:active {
+    transform: scale(0.96);
+  }
+
+  .theme-btn :global(svg) {
+    width: 20px;
+    height: 20px;
+    display: none;
+  }
+
+  .theme-btn:not([data-mode]) :global(.t-auto),
+  .theme-btn[data-mode='auto'] :global(.t-auto),
+  .theme-btn[data-mode='light'] :global(.t-light),
+  .theme-btn[data-mode='dark'] :global(.t-dark) {
+    display: block;
+  }
+
+  .menu-theme {
+    display: flex;
+    gap: 6px;
+    margin-top: 20px;
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 0.6s var(--ease),
+      transform 0.6s var(--ease);
+    transition-delay: 0.5s;
+  }
+
+  .menu:global(.is-open) .menu-theme {
+    opacity: 1;
+    transform: none;
+  }
+
+  .menu-theme button {
+    flex: 1;
+    min-height: 44px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    color: var(--ink);
+    font: 500 0.95rem var(--font-body);
+    cursor: pointer;
+  }
+
+  .menu-theme button[aria-pressed='true'] {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+
   .menu {
+  overscroll-behavior: contain;
     position: fixed;
     inset: var(--nav-h) 0 0;
     z-index: var(--z-menu);
@@ -398,8 +513,9 @@ const current = (href: string) => (path === href.replace('.html', '') ? 'page' :
 
   @media (max-width: 960px) {
     .nav-links,
-    .nav-cta {
-      display: none;
+    .nav-cta,
+    .theme-btn {
+      display: none !important;
     }
     .burger {
       display: block;

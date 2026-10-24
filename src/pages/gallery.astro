@@ -1,23 +1,456 @@
 ---
+import { getImage } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
 import Base from '../layouts/Base.astro';
+import gallery from '../data/gallery.json';
+import { productImage } from '../lib/images';
+
+// Photos laid out like prints on a worktable. Thumbnails are small WebP files; the large version loads only when opened.
+const categories = [
+  { id: 'all', label: 'All' },
+  { id: 'gold', label: 'Gold & platinum' },
+  { id: 'lustre', label: 'Lustres' },
+  { id: 'glass', label: 'On glass' },
+  { id: 'ceramic', label: 'On ceramic' },
+  { id: 'packing', label: 'Powders & packing' },
+];
+
+const photos = (
+  await Promise.all(
+    gallery.map(async (g) => {
+      const src = productImage(g.image);
+      if (!src) return null;
+      const w = (n: number) => Math.min(n, src.width);
+      const [s, m, full] = await Promise.all([
+        getImage({ src, width: w(400), format: 'webp', quality: 72 }),
+        getImage({ src, width: w(720), format: 'webp', quality: 72 }),
+        getImage({ src, width: w(1600), format: 'webp', quality: 82 }),
+      ]);
+      return { ...g, small: s.src, medium: m.src, full: full.src, width: src.width, height: src.height };
+    }),
+  )
+).filter((p): p is NonNullable<typeof p> => p !== null);
+const count = (id: string) => (id === 'all' ? photos.length : photos.filter((p) => p.category === id).length);
 ---
 
-<Base title="Gallery" description="Finished ceramic and glassware decorated with our lustre colours, liquid gold and ceramic colours.">
-  <section class="wrap holder">
+<Base title="Gallery" description="Test pieces, fired ware and packing from our works in Agra: liquid gold and platinum, lustre colours, glass and ceramic colours.">
+  <section class="wrap head">
     <h1 data-reveal>Gallery</h1>
-    <p class="lede" data-reveal style="--i:1">
-      We are collecting photographs of finished ware decorated with our colours. Until then, every product page shows the shades themselves.
-    </p>
-    <a class="btn" href="/products.html" data-reveal style="--i:2">View products <span class="btn-icon"><Icon name="ph:arrow-up-right" aria-hidden="true" /></span></a>
+    <p class="lede" data-reveal style="--i:1">Test pieces, fired ware and packing from our works in Agra. Tap a photo to see it large.</p>
+    <div class="filters" role="group" aria-label="Show photos of" data-reveal style="--i:2">
+      {
+        categories.map((c) => (
+          <button type="button" class="chip" data-cat={c.id} aria-pressed={c.id === 'all' ? 'true' : 'false'}>
+            {c.label} <span class="num">{count(c.id)}</span>
+          </button>
+        ))
+      }
+    </div>
   </section>
+
+  <section class="wrap worktable">
+    <ul class="prints" data-prints>
+      {
+        photos.map((p, i) => (
+          <li class="print" data-cat={p.category}>
+            <button
+              type="button"
+              class="print-btn"
+              data-index={i}
+              data-full={p.full}
+              data-caption={p.caption}
+              aria-label={`Open photo: ${p.caption}`}
+            >
+              <img
+                src={p.small}
+                srcset={`${p.small} 400w, ${p.medium} 720w`}
+                sizes="(max-width: 640px) 48vw, (max-width: 1100px) 32vw, 24vw"
+                alt={p.caption}
+                width={p.width}
+                height={p.height}
+                loading={i < 6 ? 'eager' : 'lazy'}
+                decoding="async"
+              />
+            </button>
+            <span class="print-cap">{p.caption}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <dialog class="lightbox" data-lightbox aria-label="Photo viewer">
+    <figure class="lb-figure" data-lb-figure>
+      <figcaption class="lb-cap">
+        <span data-lb-cap></span>
+        <span class="lb-count num" data-lb-count></span>
+      </figcaption>
+    </figure>
+    <button type="button" class="lb-btn lb-close" data-lb-close aria-label="Close photo">
+      <Icon name="ph:x" aria-hidden="true" />
+    </button>
+    <button type="button" class="lb-btn lb-prev" data-lb-prev aria-label="Previous photo">
+      <Icon name="ph:arrow-left" aria-hidden="true" />
+    </button>
+    <button type="button" class="lb-btn lb-next" data-lb-next aria-label="Next photo">
+      <Icon name="ph:arrow-right" aria-hidden="true" />
+    </button>
+  </dialog>
 </Base>
 
+<script>
+  const prints = [...document.querySelectorAll<HTMLLIElement>('.print')];
+  const buttons = [...document.querySelectorAll<HTMLButtonElement>('[data-cat]')].filter((b) => b.tagName === 'BUTTON');
+
+  // Category filter, kept in the URL (?cat=lustre) so a view can be shared.
+  const setCat = (cat: string) => {
+    if (!buttons.some((b) => b.dataset.cat === cat)) cat = 'all';
+    buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.cat === cat)));
+    prints.forEach((p) => (p.hidden = cat !== 'all' && p.dataset.cat !== cat));
+    const url = new URL(location.href);
+    cat === 'all' ? url.searchParams.delete('cat') : url.searchParams.set('cat', cat);
+    history.replaceState(null, '', url);
+  };
+  buttons.forEach((b) => b.addEventListener('click', () => setCat(b.dataset.cat!)));
+  setCat(new URLSearchParams(location.search).get('cat') ?? 'all');
+
+  // Lightbox on a native <dialog>: Esc closes, arrow keys and swipes move between visible photos.
+  const dlg = document.querySelector<HTMLDialogElement>('[data-lightbox]')!;
+  // The large image element is created on first open, so the page carries no empty <img>.
+  let img: HTMLImageElement | null = null;
+  const lbImg = () => {
+    if (!img) {
+      img = document.createElement('img');
+      img.className = 'lb-img';
+      img.decoding = 'async';
+      dlg.querySelector('[data-lb-figure]')!.prepend(img);
+    }
+    return img;
+  };
+  const cap = dlg.querySelector<HTMLElement>('[data-lb-cap]')!;
+  const counter = dlg.querySelector<HTMLElement>('[data-lb-count]')!;
+  let current = 0;
+  const visible = () => prints.filter((p) => !p.hidden).map((p) => p.querySelector<HTMLButtonElement>('.print-btn')!);
+  const show = (btn: HTMLButtonElement) => {
+    const list = visible();
+    current = list.indexOf(btn);
+    const el = lbImg();
+    el.src = btn.dataset.full!;
+    el.alt = btn.dataset.caption!;
+    cap.textContent = btn.dataset.caption!;
+    counter.textContent = `${current + 1} / ${list.length}`;
+  };
+  const step = (d: number) => {
+    const list = visible();
+    show(list[(current + d + list.length) % list.length]);
+  };
+  document.querySelectorAll<HTMLButtonElement>('.print-btn').forEach((btn) =>
+    btn.addEventListener('click', () => {
+      show(btn);
+      dlg.showModal();
+    }),
+  );
+  dlg.querySelector('[data-lb-close]')!.addEventListener('click', () => dlg.close());
+  dlg.querySelector('[data-lb-prev]')!.addEventListener('click', () => step(-1));
+  dlg.querySelector('[data-lb-next]')!.addEventListener('click', () => step(1));
+  dlg.addEventListener('click', (e) => e.target === dlg && dlg.close());
+  dlg.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') step(1);
+    if (e.key === 'ArrowLeft') step(-1);
+  });
+  let startX = 0;
+  dlg.addEventListener('pointerdown', (e) => (startX = e.clientX));
+  dlg.addEventListener('pointerup', (e) => {
+    const dx = e.clientX - startX;
+    if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1);
+  });
+  dlg.addEventListener('close', () => {
+    img?.remove();
+    img = null;
+    visible()[current]?.focus();
+  });
+</script>
+
 <style>
-  .holder {
+  .head {
     display: grid;
+    gap: 18px;
     justify-items: start;
-    gap: 24px;
-    padding-block: clamp(64px, 10vw, 140px);
+    padding-block: clamp(40px, 6vw, 80px) clamp(24px, 3vw, 40px);
+  }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 18px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    color: var(--ink-2);
+    font: 500 0.95rem/1 var(--font-body);
+    cursor: pointer;
+    transition:
+      background-color 0.3s var(--ease),
+      color 0.3s var(--ease),
+      border-color 0.3s var(--ease);
+  }
+
+  .chip:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+
+  .chip[aria-pressed='true'] {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--bg);
+  }
+
+  .chip .num {
+    font-size: 0.8rem;
+    opacity: 0.7;
+  }
+
+  /* The worktable: a masonry of prints, each a little askew. */
+  .prints {
+    list-style: none;
+    margin: 0;
+    padding: 12px 0 0;
+    columns: 4 240px;
+    column-gap: 32px;
+  }
+
+  .print {
+    --r: -1.4deg;
+    position: relative;
+    break-inside: avoid;
+    margin: 0 0 36px;
+    padding: 10px 10px 14px;
+    background: var(--surface);
+    border-radius: 4px;
+    box-shadow:
+      0 1px 2px rgb(0 0 0 / 0.12),
+      0 14px 30px -16px rgb(0 0 0 / 0.45);
+    transform: rotate(var(--r));
+    transition:
+      transform 0.5s var(--ease),
+      box-shadow 0.5s var(--ease);
+  }
+
+  .print:nth-child(4n + 2) {
+    --r: 1.2deg;
+  }
+  .print:nth-child(4n + 3) {
+    --r: -0.5deg;
+  }
+  .print:nth-child(4n) {
+    --r: 1.8deg;
+  }
+
+  /* A strip of tape on every third print. */
+  .print:nth-child(3n + 1)::before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    width: 84px;
+    height: 24px;
+    transform: translateX(-50%) rotate(-3deg);
+    background: color-mix(in srgb, var(--gold) 30%, rgb(255 255 255 / 0.55));
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+    opacity: 0.85;
+    z-index: 1;
+  }
+
+  .print:hover,
+  .print:focus-within {
+    transform: rotate(0deg) translateY(-6px) scale(1.02);
+    box-shadow:
+      0 2px 4px rgb(0 0 0 / 0.12),
+      0 26px 48px -18px rgb(0 0 0 / 0.55);
+    z-index: 2;
+  }
+
+  .print[hidden] {
+    display: none;
+  }
+
+  .print-btn {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: var(--surface-2);
+    cursor: zoom-in;
+  }
+
+  .print-btn img {
+    width: 100%;
+    height: auto;
+  }
+
+  .print-cap {
+    display: block;
+    margin-top: 10px;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.12rem;
+    line-height: 1.25;
+    color: var(--ink-2);
+  }
+
+  /* Lightbox */
+  .lightbox {
+    width: 100vw;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: rgb(12 10 8 / 0.94);
+    color: #f1ece2;
+    overscroll-behavior: contain;
+  }
+
+  .lightbox::backdrop {
+    background: rgb(12 10 8 / 0.6);
+  }
+
+  .lightbox[open] {
+    display: grid;
+    place-items: center;
+  }
+
+  .lb-figure {
+    margin: 0;
+    display: grid;
+    justify-items: center;
+    gap: 14px;
+    padding: 72px 72px 24px;
+  }
+
+  .lightbox :global(.lb-img) {
+    max-width: min(1200px, calc(100vw - 160px));
+    max-height: calc(100dvh - 170px);
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 6px;
+    background: #1c1915;
+  }
+
+  .lb-cap {
+    display: flex;
+    gap: 16px;
+    align-items: baseline;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.3rem;
+  }
+
+  .lb-count {
+    font-family: var(--font-body);
+    font-style: normal;
+    font-size: 0.85rem;
+    opacity: 0.7;
+  }
+
+  .lb-btn {
+    position: fixed;
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 999px;
+    border: 1px solid rgb(241 236 226 / 0.3);
+    background: rgb(241 236 226 / 0.08);
+    color: #f1ece2;
+    cursor: pointer;
+    transition: background-color 0.3s var(--ease);
+  }
+
+  .lb-btn:hover {
+    background: rgb(241 236 226 / 0.2);
+  }
+
+  .lb-btn :global(svg) {
+    width: 22px;
+    height: 22px;
+  }
+
+  .lb-close {
+    top: calc(16px + env(safe-area-inset-top));
+    right: calc(16px + env(safe-area-inset-right));
+  }
+
+  .lb-prev,
+  .lb-next {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .lb-prev {
+    left: 16px;
+  }
+
+  .lb-next {
+    right: 16px;
+  }
+
+  @media (max-width: 640px) {
+    .prints {
+      columns: 2;
+      column-gap: 16px;
+    }
+    .print {
+      padding: 6px 6px 10px;
+      margin-bottom: 22px;
+      transform: rotate(calc(var(--r) / 2));
+    }
+    .print-cap {
+      font-size: 0.98rem;
+    }
+    .print:nth-child(3n + 1)::before {
+      width: 56px;
+      height: 18px;
+      top: -9px;
+    }
+    .lb-figure {
+      padding: 72px 12px 96px;
+    }
+    .lightbox :global(.lb-img) {
+      max-width: calc(100vw - 24px);
+      max-height: calc(100dvh - 210px);
+    }
+    .lb-prev,
+    .lb-next {
+      top: auto;
+      bottom: calc(20px + env(safe-area-inset-bottom));
+      transform: none;
+    }
+    .lb-prev {
+      left: calc(50% - 64px);
+    }
+    .lb-next {
+      right: calc(50% - 64px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .print,
+    .print:hover,
+    .print:focus-within {
+      transform: none;
+    }
   }
 </style>

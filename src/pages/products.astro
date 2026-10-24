@@ -10,23 +10,26 @@ import ceramic from '../data/ceramic.json';
 import luster from '../data/luster.json';
 import gold from '../data/gold.json';
 
-const ranges: { id: LineId; img?: ImageMetadata; count: number; points: string[] }[] = [
+const ranges: { id: LineId; img?: ImageMetadata; count: number; unit?: string; points: string[] }[] = [
   {
     id: 'gold',
     img: goldImg,
-    count: gold.length,
+    count: new Set(gold.map((g) => g.name)).size,
+    unit: 'products',
     points: ['7%, 10%, 12% and custom purity', 'Glass 500 to 600°C, ceramic 760 to 830°C', 'Rich shine, streak-free application, high durability after firing'],
   },
   {
     id: 'luster',
     img: lustreImg,
     count: luster.length,
+    unit: 'shades',
     points: ['Glassware 500 to 600°C', 'Ceramicware third firing 760 to 830°C', 'Stable viscosity, high coverage, consistent finish'],
   },
   {
     id: 'ceramic',
     img: ceramicImg,
     count: ceramic.length,
+    unit: 'shades',
     points: ['Glass colours 500 to 600°C', 'On-glaze third firing 760 to 830°C, sharp shades and high gloss', 'Imported for purity and firing consistency'],
   },
   {
@@ -65,7 +68,7 @@ const ranges: { id: LineId; img?: ImageMetadata; count: number; points: string[]
               <div class="range-body">
                 <div class="range-top">
                   <h2>{line.title}</h2>
-                  <span class="range-count num">{r.count ? `${r.count} listed` : 'Being added'}</span>
+                  <span class="range-count num">{r.count ? `${r.count} ${r.unit}` : 'Being added'}</span>
                 </div>
                 <p class="range-summary">{line.summary}</p>
                 <ul class="range-points">

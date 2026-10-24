@@ -1,11 +1,12 @@
 ---
 import CataloguePage from '../components/CataloguePage.astro';
-import items from '../data/luster.json';
 ---
 
 <CataloguePage
   line="luster"
-  items={items}
   description="Liquid lustre colours for ceramic and glass: bronze, mother of pearl, steel grey, rose pink and more, including gold-based lustres. Made in Agra since 1975."
-  firingFor={(i) => (i.range === 'medium' ? 'Oil base' : '750 to 850°C')}
+  notes={[
+    'For glassware, 500 to 600°C: bright, reflective finish with clean firing.',
+    'For ceramicware, third firing 760 to 830°C: metallic sheen for decorative ware, giftware and tableware.',
+  ]}
 />

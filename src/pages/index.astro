@@ -10,18 +10,30 @@ import goldCup from '../assets/resources/Gold/LiquidGoldCup.jpg';
 import lustreImg from '../assets/resources/Luster/Pink.jpg';
 import ceramicImg from '../assets/resources/Ceramic/CeramicColor.png';
 import founder from '../assets/resources/base-image/umesh.jpg';
+import ShadeCard from '../components/ShadeCard.astro';
+import packets from '../assets/resources/Ceramic/Ceramic Colours(7).jpg';
+import bowls from '../assets/resources/Ceramic/Ceramic Colours(6).jpg';
+import platinum from '../assets/resources/Gold/Liquid Platinum(1).jpg';
+import blackMug from '../assets/resources/gallery/black-lustre-mug.jpg';
 
 // Firing guide: where each range sits on the kiln temperature scale.
 const scale = { min: 450, max: 1200 };
 const pos = (t: number) => ((t - scale.min) / (scale.max - scale.min)) * 100;
 const firing = [
-  { label: 'Glass colours', min: 500, max: 560, href: '/ceramic.html' },
+  { label: 'Glass colours', min: 500, max: 560, href: '/ceramic.html?type=glass' },
   { label: 'Liquid gold & platinum', min: 500, max: 830, href: '/gold.html' },
   { label: 'Lustre colours', min: 750, max: 850, href: '/luster.html' },
-  { label: 'On-glaze ceramic colours', min: 760, max: 830, href: '/ceramic.html' },
+  { label: 'On-glaze ceramic colours', min: 760, max: 830, href: '/ceramic.html?type=on-glaze' },
   { label: 'In-glaze colours', min: 1050, max: 1150, href: '/inglaze.html' },
 ];
 const ticks = [500, 600, 700, 800, 900, 1000, 1100];
+
+const works = [
+  { img: packets, alt: 'Sample packets of ceramic colours, each labelled with shade and code', caption: 'Sample packets, labelled by shade and code' },
+  { img: bowls, alt: 'Bowls fired in blue, orange, green, yellow, black and white ceramic colours', caption: 'Bowls fired in our ceramic colours' },
+  { img: platinum, alt: 'A glass piece with bands of liquid platinum, held in a hand', caption: 'Liquid platinum bands on glass' },
+  { img: blackMug, alt: 'A mug decorated with black lustre, held in a hand', caption: 'Black lustre on a mug' },
+];
 ---
 
 <Base
@@ -103,6 +115,15 @@ const ticks = [500, 600, 700, 800, 900, 1000, 1100];
     </div>
   </section>
 
+  <!-- Shade card: real product photos, each one opens its catalogue entry -->
+  <section class="wrap section shades" aria-labelledby="shades-h">
+    <div class="sec-head">
+      <h2 id="shades-h" data-reveal>Our shade card</h2>
+      <p class="lede" data-reveal style="--i:1">Real photos of our powders, lustre tests and gold. Tap any shade to see its code, firing range and stock.</p>
+    </div>
+    <ShadeCard />
+  </section>
+
   <!-- Firing guide: a real temperature scale, the most useful thing a buyer can check -->
   <section class="firing-sec" aria-labelledby="firing-h">
     <div class="wrap section">
@@ -130,6 +151,28 @@ const ticks = [500, 600, 700, 800, 900, 1000, 1100];
           </div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- From our works: real photos; a swipeable strip on phones -->
+  <section class="wrap section works-sec" aria-labelledby="works-h">
+    <div class="sec-head sec-head-row">
+      <h2 id="works-h" data-reveal>From our works</h2>
+      <a class="link-arrow" href="/gallery.html" data-reveal>See the gallery <Icon name="ph:arrow-right" aria-hidden="true" /></a>
+    </div>
+    <div class="works" tabindex="0" aria-label="Photos from our works">
+      {
+        works.map((w, i) => (
+          <figure class="work" data-reveal style={`--i:${i}`}>
+            <div class="bezel">
+              <div class="plate">
+                <Image src={w.img} alt={w.alt} widths={[400, 640, 900]} sizes="(max-width: 640px) 80vw, (max-width: 1100px) 45vw, 25vw" />
+              </div>
+            </div>
+            <figcaption>{w.caption}</figcaption>
+          </figure>
+        ))
+      }
     </div>
   </section>
 
@@ -169,6 +212,89 @@ const ticks = [500, 600, 700, 800, 900, 1000, 1100];
 </Base>
 
 <style>
+  /* Section heading used by the shade card and works sections */
+  .sec-head {
+    display: grid;
+    gap: 14px;
+    margin-bottom: clamp(28px, 4vw, 48px);
+  }
+
+  .sec-head h2 {
+    max-width: 20ch;
+  }
+
+  .sec-head-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+  }
+
+  .shades {
+    padding-top: 0;
+  }
+
+  /* From our works */
+  .works {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .work {
+    margin: 0;
+  }
+
+  .work:nth-child(even) {
+    margin-top: 40px;
+  }
+
+  .work .plate :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    transition: transform 1.2s var(--ease);
+  }
+
+  .work:hover .plate :global(img) {
+    transform: scale(1.04);
+  }
+
+  .work figcaption {
+    margin-top: 12px;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.15rem;
+    color: var(--ink-2);
+  }
+
+  @media (max-width: 1100px) {
+    .works {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 640px) {
+    .works {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      margin-inline: calc(var(--gutter) * -1);
+      padding-inline: var(--gutter);
+      padding-bottom: 8px;
+      scrollbar-width: none;
+    }
+    .work {
+      flex: 0 0 80%;
+      scroll-snap-align: start;
+    }
+    .work:nth-child(even) {
+      margin-top: 0;
+    }
+  }
+
   /* Hero */
   .hero {
     display: grid;
@@ -390,6 +516,9 @@ const ticks = [500, 600, 700, 800, 900, 1000, 1100];
   }
 
   .bar-label {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
     font-weight: 500;
     text-decoration: none;
   }

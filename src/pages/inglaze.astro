@@ -1,11 +1,296 @@
 ---
+// In-glaze colours. Until shades are added to src/data/inglaze.json this is a placeholder page;
+// once the file has entries it becomes a normal catalogue page.
+import { Icon } from 'astro-icon/components';
+import Base from '../layouts/Base.astro';
 import CataloguePage from '../components/CataloguePage.astro';
+import OtherRanges from '../components/OtherRanges.astro';
+import { lineById } from '../data/lines';
+import { waLink } from '../lib/links';
 import items from '../data/inglaze.json';
+import site from '../data/site.json';
+
+const line = lineById.inglaze;
+const description = 'High-temperature in-glaze ceramic colours (1050 to 1150°C) that fuse into the glaze for scratch resistance and lasting colour depth.';
+const ask = waLink('Hello, I would like to enquire about in-glaze colours (1050 to 1150°C). Shade or code needed: ');
 ---
 
-<CataloguePage
-  line="inglaze"
-  items={items}
-  description="High-temperature in-glaze ceramic colours (1050 to 1150°C) that fuse into the glaze for scratch resistance and lasting colour depth."
-  firingFor={() => '1050 to 1150°C'}
-/>
+{
+  items.length > 0 ? (
+    <CataloguePage line="inglaze" description={description} />
+  ) : (
+    <Base title={line.title} description={description}>
+      <section class="wrap head">
+        <a class="back" href="/products.html">
+          <Icon name="ph:arrow-left" aria-hidden="true" /> All products
+        </a>
+        <span class="status" data-reveal>
+          <Icon name="ph:hourglass-medium" aria-hidden="true" /> Range being added
+        </span>
+        <h1 data-reveal style="--i:1">{line.title}</h1>
+        <p class="lede" data-reveal style="--i:2">
+          High-temperature colours that fuse into the glaze, for lasting colour depth, scratch resistance and thermal stability. We are
+          photographing and listing the range now; you can already ask us for shades.
+        </p>
+        <div class="ctas" data-reveal style="--i:3">
+          <a class="btn" href={ask} target="_blank" rel="noopener">
+            Ask for a shade <span class="btn-icon"><Icon name="ph:whatsapp-logo" aria-hidden="true" /></span>
+          </a>
+          <a class="link-arrow" href={`tel:${site.phones[0].tel}`}>
+            Call {site.phones[0].display} <Icon name="ph:arrow-right" aria-hidden="true" />
+          </a>
+        </div>
+      </section>
+
+      <section class="wrap section compare" aria-labelledby="compare-h">
+        <h2 id="compare-h" data-reveal>Where the colour sits</h2>
+        <div class="diagrams">
+          <figure class="diagram" data-reveal>
+            <div class="layers" aria-hidden="true">
+              <span class="layer colour on">Colour</span>
+              <span class="layer glaze">Glaze</span>
+              <span class="layer body">Ceramic body</span>
+            </div>
+            <figcaption>
+              <strong>On-glaze</strong>
+              <span class="num">Third firing, 760 to 830°C</span>
+              Colour fires onto the surface of the glaze. Sharp shades and high gloss.
+              <a class="link-arrow" href="/ceramic.html?type=on-glaze">
+                See on-glaze colours <Icon name="ph:arrow-right" aria-hidden="true" />
+              </a>
+            </figcaption>
+          </figure>
+          <figure class="diagram" data-reveal style="--i:1">
+            <div class="layers" aria-hidden="true">
+              <span class="layer glaze in">
+                <span class="layer colour sunk">Colour</span>
+                Glaze
+              </span>
+              <span class="layer body">Ceramic body</span>
+            </div>
+            <figcaption>
+              <strong>In-glaze</strong>
+              <span class="num">1050 to 1150°C</span>
+              Colour sinks into the glaze layer as it melts, so it is protected by the glaze itself.
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="wrap section ask" aria-labelledby="ask-h">
+        <div class="ask-inner" data-reveal>
+          <div>
+            <h2 id="ask-h">What to send us</h2>
+            <p class="lede">So we can confirm a shade in one reply.</p>
+          </div>
+          <ol class="ask-list">
+            <li>The shade code, or a photo or fired sample of the colour you want</li>
+            <li>Your body and glaze, and your firing temperature</li>
+            <li>The quantity you need</li>
+          </ol>
+          <a class="btn" href={ask} target="_blank" rel="noopener">
+            Ask for a shade <span class="btn-icon"><Icon name="ph:whatsapp-logo" aria-hidden="true" /></span>
+          </a>
+        </div>
+      </section>
+
+      <section class="wrap more">
+        <h2 class="more-h">Other ranges</h2>
+        <OtherRanges exclude="inglaze" />
+      </section>
+    </Base>
+  )
+}
+
+<style>
+  .head {
+    display: grid;
+    justify-items: start;
+    gap: 20px;
+    padding-top: clamp(32px, 5vw, 64px);
+  }
+
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    font-size: 0.92rem;
+    color: var(--muted);
+    text-decoration: none;
+  }
+
+  .back :global(svg) {
+    width: 16px;
+    height: 16px;
+  }
+
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: var(--gold-soft);
+    color: var(--gold-ink);
+    font-size: 0.88rem;
+    font-weight: 500;
+  }
+
+  .status :global(svg) {
+    width: 18px;
+    height: 18px;
+  }
+
+  .head h1 {
+    max-width: 14ch;
+  }
+
+  .ctas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px 24px;
+  }
+
+  .compare h2 {
+    margin-bottom: clamp(24px, 3vw, 40px);
+  }
+
+  .diagrams {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  .diagram {
+    margin: 0;
+    display: grid;
+    gap: 20px;
+    padding: clamp(20px, 3vw, 32px);
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+
+  .layers {
+    display: grid;
+    gap: 0;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  .layer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 12px;
+  }
+
+  .colour {
+    background: #2f5ea8;
+    color: #f7f4ee;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .colour.on {
+    min-height: 30px;
+  }
+
+  .glaze {
+    position: relative;
+    min-height: 64px;
+    background: color-mix(in srgb, var(--gold) 18%, var(--surface-2));
+    color: var(--ink-2);
+  }
+
+  .glaze.in {
+    flex-direction: column;
+    gap: 6px;
+    min-height: 94px;
+    padding: 10px 12px;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .colour.sunk {
+    width: 100%;
+    min-height: 30px;
+    border-radius: 6px;
+    opacity: 0.9;
+  }
+
+  .body {
+    min-height: 54px;
+    background: var(--surface-2);
+    color: var(--muted);
+    border-radius: 0 0 8px 8px;
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+
+  .diagram figcaption {
+    display: grid;
+    gap: 6px;
+    color: var(--ink-2);
+  }
+
+  .diagram strong {
+    font-family: var(--font-display);
+    font-size: 1.7rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .diagram .num {
+    color: var(--gold-ink);
+    font-weight: 500;
+  }
+
+  .diagram .link-arrow {
+    justify-self: start;
+    margin-top: 6px;
+  }
+
+  .ask-inner {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr auto;
+    gap: 24px 40px;
+    align-items: center;
+    padding: clamp(24px, 4vw, 48px);
+    border-radius: calc(var(--radius) + 8px);
+    background:
+      radial-gradient(70% 120% at 0% 0%, var(--gold-soft), transparent 70%),
+      var(--surface);
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+
+  .ask-list {
+    margin: 0;
+    padding-left: 22px;
+    display: grid;
+    gap: 10px;
+    color: var(--ink-2);
+  }
+
+  .more {
+    padding-bottom: 24px;
+  }
+
+  .more-h {
+    font-size: 1.9rem;
+    margin-bottom: 16px;
+  }
+
+  @media (max-width: 960px) {
+    .ask-inner {
+      grid-template-columns: 1fr;
+      justify-items: start;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .diagrams {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
