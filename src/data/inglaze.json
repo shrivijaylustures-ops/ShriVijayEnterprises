@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "name": "Red",
+    "code": "SV 1154",
+    "hex": "#D10018",
+    "image": "resources/InGlaze/sv-1154-red-d9f96a.jpg",
+    "stock": "in",
+    "range": "inglaze"
+  }
+]
