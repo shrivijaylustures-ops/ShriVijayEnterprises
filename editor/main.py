@@ -7,6 +7,7 @@ Options for testing:
   --api URL          talk to a different GitHub API (used by the automated tests)
   --port N           fixed port (default: any free port)
   --no-window        do not open a window; print the address instead
+  --screen WxH       open the window at this size, to test how it looks on a smaller screen (e.g. 1093x614)
   --self-test        check this build works (used when building the .exe), then exit
 """
 
@@ -64,6 +65,7 @@ def main() -> int:
     ap.add_argument('--api')
     ap.add_argument('--port', type=int, default=0)
     ap.add_argument('--no-window', action='store_true')
+    ap.add_argument('--screen')
     ap.add_argument('--self-test', action='store_true')
     args = ap.parse_args()
 
@@ -107,7 +109,7 @@ def main() -> int:
         except KeyboardInterrupt:
             return 0
 
-    open_window(url, config.dir / 'window')
+    open_window(url, config.dir / 'window', args.screen)
     # Stay alive while the page is alive. The launched Edge process is NOT a reliable signal: Edge
     # often hands the window to an already-running instance and exits at once, which used to shut the
     # server down under an open window ("Failed to fetch"). The page sends a heartbeat every 20s.
