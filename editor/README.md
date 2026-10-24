@@ -24,18 +24,22 @@ GitHub builds it automatically whenever anything in `editor/` changes:
 
 ## 2. Make a GitHub key (once)
 
-1. On GitHub, signed in as an account that can push to the repository, go to
-   **Settings > Developer settings > Personal access tokens > Fine-grained tokens > Generate new token**.
+The repository belongs to the personal account `shrivijaylustures-ops`. GitHub only allows fine-grained keys for
+repositories owned by the account making the key (or an organisation), so make it **while signed in as
+`shrivijaylustures-ops`**:
+
+1. **Settings > Developer settings > Personal access tokens > Fine-grained tokens > Generate new token**.
 2. Name: `SVE Website Editor`. Expiration: the longest allowed (set a reminder to renew it).
-3. Resource owner: the owner of the repository (`shrivijaylustures-ops`).
+3. Resource owner: `shrivijaylustures-ops`.
 4. Repository access: **Only select repositories** > `ShriVijayEnterprises`.
 5. Permissions > Repository permissions: **Contents: Read and write**. (Metadata: Read is added automatically.)
 6. Generate, and copy the key. It is shown only once.
 
-Which account should own the key?
+Changes published with this key are made by `shrivijaylustures-ops`. Cloudflare Pages deploys them; Vercel's free plan
+does not (it only deploys commits by the Vercel project owner), so move hosting first (section 5).
 
-- **On Cloudflare Pages** (recommended, see section 5): any account with write access, for example `shrivijaylustures-ops`.
-- **While the site is still on Vercel's free plan**: it must be the account that owns the Vercel project, otherwise Vercel refuses to deploy the change.
+Stopgap while still on Vercel: a **classic** token from the Vercel owner's GitHub account with only the `public_repo`
+scope. It works, but it can write to every public repository that account can push to, so prefer the key above.
 
 ## 3. Set it up on your dad's computer (once)
 
