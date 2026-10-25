@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "name": "Cobalt Blue",
+    "hex": "#174077",
+    "image": "resources/glass-lined-pigments/cobalt-blue-c13177.jpg",
+    "stock": "in",
+    "range": "glass-lined-pigments"
+  },
+  {
+    "name": "Cobalt Si Blue",
+    "hex": "#66507D",
+    "image": "resources/glass-lined-pigments/cobalt-si-blue-e8ee7e.jpg",
+    "stock": "in",
+    "range": "glass-lined-pigments"
+  }
+]
