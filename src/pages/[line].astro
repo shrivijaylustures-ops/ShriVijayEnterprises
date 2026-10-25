@@ -1,0 +1,15 @@
+---
+// One page per product category in categories.json (/gold, /luster, /ceramic, /inglaze and any added later).
+import CataloguePage from '../components/CataloguePage.astro';
+import InglazePlaceholder from '../components/InglazePlaceholder.astro';
+import { lineById, lines, productsOf } from '../data/lines';
+
+export function getStaticPaths() {
+  return lines.map((l) => ({ params: { line: l.id } }));
+}
+
+const id = Astro.params.line!;
+const line = lineById[id];
+---
+
+{id === 'inglaze' && productsOf(id).length === 0 ? <InglazePlaceholder /> : <CataloguePage line={id} description={line.description} />}

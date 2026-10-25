@@ -1,0 +1,18 @@
+{
+  "name": "sve-editor-android",
+  "private": true,
+  "description": "The SVE Website Editor as an Android app (the same screens as editor/ui, wrapped with Capacitor).",
+  "scripts": {
+    "copy": "rm -rf www && cp -r ../ui www",
+    "sync": "npm run copy && npx cap sync android",
+    "apk": "npm run sync && cd android && ./gradlew assembleRelease && cp app/build/outputs/apk/release/app-release.apk ../SVE-Editor.apk && echo 'APK: editor/android/SVE-Editor.apk'"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/core": "^8.5.3"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.5.3"
+  }
+}

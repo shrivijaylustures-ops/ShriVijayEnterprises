@@ -2,7 +2,7 @@
 // Generated at build time from the same data files the editor changes, so it is always current.
 import type { APIRoute } from 'astro';
 import site from '../data/site.json';
-import { lines } from '../data/lines';
+import { groups, lines } from '../data/lines';
 import { goldProducts, shadesFor } from '../lib/shades';
 
 const SITE = 'https://www.shrivijayenterprises.in';
@@ -21,20 +21,23 @@ export const GET: APIRoute = async () => {
   out.push('- Fired samples are available on request; screen colours are approximate.', '');
 
   out.push('## Product ranges', '');
-  for (const l of lines) out.push(`- [${l.title}](${SITE}${l.href}): ${l.summary} Firing range ${l.firing}.`);
-  out.push('');
+  for (const g of groups) {
+    out.push(`### ${g.title}`, '');
+    for (const l of g.lines) out.push(`- [${l.title}](${SITE}${l.href}): ${l.summary}${l.firing ? ` Firing range ${l.firing}.` : ''}`);
+    out.push('');
+  }
 
   for (const l of lines) {
-    out.push(`## ${l.title} (${l.firing})`, '');
-    if (l.id === 'gold') {
-      for (const p of await goldProducts()) {
+    out.push(`## ${l.title}${l.firing ? ` (${l.firing})` : ''}`, '');
+    if (l.layout === 'grades') {
+      for (const p of await goldProducts(l.id)) {
         out.push(`- ${p.name}: purity ${p.grades.map((g) => `${g.purity}${g.stock !== 'in' ? ` (${STOCK[g.stock]})` : ''}`).join(', ')}`);
       }
     } else {
       const shades = await shadesFor(l.id);
       if (!shades.length) out.push('- Range being added. Ask for shades by WhatsApp or phone.');
       for (const s of shades) {
-        out.push(`- ${s.code ? `${s.code} ` : ''}${s.name}${s.rangeLabel ? `, ${s.rangeLabel.toLowerCase()}` : ''}, ${s.firing}, ${STOCK[s.stock]}`);
+        out.push(`- ${s.code ? `${s.code} ` : ''}${s.name}${s.rangeLabel ? `, ${s.rangeLabel.toLowerCase()}` : ''}${s.firing ? `, ${s.firing}` : ''}, ${STOCK[s.stock]}`);
       }
     }
     out.push('');

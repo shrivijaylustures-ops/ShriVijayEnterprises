@@ -1,11 +1,7 @@
 import { getImage } from 'astro:assets';
-import { lineById, type LineId } from '../data/lines';
+import { lineById, lines, productsOf, temps, type LineId } from '../data/lines';
 import { productImage } from './images';
 import { waLink } from './links';
-import ceramic from '../data/ceramic.json';
-import luster from '../data/luster.json';
-import gold from '../data/gold.json';
-import inglaze from '../data/inglaze.json';
 
 interface Raw {
   name: string;
@@ -43,13 +39,12 @@ export interface GoldProduct {
   grades: { purity: string; stock: string; enquire: string }[];
 }
 
-const data: Record<LineId, Raw[]> = { ceramic, luster, gold, inglaze };
+const data = (line: LineId) => productsOf(line) as Raw[];
 
-// Firing range per product. Where the data does not say, use the range of the whole line.
+// Firing range per product: from its type when the type has its own (glass, on-glaze), else the whole line's.
 const firingFor = (line: LineId, r: Raw) => {
-  if (line === 'ceramic') return r.range === 'glass' ? '500 to 560°C' : '760 to 830°C';
-  if (line === 'luster') return r.range === 'medium' ? 'Oil base' : '750 to 850°C';
-  return lineById[line].firing;
+  const t = lineById[line].types.find((x) => x.id === r.range);
+  return t?.note || temps(t?.min, t?.max) || lineById[line].firing;
 };
 
 export const slug = (s: string) =>
@@ -85,16 +80,17 @@ function photoNotes(items: Raw[]) {
   return notes;
 }
 
-const goldGroupId = (name: string) => `gold-${slug(name)}`;
+const gradeGroupId = (line: LineId, name: string) => `${line}-${slug(name)}`;
 
 export async function shadesFor(line: LineId): Promise<Shade[]> {
   const l = lineById[line];
-  const labels = Object.fromEntries(l.filters.map((f) => [f.id, f.label.replace(/ \d.*$/, '')]));
-  const notes = photoNotes(data[line]);
+  const labels = Object.fromEntries(l.types.map((t) => [t.id, t.label]));
+  const notes = photoNotes(data(line));
+  const grades = l.layout === 'grades';
   return Promise.all(
-    data[line].map(async (r) => {
+    data(line).map(async (r) => {
       const code = r.code ?? r.purity;
-      const id = line === 'gold' ? goldGroupId(r.name) : `${line}-${slug(code ? `${code}-${r.name}` : r.name)}`;
+      const id = grades ? gradeGroupId(line, r.name) : `${line}-${slug(code ? `${code}-${r.name}` : r.name)}`;
       return {
         id,
         line,
@@ -115,15 +111,15 @@ export async function shadesFor(line: LineId): Promise<Shade[]> {
   );
 }
 
-export const allShades = async () => (await Promise.all((['ceramic', 'luster', 'gold', 'inglaze'] as LineId[]).map(shadesFor))).flat();
+export const allShades = async () => (await Promise.all(lines.map((l) => shadesFor(l.id)))).flat();
 
-/** Gold and platinum are sold by purity grade; show one card per product with its grades. */
-export async function goldProducts(): Promise<GoldProduct[]> {
+/** Products sold by purity grade (liquid gold and platinum): one card per product with its grades. */
+export async function goldProducts(line: LineId = 'gold'): Promise<GoldProduct[]> {
   const groups = new Map<string, Raw[]>();
-  (gold as Raw[]).forEach((r) => groups.set(r.name, [...(groups.get(r.name) ?? []), r]));
+  data(line).forEach((r) => groups.set(r.name, [...(groups.get(r.name) ?? []), r]));
   return Promise.all(
     [...groups].map(async ([name, rows]) => ({
-      id: goldGroupId(name),
+      id: gradeGroupId(line, name),
       name,
       img: await webp(rows.find((r) => r.image)?.image, 720),
       range: rows[0].range,

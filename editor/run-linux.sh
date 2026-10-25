@@ -1,52 +1,38 @@
 #!/usr/bin/env bash
-# Run the website editor on Linux, the same program your dad gets as the .exe.
+# Open the website editor in its own window on Linux. It is the same editor as the website's /editor/ page
+# and the Android app (editor/ui), served from this folder, so changes to it can be tried before publishing.
 #
-#   ./editor/run-linux.sh                     real mode: talks to GitHub with the key you set up (publishing is live)
-#   ./editor/run-linux.sh --test              practice mode: edits a throwaway copy of this folder, nothing is published
-#   ./editor/run-linux.sh --screen 1093x614   open the window at your dad's screen size (works with --test too)
+#   ./editor/run-linux.sh                     real mode: the first time, it asks for the GitHub key (publishing is live)
+#   ./editor/run-linux.sh --practice          practice mode: reads the website, never changes it
+#   ./editor/run-linux.sh --screen 1093x614   open the window at your dad's screen size
 #
-# First run creates a small Python environment in ~/.local/share/sve-editor (needs python3 and python3-venv).
+# Needs python3 and Chrome, Chromium or Edge. The key and unsaved changes stay in this window's own profile.
 set -euo pipefail
 
 here="$(cd "$(dirname "$0")" && pwd)"
-repo="$(dirname "$here")"
-venv="${XDG_DATA_HOME:-$HOME/.local/share}/sve-editor/venv"
-
-# Set up (or repair) a private Python environment with Pillow. Uses uv if present, else python3 -m venv.
-if ! "$venv/bin/python" -c "import PIL" 2>/dev/null; then
-  echo "Setting up the editor (first run only)..."
-  rm -rf "$venv"
-  uv="$(command -v uv || true)"
-  [ -z "$uv" ] && [ -x "$HOME/.local/bin/uv" ] && uv="$HOME/.local/bin/uv"
-  if [ -n "$uv" ]; then
-    "$uv" venv --quiet "$venv"
-    "$uv" pip install --quiet --python "$venv/bin/python" -r "$here/requirements.txt"
-  elif python3 -m venv "$venv" 2>/dev/null; then
-    "$venv/bin/pip" install --quiet -r "$here/requirements.txt"
-  else
-    rm -rf "$venv"
-    echo "Python's venv module is missing. Install it once with:  sudo apt install python3-venv"
-    echo "(or install uv:  curl -LsSf https://astral.sh/uv/install.sh | sh)"
-    exit 1
-  fi
-fi
-
-args=()
-test_mode=0
+port=8795
+page=''
+window='--start-maximized'
 while [ $# -gt 0 ]; do
   case "$1" in
-    --test) test_mode=1 ;;
-    *) args+=("$1") ;;
+    --practice | --test) page='?practice' ;;
+    --screen) shift; window="--window-size=${1/x/,}" ;;
+    *) echo "Unknown option: $1"; exit 1 ;;
   esac
   shift
 done
 
-if [ "$test_mode" = 1 ]; then
-  copy="$(mktemp -d /tmp/sve-editor-test.XXXXXX)"
-  echo "Practice mode: editing a copy in $copy (deleted when you close this)."
-  tar -C "$repo" --exclude=./node_modules --exclude=./dist --exclude=./.git --exclude=./.astro -cf - . | tar -xf - -C "$copy"
-  trap 'rm -rf "$copy"' EXIT
-  args+=(--local "$copy" --config-dir "$copy/.editor-config")
-fi
+browser=''
+for b in google-chrome google-chrome-stable chromium chromium-browser microsoft-edge; do
+  if command -v "$b" >/dev/null; then browser="$b"; break; fi
+done
+[ -z "$browser" ] && { echo "Install Google Chrome or Chromium first."; exit 1; }
 
-"$venv/bin/python" "$here/main.py" "${args[@]+"${args[@]}"}"
+python3 -m http.server "$port" --bind 127.0.0.1 --directory "$here/ui" >/dev/null 2>&1 &
+server=$!
+trap 'kill $server 2>/dev/null' EXIT
+sleep 0.5
+
+profile="${XDG_DATA_HOME:-$HOME/.local/share}/sve-editor/window"
+mkdir -p "$profile"
+"$browser" --app="http://127.0.0.1:$port/$page" --user-data-dir="$profile" "$window" --no-first-run --no-default-browser-check

@@ -51,7 +51,7 @@ export function businessSchema() {
       itemListElement: lines.map((l) => ({
         '@type': 'OfferCatalog',
         name: l.title,
-        description: `${l.summary} Firing range ${l.firing}.`,
+        description: l.description,
         url: `${SITE}${l.href}`,
       })),
     },

@@ -2,51 +2,36 @@
 import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
 import Base from '../layouts/Base.astro';
-import { lineById, lines, type LineId } from '../data/lines';
-import ceramicImg from '../assets/resources/Ceramic/CeramicColor.png';
-import lustreImg from '../assets/resources/Luster/Pink.jpg';
-import goldImg from '../assets/resources/Gold/LiquidPlatinum.jpg';
-import ceramic from '../data/ceramic.json';
-import luster from '../data/luster.json';
-import gold from '../data/gold.json';
-import inglaze from '../data/inglaze.json';
+import { groups, lineById, lines, productsOf, type Line } from '../data/lines';
+import { productImage } from '../lib/images';
 import site from '../data/site.json';
 import { breadcrumbs, faqSchema } from '../lib/schema';
 
-const ranges: { id: LineId; img?: ImageMetadata; count: number; unit?: string }[] = [
-  {
-    id: 'gold',
-    img: goldImg,
-    count: new Set(gold.map((g) => g.name)).size,
-    unit: 'products',
-  },
-  {
-    id: 'luster',
-    img: lustreImg,
-    count: luster.length,
-    unit: 'shades',
-  },
-  {
-    id: 'ceramic',
-    img: ceramicImg,
-    count: ceramic.length,
-    unit: 'shades',
-  },
-  {
-    id: 'inglaze',
-    count: inglaze.length,
-    unit: 'shades',
-  },
-];
+// Count per category: products for grade-based lines (one per name), shades for the rest.
+const count = (l: Line) => {
+  const items = productsOf(l.id);
+  const n = l.layout === 'grades' ? new Set(items.map((g) => g.name)).size : items.length;
+  const unit = l.layout === 'grades' ? 'product' : 'shade';
+  return n ? `${n} ${unit}${n === 1 ? '' : 's'}` : 'Being added';
+};
 
 // Short answers to the questions buyers ask most. Built from the data files, so temperatures stay current.
 const r = lineById;
+const gold = productsOf('gold') as { purity: string }[];
 const fixed = [...new Set(gold.map((g) => g.purity))].filter((x) => /\d/.test(x));
 const purities = fixed.length > 1 ? `${fixed.slice(0, -1).join(', ')} and ${fixed.at(-1)}` : fixed.join('');
 const faq = [
   {
     q: 'What firing temperature do your colours need?',
-    a: `Glass colours fire at 500 to 560°C, on-glaze ceramic colours at 760 to 830°C (third firing), lustre colours at ${r.luster.firing}, liquid gold and platinum at ${r.gold.firing}, and in-glaze colours at ${r.inglaze.firing}.`,
+    a: `${lines
+      .flatMap((l) => {
+        const typed = l.types.filter((t) => t.min && t.max);
+        if (typed.length) return typed.map((t) => `${t.label.toLowerCase()} colours at ${t.min} to ${t.max}°C`);
+        return l.firing ? [`${l.title.toLowerCase()} at ${l.firing}`] : [];
+      })
+      .join(', ')
+      .replace(/^./, (c) => c.toUpperCase())
+      .replace(/, ([^,]*)$/, ', and $1')}.`,
   },
   {
     q: 'What purities of liquid gold do you make?',
@@ -79,7 +64,7 @@ const pageSchema = [breadcrumbs([{ name: 'Home', path: '/' }, { name: 'Products'
 <Base
   schema={pageSchema}
   title="Products"
-  description={`Liquid gold and platinum lustre, liquid lustre colours, ceramic and glass colours and in-glaze colours. Firing ranges from ${Math.min(...lines.map((l) => l.min))} to ${Math.max(...lines.map((l) => l.max))}°C.`}
+  description={`${lines.map((l) => l.title).join(', ').replace(/, ([^,]*)$/, ' and $1')}. Firing ranges from ${Math.min(...lines.flatMap((l) => l.min ?? []))} to ${Math.max(...lines.flatMap((l) => l.max ?? []))}°C.`}
 >
   <section class="wrap intro">
     <h1 data-reveal>Products</h1>
@@ -88,43 +73,47 @@ const pageSchema = [breadcrumbs([{ name: 'Home', path: '/' }, { name: 'Products'
     </p>
   </section>
 
-  <section class="wrap list">
-    {
-      ranges.map((r, i) => {
-        const line = lineById[r.id];
-        return (
-          <a href={line.href} class="range bezel" data-reveal style={`--i:${i % 2}`}>
-            <div class="plate range-plate">
-              <div class="range-media">
-                {r.img ? (
-                  <Image src={r.img} alt="" widths={[480, 800]} sizes="(max-width: 860px) 100vw, 50vw" />
-                ) : (
-                  <div class="range-glaze" />
-                )}
-              </div>
-              <div class="range-body">
-                <div class="range-top">
-                  <h2>{line.title}</h2>
-                  <span class="range-count num">{r.count ? `${r.count} ${r.count === 1 ? r.unit!.replace(/s$/, '') : r.unit}` : 'Being added'}</span>
+  {
+    groups.map((g) => (
+      <section class="wrap group" aria-labelledby={`g-${g.id}`}>
+        <h2 class="group-h" id={`g-${g.id}`} data-reveal>{g.title}</h2>
+        <div class="list">
+          {g.lines.map((line, i) => {
+            const img = productImage(line.image);
+            return (
+              <a href={line.href} class="range bezel" data-reveal style={`--i:${i % 2}`}>
+                <div class="plate range-plate">
+                  <div class="range-media">
+                    {img ? <Image src={img} alt="" widths={[480, 800]} sizes="(max-width: 860px) 100vw, 50vw" /> : <div class="range-glaze" />}
+                  </div>
+                  <div class="range-body">
+                    <div class="range-top">
+                      <h3>{line.title}</h3>
+                      <span class="range-count num">{count(line)}</span>
+                    </div>
+                    {line.firing && <p class="range-firing num">{line.firing}</p>}
+                    <p class="range-summary">{line.summary}</p>
+                    {line.points.length > 0 && (
+                      <ul class="range-points">
+                        {line.points.map((p) => (
+                          <li>
+                            <Icon name="ph:check" aria-hidden="true" /> {p}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    <span class="link-arrow">
+                      View {line.short.toLowerCase()} <Icon name="ph:arrow-right" aria-hidden="true" />
+                    </span>
+                  </div>
                 </div>
-                <p class="range-summary">{line.summary}</p>
-                <ul class="range-points">
-                  {line.points.map((p) => (
-                    <li>
-                      <Icon name="ph:check" aria-hidden="true" /> {p}
-                    </li>
-                  ))}
-                </ul>
-                <span class="link-arrow">
-                  View {line.short.toLowerCase()} <Icon name="ph:arrow-right" aria-hidden="true" />
-                </span>
-              </div>
-            </div>
-          </a>
-        );
-      })
-    }
-  </section>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+    ))
+  }
   <section class="wrap faq" aria-labelledby="faq-h">
     <h2 id="faq-h" data-reveal>Common questions</h2>
     <dl class="faq-list">
@@ -188,11 +177,19 @@ const pageSchema = [breadcrumbs([{ name: 'Home', path: '/' }, { name: 'Products'
     padding-block: clamp(40px, 6vw, 80px) clamp(32px, 4vw, 56px);
   }
 
+  .group {
+    padding-bottom: clamp(40px, 6vw, 72px);
+  }
+
+  .group-h {
+    font-size: clamp(1.7rem, 2.6vw, 2.2rem);
+    margin-bottom: 20px;
+  }
+
   .list {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
-    padding-bottom: clamp(56px, 8vw, 104px);
   }
 
   .range {
@@ -252,8 +249,16 @@ const pageSchema = [breadcrumbs([{ name: 'Home', path: '/' }, { name: 'Products'
     gap: 16px;
   }
 
-  .range-top h2 {
+  .range-top h3 {
+    min-width: 0;
     font-size: clamp(1.8rem, 2.6vw, 2.3rem);
+  }
+
+  .range-firing {
+    margin-top: -8px;
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: var(--gold-ink);
   }
 
   .range-count {

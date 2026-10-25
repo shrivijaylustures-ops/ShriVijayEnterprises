@@ -3,12 +3,11 @@ import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
 import Base from '../layouts/Base.astro';
 import site from '../data/site.json';
-import { lineById, lines } from '../data/lines';
+import { lines } from '../data/lines';
+import { productImage } from '../lib/images';
 import { waLink } from '../lib/links';
 import heroImg from '../assets/resources/base-image/image-front.jpg';
 import goldCup from '../assets/resources/Gold/LiquidGoldCup.jpg';
-import lustreImg from '../assets/resources/Luster/Pink.jpg';
-import ceramicImg from '../assets/resources/Ceramic/CeramicColor.png';
 import founder from '../assets/resources/base-image/umesh.jpg';
 import ShadeCard from '../components/ShadeCard.astro';
 import packets from '../assets/resources/Ceramic/Ceramic Colours(7).jpg';
@@ -19,17 +18,39 @@ import blackMug from '../assets/resources/gallery/black-lustre-mug.jpg';
 // Firing guide: where each range sits on the kiln temperature scale.
 const scale = { min: 450, max: 1300 };
 const pos = (t: number) => ((t - scale.min) / (scale.max - scale.min)) * 100;
-const firing = [
-  { label: 'Glass colours', min: 500, max: 560, href: '/ceramic?type=glass' },
-  { label: 'Liquid gold & platinum', min: 500, max: 830, href: '/gold' },
-  { label: 'Lustre colours', min: 750, max: 850, href: '/luster' },
-  { label: 'On-glaze ceramic colours', min: 760, max: 830, href: '/ceramic?type=on-glaze' },
-  { label: 'In-glaze colours', min: lineById.inglaze.min, max: lineById.inglaze.max, href: '/inglaze' },
-];
+// One bar per category, or one per type where the types fire differently (glass and on-glaze colours).
+// Categories without a firing temperature are left out.
+const firing = lines
+  .flatMap((l) => {
+    const typed = l.types.filter((t) => t.min && t.max);
+    if (typed.length) return typed.map((t) => ({ label: `${t.label} colours`, min: t.min!, max: t.max!, href: `${l.href}?type=${t.id}` }));
+    return l.min && l.max ? [{ label: l.title, min: l.min, max: l.max, href: l.href }] : [];
+  })
+  .sort((a, b) => a.min - b.min || a.max - b.max);
 const ticks = [500, 600, 700, 800, 900, 1000, 1100, 1200];
 // Overall firing range across all products, for the facts strip.
-const lowest = Math.min(...lines.map((l) => l.min));
-const highest = Math.max(...lines.map((l) => l.max));
+const lowest = Math.min(...lines.flatMap((l) => l.min ?? []));
+const highest = Math.max(...lines.flatMap((l) => l.max ?? []));
+
+// Range tiles: the first category is the large tile; the rest fill the grid, and the last one in a row
+// stretches to fill it, so any number of categories lays out without gaps.
+const words = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten'];
+const tiles = lines.map((l, i) => ({ ...l, img: productImage(l.image), lead: i === 0, span: 1 }));
+{
+  const rest = tiles.slice(1);
+  let row = 0;
+  let used = 0;
+  rest.forEach((t, i) => {
+    const cols = row < 2 ? 2 : 3; // first two rows share the grid with the large tile
+    used += 1;
+    const lastInRow = used === cols;
+    if (i === rest.length - 1 && !lastInRow) t.span = cols - used + 1;
+    if (lastInRow || i === rest.length - 1) {
+      row += 1;
+      used = 0;
+    }
+  });
+}
 
 const works = [
   { img: packets, alt: 'Sample packets of ceramic colours, each labelled with shade and code', caption: 'Sample packets, labelled by shade and code' },
@@ -82,39 +103,38 @@ const works = [
     </div>
   </section>
 
-  <!-- Ranges: asymmetric bento, four cells for four ranges -->
+  <!-- Ranges: asymmetric bento; one large tile, the rest fill around it -->
   <section class="wrap section ranges" aria-labelledby="ranges-h">
-    <h2 id="ranges-h" class="ranges-h" data-reveal>Four ranges, one standard of finish</h2>
+    <h2 id="ranges-h" class="ranges-h" data-reveal>{words[lines.length] || lines.length} ranges, one standard of finish</h2>
     <div class="bento">
-      <a class="tile tile-gold" href="/gold" data-reveal>
-        <Image src={goldCup} alt="" widths={[600, 900]} sizes="(max-width: 900px) 100vw, 50vw" class="tile-img" />
-        <div class="tile-copy on-image">
-          <h3>{lineById.gold.title}</h3>
-          <p>{lineById.gold.summary}</p>
-          <span class="tile-link">Browse grades <Icon name="ph:arrow-right" aria-hidden="true" /></span>
-        </div>
-      </a>
-      <a class="tile tile-lustre" href="/luster" data-reveal style="--i:1">
-        <Image src={lustreImg} alt="" widths={[400, 700]} sizes="(max-width: 900px) 100vw, 25vw" class="tile-img" />
-        <div class="tile-copy on-image">
-          <h3>{lineById.luster.short}</h3>
-          <span class="tile-link num">{lineById.luster.firing} <Icon name="ph:arrow-right" aria-hidden="true" /></span>
-        </div>
-      </a>
-      <a class="tile tile-ceramic" href="/ceramic" data-reveal style="--i:2">
-        <Image src={ceramicImg} alt="" widths={[400, 700]} sizes="(max-width: 900px) 100vw, 25vw" class="tile-img" />
-        <div class="tile-copy on-image">
-          <h3>{lineById.ceramic.short}</h3>
-          <span class="tile-link num">{lineById.ceramic.firing} <Icon name="ph:arrow-right" aria-hidden="true" /></span>
-        </div>
-      </a>
-      <a class="tile tile-inglaze" href="/inglaze" data-reveal style="--i:3">
-        <div class="tile-copy">
-          <h3>{lineById.inglaze.title}</h3>
-          <p>{lineById.inglaze.summary}</p>
-          <span class="tile-link num">{lineById.inglaze.firing} <Icon name="ph:arrow-right" aria-hidden="true" /></span>
-        </div>
-      </a>
+      {
+        tiles.map((t, i) => (
+          <a
+            class:list={['tile', { 'tile-lead': t.lead, 'tile-glaze': !t.img }]}
+            href={t.href}
+            data-reveal
+            style={`--i:${i % 4};${t.span > 1 ? `grid-column:span ${t.span}` : ''}`}
+          >
+            {t.img && (
+              <Image
+                src={t.img}
+                alt=""
+                widths={t.lead ? [600, 900] : [400, 700]}
+                sizes={t.lead ? '(max-width: 900px) 100vw, 50vw' : '(max-width: 900px) 100vw, 25vw'}
+                class="tile-img"
+              />
+            )}
+            <div class:list={['tile-copy', { 'on-image': t.img }]}>
+              <h3>{t.lead || !t.img ? t.title : t.short}</h3>
+              {(t.lead || (!t.img && t.span > 1)) && <p>{t.summary}</p>}
+              <span class:list={['tile-link', { num: !t.lead }]}>
+                {t.lead ? (t.layout === 'grades' ? 'Browse grades' : 'Browse shades') : t.firing || 'View range'}{' '}
+                <Icon name="ph:arrow-right" aria-hidden="true" />
+              </span>
+            </div>
+          </a>
+        ))
+      }
     </div>
   </section>
 
@@ -399,6 +419,7 @@ const works = [
     display: grid;
     grid-template-columns: 1.3fr 1fr 1fr;
     grid-template-rows: repeat(2, minmax(260px, auto));
+    grid-auto-rows: minmax(260px, auto);
     gap: 16px;
   }
 
@@ -416,12 +437,11 @@ const works = [
     isolation: isolate;
   }
 
-  .tile-gold {
+  .tile-lead {
     grid-row: span 2;
   }
 
-  .tile-inglaze {
-    grid-column: span 2;
+  .tile-glaze {
     background:
       radial-gradient(80% 140% at 100% 100%, color-mix(in srgb, #2f6d8a 38%, transparent), transparent 60%),
       radial-gradient(60% 120% at 70% 0%, color-mix(in srgb, #8a3b2a 30%, transparent), transparent 65%),
@@ -445,6 +465,7 @@ const works = [
   .tile-copy {
     display: grid;
     gap: 10px;
+    min-width: 0;
     padding: clamp(20px, 2.4vw, 32px);
     max-width: 52ch;
   }
@@ -680,12 +701,11 @@ const works = [
       grid-template-columns: 1fr;
       grid-template-rows: none;
     }
-    .tile-gold,
-    .tile-inglaze {
-      grid-row: auto;
-      grid-column: auto;
+    .tile {
+      grid-row: auto !important;
+      grid-column: auto !important;
     }
-    .tile-gold {
+    .tile-lead {
       min-height: 380px;
     }
     .heritage {

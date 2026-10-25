@@ -1,9 +1,16 @@
 ---
 // Liquid gold and platinum are sold by purity grade, so each product is one card listing its grades.
 import { Icon } from 'astro-icon/components';
+import { lineById } from '../data/lines';
 import { goldProducts } from '../lib/shades';
 
-const products = await goldProducts();
+interface Props {
+  line?: string;
+}
+
+const line = lineById[Astro.props.line ?? 'gold'];
+const products = await goldProducts(line.id);
+const kind = Object.fromEntries(line.types.map((t) => [t.id, t.label]));
 const STOCK: Record<string, string> = { in: 'In stock', low: 'Low stock', out: 'On order' };
 ---
 
@@ -15,9 +22,9 @@ const STOCK: Record<string, string> = { in: 'In stock', low: 'Low stock', out: '
         <div class="g-body">
           <div class="g-top">
             <h3 translate="no">{p.name}</h3>
-            <span class="g-kind">{p.range === 'platinum' ? 'Platinum' : 'Gold'}</span>
+            {kind[p.range] && <span class="g-kind">{kind[p.range]}</span>}
           </div>
-          <p class="g-meta num">For glass and ceramic, 500 to 830°C</p>
+          {line.firing && <p class="g-meta num">{line.id === 'gold' ? `For glass and ceramic, ${line.firing}` : line.firing}</p>}
           <p class="g-label">Pick a grade to enquire</p>
           <ul class="g-grades">
             {p.grades.map((g) => (

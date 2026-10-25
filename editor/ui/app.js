@@ -1,72 +1,52 @@
-/* SVE Website Editor: the page inside the editor window.
-   All website data is loaded once, edited here, kept as a draft on this computer, and sent to the
-   website in one go when "Publish changes" is pressed. */
+/* SVE Website Editor: the editor's screens. Runs as an app window on Windows, as the Android app, or in any browser.
+   All website data is loaded once, edited here, kept as a draft on this device, and sent to the
+   website in one go when "Publish changes" is pressed. backend.js does the talking to GitHub. */
 
 'use strict';
 
-const KEY = new URLSearchParams(location.search).get('k') || '';
-
 const FILES = {
-  ceramic: 'src/data/ceramic.json',
-  luster: 'src/data/luster.json',
-  gold: 'src/data/gold.json',
-  inglaze: 'src/data/inglaze.json',
+  categories: 'src/data/categories.json',
   gallery: 'src/data/gallery.json',
   site: 'src/data/site.json',
-  ranges: 'src/data/ranges.json',
 };
+// Each product category keeps its products in src/data/<id>.json.
+const productPath = (id) => `src/data/${id}.json`;
+const cats = () => S.work[FILES.categories] || { groups: [], categories: {} };
+const catIds = () => cats().groups.flatMap((g) => g.categories);
+// Every file the editor works on: the fixed ones plus one per category (including ones added but not yet published).
+const allPaths = () => [...new Set([...Object.values(FILES), ...Object.keys(S.work).filter((p) => !Object.values(FILES).includes(p))])];
 
-const PRODUCTS = {
-  ceramic: {
-    title: 'Ceramic & glass colours',
-    noun: 'colour',
-    code: 'required',
-    intro: 'On-glaze and glass colours shown on the Ceramic & Glass Colours page.',
-    types: () => [
-      ['on-glaze', 'On-glaze (760 to 830°C)'],
-      ['glass', 'Glass (500 to 560°C)'],
-    ],
-  },
-  luster: {
-    title: 'Lustre colours',
-    noun: 'colour',
-    code: 'optional',
-    intro: 'Lustres shown on the Liquid Lustre Colours page.',
-    types: () => [
-      ['non-gold', 'Standard lustre'],
-      ['gold-based', 'Gold-based lustre'],
-      ['medium', 'Medium (oil base)'],
-    ],
-  },
-  gold: {
-    title: 'Liquid gold & platinum',
-    noun: 'grade',
-    purity: true,
-    intro: 'Each purity is one entry. Entries with the same name are shown together on the website as one product.',
-    types: () => [
-      ['gold', 'Gold'],
-      ['platinum', 'Platinum'],
-    ],
-  },
-  inglaze: {
-    title: 'In-glaze colours',
-    noun: 'colour',
-    code: 'required',
-    intro: 'High-temperature colours. While this list is empty, the website shows a "range being added" page.',
-    types: () => [['inglaze', `In-glaze (${S.work[FILES.ranges]?.inglaze?.firing || '1150 to 1250°C'})`]],
-  },
-};
+const temps = (min, max) => (Number.isInteger(min) && Number.isInteger(max) ? `${min} to ${max}°C` : '');
 
-const SECTIONS = [
-  { id: 'ceramic', label: 'Ceramic & glass', group: 'Colours' },
-  { id: 'luster', label: 'Lustres' },
-  { id: 'gold', label: 'Gold & platinum' },
-  { id: 'inglaze', label: 'In-glaze' },
-  { id: 'gallery', label: 'Gallery photos', group: 'Photos' },
-  { id: 'contact', label: 'Contact details', group: 'Website text' },
-  { id: 'ranges', label: 'Range descriptions' },
-  { id: 'help', label: 'How to use', group: 'Help' },
-];
+/** How one category's products are edited, from its settings in categories.json. */
+function cfgOf(id) {
+  const c = cats().categories[id];
+  if (!c) return null;
+  const grades = c.layout === 'grades';
+  const types = c.types.length ? c.types.map((t) => [t.id, [t.label, t.note || temps(t.min, t.max)].filter(Boolean).join(', ')]) : [[id, c.short]];
+  return {
+    id,
+    title: c.title,
+    noun: grades ? 'grade' : 'colour',
+    code: grades ? null : c.code || 'optional',
+    purity: grades,
+    intro: grades
+      ? 'Each purity is one entry. Entries with the same name are shown together on the website as one product.'
+      : `Shown on the ${c.title} page.${(S.work[productPath(id)] || []).length ? '' : ' While this list is empty, the website shows a "range being added" page.'}`,
+    types: () => types,
+  };
+}
+
+// The menu on the left: one entry per category under its group, then the fixed sections.
+function sections() {
+  const out = [];
+  for (const g of cats().groups) g.categories.forEach((id, i) => out.push({ id, label: cats().categories[id]?.short || id, group: i === 0 ? g.title : null, path: productPath(id) }));
+  out.push({ id: 'gallery', label: 'Gallery photos', group: 'Photos', path: FILES.gallery });
+  out.push({ id: 'contact', label: 'Contact details', group: 'Website text', path: FILES.site });
+  out.push({ id: 'categories', label: 'Categories and groups', group: 'Set up', path: FILES.categories });
+  out.push({ id: 'help', label: 'How to use', group: 'Help' });
+  return out;
+}
 
 const STOCK = { in: 'In stock', low: 'Low stock', out: 'On order' };
 const GALLERY_CATEGORIES = [
@@ -83,11 +63,11 @@ const S = {
   work: {}, // working copies being edited
   seq: 0,
   view: 'ceramic',
+  practice: false,
   q: '',
   filter: 'all',
   settings: {},
   local: false,
-  windows: false,
   stale: false,
 };
 
@@ -107,30 +87,9 @@ function inkFor(hex) {
   return lum > 150 ? '#1c1a17' : '#f7f4ee';
 }
 
-function photoUrl(image) {
-  if (!image) return '';
-  if (image.startsWith('draft:')) return `/photo/draft/${image.slice(6)}?k=${encodeURIComponent(KEY)}`;
-  return `/photo/site?path=${encodeURIComponent(image)}&k=${encodeURIComponent(KEY)}`;
-}
-
-async function api(path, body, opts = {}) {
-  const res = await fetch(path, {
-    method: body === undefined ? 'GET' : 'POST',
-    headers: { 'X-SVE-Key': KEY, ...(opts.raw ? {} : { 'Content-Type': 'application/json' }) },
-    body: body === undefined ? undefined : opts.raw ? body : JSON.stringify(body),
-  });
-  let data = {};
-  try {
-    data = await res.json();
-  } catch {}
-  if (!res.ok) {
-    const err = new Error(data.error || 'Something went wrong. Try again.');
-    err.status = res.status;
-    err.conflict = data.conflict;
-    throw err;
-  }
-  return data;
-}
+const finePointer = () => matchMedia('(pointer: fine)').matches;
+const photoUrl = (image) => Backend.photoUrl(image);
+const api = (path, body) => Backend.call(path, body);
 
 function itemLabel(item) {
   if (item.caption !== undefined && item.name === undefined) return item.caption;
@@ -174,12 +133,13 @@ function confirmBox(title, text, yes = 'Yes', danger = false) {
 
 function changes() {
   const out = [];
-  for (const [section, path] of Object.entries(FILES)) {
+  for (const path of allPaths()) {
     const base = S.base[path];
     const work = S.work[path];
-    if (base === undefined || same(base, work)) continue;
+    if (base === undefined || work === undefined || same(base, work)) continue;
     if (Array.isArray(work)) {
-      const where = section === 'gallery' ? 'gallery' : PRODUCTS[section].title.toLowerCase();
+      const id = path.slice(9, -5);
+      const where = path === FILES.gallery ? 'gallery' : (cats().categories[id]?.title || id).toLowerCase();
       const baseById = new Map(base.map((b) => [b.__id, b]));
       const workIds = new Set(work.map((w) => w.__id));
       for (const w of work) {
@@ -190,16 +150,23 @@ function changes() {
       for (const b of base) if (!workIds.has(b.__id)) out.push({ path, text: `Remove ${itemLabel(b)} (${where})` });
       const order = (list) => list.filter((x) => workIds.has(x.__id) && baseById.has(x.__id)).map((x) => x.__id).join();
       if (out.filter((c) => c.path === path).length === 0 && order(base) !== order(work)) out.push({ path, text: `Change the order of the ${where}` });
-    } else if (section === 'site') {
+    } else if (path === FILES.site) {
       out.push({ path, text: 'Change contact details' });
-    } else if (section === 'ranges') {
-      for (const key of Object.keys(work)) if (!same(base[key], work[key])) out.push({ path, text: `Change the text for ${work[key].title}` });
+    } else if (path === FILES.categories) {
+      const b = base.categories || {};
+      const w = work.categories || {};
+      for (const id of Object.keys(w)) {
+        if (!b[id]) out.push({ path, text: `Add the category ${w[id].title}` });
+        else if (!same(b[id], w[id])) out.push({ path, text: `Change the category ${w[id].title}` });
+      }
+      for (const id of Object.keys(b)) if (!w[id]) out.push({ path, text: `Remove the category ${b[id].title}` });
+      if (!same(base.groups, work.groups)) out.push({ path, text: 'Change the groups or the order of categories' });
     }
   }
   return out;
 }
 
-const changedFiles = () => Object.values(FILES).filter((p) => S.base[p] !== undefined && !same(S.base[p], S.work[p]));
+const changedFiles = () => allPaths().filter((p) => S.base[p] !== undefined && S.work[p] !== undefined && !same(S.base[p], S.work[p]));
 
 /* ---------- draft (kept on this computer until published) ---------- */
 
@@ -221,8 +188,7 @@ function draftBody() {
 
 function flushDraft() {
   clearTimeout(draftTimer);
-  const body = new Blob([JSON.stringify(draftBody())], { type: 'application/json' });
-  navigator.sendBeacon(`/api/draft?k=${encodeURIComponent(KEY)}`, body);
+  if (S.work[FILES.categories]) Backend.saveDraftNow(draftBody());
 }
 
 function changed() {
@@ -246,7 +212,7 @@ async function loadAll() {
     S.work = r.draft.work;
     S.seq = r.draft.seq || 0;
     const oldShas = r.draft.baseShas || {};
-    S.stale = Object.values(FILES).some((p) => oldShas[p] && oldShas[p] !== S.baseShas[p] && !same(S.base[p], S.work[p]));
+    S.stale = Object.keys(S.base).some((p) => oldShas[p] && oldShas[p] !== S.baseShas[p] && !same(S.base[p], S.work[p]));
     if (S.stale) {
       // The website changed since these edits were made: move the edits onto the latest version.
       S.work = rebase({ ...S.base, ...(r.draft.base || {}) }, S.work, S.base);
@@ -255,10 +221,13 @@ async function loadAll() {
     } else {
       S.baseShas = { ...S.baseShas, ...oldShas };
     }
-    for (const p of Object.values(FILES)) if (S.work[p] === undefined) S.work[p] = clone(S.base[p]);
+    for (const p of Object.keys(S.base)) if (S.work[p] === undefined) S.work[p] = clone(S.base[p]);
+    // Categories added in the draft but not yet published start from an empty list.
+    for (const id of catIds()) if (S.base[productPath(id)] === undefined) S.base[productPath(id)] = [];
   } else {
     S.work = clone(S.base);
   }
+  if (!sections().some((x) => x.id === S.view)) S.view = catIds()[0] || 'help';
   render();
 }
 
@@ -269,12 +238,31 @@ async function loadAll() {
 function rebase(oldBase, work, newBase) {
   const result = {};
   const keyOf = (path, it) => (path === FILES.gallery ? it.image : `${(it.code || '').toLowerCase()}|${(it.name || '').toLowerCase()}|${it.purity || ''}`);
-  for (const path of Object.values(FILES)) {
+  for (const path of new Set([...Object.keys(newBase), ...Object.keys(work)])) {
     const nb = clone(newBase[path]);
     const ob = oldBase[path];
     const w = work[path];
     if (w === undefined || ob === undefined || same(ob, w)) {
-      result[path] = nb;
+      result[path] = nb ?? w;
+      continue;
+    }
+    if (nb === undefined) {
+      result[path] = w;
+      continue;
+    }
+    if (path === FILES.categories) {
+      // Merge category by category; the group layout is taken from my changes if I changed it.
+      const merged = clone(nb);
+      for (const id of new Set([...Object.keys(ob.categories), ...Object.keys(w.categories)])) {
+        if (same(ob.categories[id], w.categories[id])) continue;
+        if (w.categories[id]) merged.categories[id] = w.categories[id];
+        else delete merged.categories[id];
+      }
+      if (!same(ob.groups, w.groups)) merged.groups = w.groups;
+      const listed = new Set(merged.groups.flatMap((g) => g.categories));
+      for (const g of merged.groups) g.categories = g.categories.filter((id) => merged.categories[id]);
+      for (const id of Object.keys(merged.categories)) if (!listed.has(id)) merged.groups.at(-1)?.categories.push(id);
+      result[path] = merged;
       continue;
     }
     if (!Array.isArray(w)) {
@@ -315,32 +303,35 @@ function renderStatus() {
   st.classList.toggle('pending', n > 0);
   st.textContent = n
     ? `${n} ${n === 1 ? 'change' : 'changes'} not on the website yet`
-    : S.local
-      ? 'Test mode: saving to a folder on this computer'
+    : S.practice
+      ? 'Practice mode: nothing you do here changes the website'
       : 'Everything is on the website';
   $('#publishBtn').disabled = n === 0;
+  $('#publishCount').textContent = n ? String(n) : '';
   $('#undoAll').hidden = n === 0;
 }
 
 function renderSide() {
   const changedPaths = new Set(changedFiles());
-  const html = SECTIONS.map((s) => {
+  const all = sections();
+  const html = all.map((s) => {
     const group = s.group ? `<p class="side-label">${esc(s.group)}</p>` : '';
-    const path = FILES[s.id === 'contact' ? 'site' : s.id];
+    const path = s.path;
     const list = Array.isArray(S.work[path]) ? S.work[path] : null;
     const dot = path && changedPaths.has(path) ? '<span class="dot" title="Changed"></span>' : '';
     const count = list ? `<span class="count">${list.length}</span>` : '';
     return `${group}<button class="side-btn" data-view="${s.id}" ${S.view === s.id ? 'aria-current="page"' : ''}><span>${esc(s.label)}</span>${dot}${count}</button>`;
   }).join('');
   $('#side').innerHTML = html;
+  $('#sideToggleLabel').textContent = all.find((x) => x.id === S.view)?.label || 'Menu';
 }
 
 function renderMain() {
   const main = $('#main');
-  if (PRODUCTS[S.view]) main.innerHTML = productView(S.view);
+  if (cfgOf(S.view)) main.innerHTML = productView(S.view);
   else if (S.view === 'gallery') main.innerHTML = galleryView();
   else if (S.view === 'contact') main.innerHTML = contactView();
-  else if (S.view === 'ranges') main.innerHTML = rangesView();
+  else if (S.view === 'categories') main.innerHTML = categoriesView();
   else main.innerHTML = helpView();
 }
 
@@ -359,8 +350,8 @@ function thumb(item, label) {
 }
 
 function productView(section) {
-  const cfg = PRODUCTS[section];
-  const path = FILES[section];
+  const cfg = cfgOf(section);
+  const path = productPath(section);
   const all = S.work[path] || [];
   const types = cfg.types();
   const typeName = Object.fromEntries(types);
@@ -391,8 +382,11 @@ function productView(section) {
   const addCard = `<li><button class="add-card" data-action="add"><svg viewBox="0 0 256 256" aria-hidden="true"><path fill="currentColor" d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/></svg>Add a ${esc(cfg.noun)}</button></li>`;
   return `
     <div class="view-head">
-      <div><h1>${esc(cfg.title)}</h1><p class="muted">${esc(cfg.intro)} ${all.length} on the list.</p></div>
-      <button class="btn primary" data-action="add">Add a ${esc(cfg.noun)}</button>
+      <div class="view-title"><h1>${esc(cfg.title)}</h1><p class="muted">${esc(cfg.intro)} ${all.length} on the list.</p></div>
+      <div class="view-actions">
+        <button class="btn" data-edit-cat="${esc(section)}">Category details</button>
+        <button class="btn primary" data-action="add">Add a ${esc(cfg.noun)}</button>
+      </div>
     </div>
     <div class="toolbar">
       <input type="search" id="search" value="${esc(S.q)}" placeholder="Find by name or code…" aria-label="Find by name or code" autocomplete="off" spellcheck="false">
@@ -452,52 +446,473 @@ function contactView() {
     </form>`;
 }
 
-function rangesView() {
-  const r = S.work[FILES.ranges];
-  const order = ['gold', 'luster', 'ceramic', 'inglaze'];
-  return `
-    <div class="view-head"><div><h1>Range descriptions</h1><p class="muted">The words and temperatures for each product range. Changes are kept as you type.</p></div></div>
-    ${order
-      .map((k) => {
-        const x = r[k];
-        return `<form class="sheet" data-range="${k}" novalidate>
-          <h2>${esc(x.title)}</h2>
-          <label class="field"><span>Name of the range</span><input name="title" value="${esc(x.title)}"></label>
-          <div class="grid-2">
-            <label class="field"><span>Lowest firing temperature (°C)</span><input name="min" type="number" inputmode="numeric" value="${esc(x.min)}"></label>
-            <label class="field"><span>Highest firing temperature (°C)</span><input name="max" type="number" inputmode="numeric" value="${esc(x.max)}"></label>
+/* ---------- categories and groups ---------- */
+
+function catBadge(id) {
+  const b = S.base[FILES.categories]?.categories?.[id];
+  const w = cats().categories[id];
+  if (!b) return '<span class="badge new">New</span>';
+  if (!same(b, w)) return '<span class="badge edited">Changed</span>';
+  return '';
+}
+
+function categoriesView() {
+  const c = cats();
+  const order = catIds();
+  const groups = c.groups
+    .map((g, gi) => {
+      const rows = g.categories
+        .map((id) => {
+          const cat = c.categories[id];
+          const n = (S.work[productPath(id)] || []).length;
+          const at = order.indexOf(id);
+          const meta = [
+            temps(cat.min, cat.max) || 'No firing temperature yet',
+            `${n} ${cat.layout === 'grades' ? (n === 1 ? 'grade' : 'grades') : n === 1 ? 'colour' : 'colours'}`,
+            cat.hidden ? 'Hidden from the website' : '',
+          ].filter(Boolean);
+          return `<li class="cat-row${cat.hidden ? ' is-hidden' : ''}">
+            <div class="cat-main">
+              <span class="cat-title">${esc(cat.title)} ${catBadge(id)}</span>
+              <span class="cat-meta">In the menu: <strong>${esc(cat.short)}</strong></span>
+              <span class="cat-meta">${meta.map(esc).join(' · ')}</span>
+            </div>
+            <div class="cat-actions">
+              <button class="icon-btn" data-cat-action="up" data-id="${esc(id)}" aria-label="Move ${esc(cat.short)} up" title="Move up" ${at === 0 ? 'disabled' : ''}>↑</button>
+              <button class="icon-btn" data-cat-action="down" data-id="${esc(id)}" aria-label="Move ${esc(cat.short)} down" title="Move down" ${at === order.length - 1 ? 'disabled' : ''}>↓</button>
+              <button class="btn" data-edit-cat="${esc(id)}">Edit</button>
+            </div>
+          </li>`;
+        })
+        .join('');
+      return `<section class="sheet group-card" aria-labelledby="grp-${esc(g.id)}">
+        <div class="group-head">
+          <div class="group-name"><span class="side-label">Group ${gi + 1}</span><h2 id="grp-${esc(g.id)}">${esc(g.title)}</h2></div>
+          <div class="cat-actions">
+            <button class="icon-btn" data-cat-action="group-up" data-id="${esc(g.id)}" aria-label="Move the group ${esc(g.title)} up" title="Move group up" ${gi === 0 ? 'disabled' : ''}>↑</button>
+            <button class="icon-btn" data-cat-action="group-down" data-id="${esc(g.id)}" aria-label="Move the group ${esc(g.title)} down" title="Move group down" ${gi === c.groups.length - 1 ? 'disabled' : ''}>↓</button>
+            <button class="btn" data-cat-action="rename-group" data-id="${esc(g.id)}">Rename</button>
+            ${g.categories.length ? '' : `<button class="btn danger-text" data-cat-action="delete-group" data-id="${esc(g.id)}">Delete group</button>`}
           </div>
-          <span class="field-error" data-error="temps" hidden></span>
-          <label class="field"><span>Short description</span><textarea name="summary" rows="3">${esc(x.summary)}</textarea></label>
-          <label class="field"><span>Points on the Products page</span><textarea name="points" rows="3">${esc(x.points.join('\n'))}</textarea><small>One point per line</small></label>
-          <label class="field"><span>Notes at the top of the range page</span><textarea name="notes" rows="3">${esc(x.notes.join('\n'))}</textarea><small>One note per line. Can be empty.</small></label>
-        </form>`;
-      })
-      .join('')}`;
+        </div>
+        ${rows ? `<ul class="cat-list">${rows}</ul>` : '<p class="muted">This group is empty. Open a category with <strong>Edit</strong> and choose this group, or add a new category here.</p>'}
+        <button class="btn add-cat" data-cat-action="add" data-id="${esc(g.id)}">+ Add a category to this group</button>
+      </section>`;
+    })
+    .join('');
+  return `
+    <div class="view-head">
+      <div class="view-title"><h1>Categories and groups</h1>
+        <p class="muted">A <strong>category</strong> is one product page on the website, for example Liquid Gold &amp; Platinum.
+        A <strong>group</strong> is a heading that categories are listed under, in the Products menu and on the Products page.</p></div>
+      <button class="btn primary" data-cat-action="add-group">+ Add a group</button>
+    </div>
+    <ol class="how">
+      <li>Use <strong>↑ ↓</strong> to change the order. Moving past the top or bottom of a group moves the category into the next group.</li>
+      <li>Press <strong>Edit</strong> to change a category's name, temperatures, description or group.</li>
+      <li>Changes show on the website after you press <strong>Publish changes</strong>.</li>
+    </ol>
+    ${groups}`;
+}
+
+function uniqueId(base, taken) {
+  let id = Backend.slug(base).replace(/^photo$/, 'range');
+  if (Backend.reserved.has(id) || /^\d+$/.test(id)) id = `${id}-range`;
+  let n = 2;
+  let out = id;
+  while (taken.has(out)) out = `${id}-${n++}`;
+  return out;
+}
+
+async function categoryAction(action, id) {
+  const c = cats();
+  const groupOf = (cid) => c.groups.find((g) => g.categories.includes(cid));
+  if (action === 'up' || action === 'down') {
+    const g = groupOf(id);
+    const gi = c.groups.indexOf(g);
+    const i = g.categories.indexOf(id);
+    const dir = action === 'up' ? -1 : 1;
+    const j = i + dir;
+    g.categories.splice(i, 1);
+    if (j >= 0 && j <= g.categories.length && !(dir === 1 && i === g.categories.length)) {
+      g.categories.splice(j, 0, id);
+    } else {
+      // Past the edge of the group: into the next group along (its end when going up, its start when going down).
+      const next = c.groups[gi + dir];
+      if (!next) g.categories.splice(i, 0, id);
+      else if (dir === -1) next.categories.push(id);
+      else next.categories.unshift(id);
+      if (next) toast(`${c.categories[id].short} is now in the group "${next.title}".`);
+    }
+  } else if (action === 'group-up' || action === 'group-down') {
+    const gi = c.groups.findIndex((g) => g.id === id);
+    const j = gi + (action === 'group-up' ? -1 : 1);
+    if (j < 0 || j >= c.groups.length) return;
+    [c.groups[gi], c.groups[j]] = [c.groups[j], c.groups[gi]];
+  } else if (action === 'rename-group') {
+    const g = c.groups.find((x) => x.id === id);
+    const title = await askText('Rename the group', 'Group name', g.title, 'Shown as a heading in the Products menu and on the Products page.');
+    if (!title) return;
+    g.title = title;
+  } else if (action === 'delete-group') {
+    const g = c.groups.find((x) => x.id === id);
+    if (g.categories.length) return toast('Move the categories out of this group first.');
+    if (!(await confirmBox(`Delete the group "${g.title}"?`, 'It has no categories, so nothing else changes.', 'Delete group', true))) return;
+    c.groups = c.groups.filter((x) => x !== g);
+  } else if (action === 'add-group') {
+    const title = await askText('Add a group', 'Group name', '', 'For example: Colours for glass. You can then add categories to it.');
+    if (!title) return;
+    c.groups.push({ id: uniqueId(title, new Set(c.groups.map((g) => g.id))), title, categories: [] });
+  } else if (action === 'add') {
+    return openCategory(null, id);
+  }
+  changed();
+  renderMain();
+}
+
+function moveCategoryTo(id, groupId) {
+  const c = cats();
+  for (const g of c.groups) g.categories = g.categories.filter((x) => x !== id);
+  c.groups.find((g) => g.id === groupId)?.categories.push(id);
+}
+
+/** A small "type a name" question, used for group names. Resolves with the text, or '' when cancelled. */
+function askText(title, label, value, help) {
+  const dlg = $('#askDialog');
+  $('#askTitle').textContent = title;
+  $('#askLabel').textContent = label;
+  $('#askHelp').textContent = help || '';
+  const input = $('#askInput');
+  input.value = value || '';
+  $('#askError').hidden = true;
+  dlg.returnValue = '';
+  dlg.showModal();
+  input.focus();
+  return new Promise((resolve) => {
+    const form = $('#askForm');
+    const submit = (e) => {
+      e.preventDefault();
+      if (e.submitter?.value === 'no') return dlg.close();
+      if (!input.value.trim()) {
+        $('#askError').textContent = 'Write a name.';
+        $('#askError').hidden = false;
+        return;
+      }
+      dlg.close('yes');
+    };
+    form.addEventListener('submit', submit);
+    dlg.addEventListener(
+      'close',
+      () => {
+        form.removeEventListener('submit', submit);
+        resolve(dlg.returnValue === 'yes' ? input.value.trim().replace(/\s+/g, ' ') : '');
+      },
+      { once: true },
+    );
+  });
+}
+
+function blankCategory() {
+  return { title: '', short: '', min: null, max: null, summary: '', points: [], notes: [], description: '', image: null, layout: 'shades', code: 'optional', types: [], hidden: false };
+}
+
+function openCategory(id, groupId) {
+  const c = cats();
+  const existing = id ? c.categories[id] : null;
+  const item = existing ? clone(existing) : blankCategory();
+  const group = id ? c.groups.find((g) => g.categories.includes(id))?.id : groupId || c.groups[0]?.id;
+  panelState = { kind: 'category', section: 'category', id, item, group, types: clone(item.types), dirty: false, hexTouched: true };
+  const dlg = $('#panel');
+  dlg.innerHTML = categoryForm();
+  dlg.showModal();
+  wirePanel();
+  if (finePointer()) dlg.querySelector('input[name=title]').focus();
+}
+
+function typeRows() {
+  const rows = panelState.types
+    .map(
+      (t, i) => `<li class="type-row">
+        <label class="field"><span>Type name</span><input data-type="${i}" data-field="label" value="${esc(t.label)}" maxlength="40" autocomplete="off"></label>
+        <label class="field small"><span>From °C</span><input data-type="${i}" data-field="min" type="number" inputmode="numeric" value="${esc(t.min ?? '')}"></label>
+        <label class="field small"><span>To °C</span><input data-type="${i}" data-field="max" type="number" inputmode="numeric" value="${esc(t.max ?? '')}"></label>
+        <button type="button" class="icon-btn" data-remove-type="${i}" aria-label="Remove the type ${esc(t.label)}" title="Remove">✕</button>
+      </li>`,
+    )
+    .join('');
+  return `${rows ? `<ul class="type-list">${rows}</ul>` : '<p class="help">No types: all products in this category are shown together.</p>'}
+    <button type="button" class="btn" id="addType">+ Add a type</button>`;
+}
+
+function categoryForm() {
+  const { id, item, group } = panelState;
+  const c = cats();
+  const n = id ? (S.work[productPath(id)] || []).length : 0;
+  const noTemps = item.min === null && item.max === null;
+  const layout = item.layout === 'grades' ? 'grades' : item.code === 'required' ? 'code' : 'name';
+  const layoutLabels = {
+    code: 'Every colour has a code (like ceramic colours, e.g. 3589 Cobalt Blue)',
+    name: 'Colours by name, code if there is one (like lustres)',
+    grades: 'Sold by purity (like liquid gold: 7%, 10%, 12%)',
+  };
+  const site = (S.settings.site_url || '').replace(/^https?:\/\/(www\.)?/, '');
+  const canDelete = id && !item.builtIn;
+  return `<form method="dialog" id="itemForm" novalidate>
+    <div class="panel-head"><h2 id="panelTitle">${id ? 'Edit category' : 'Add a category'}</h2><button type="button" class="icon-btn" data-close aria-label="Close">✕</button></div>
+    <div class="panel-body">
+      <label class="field"><span>Name of the category</span><input name="title" value="${esc(item.title)}" maxlength="80" autocomplete="off">
+        <small>The heading of its page, for example "Pigment for Glass Lined Coatings". Long names are fine.</small><span class="field-error" data-error="title" hidden></span></label>
+      <label class="field"><span>Short name, for menus</span><input name="short" value="${esc(item.short)}" maxlength="32" autocomplete="off">
+        <small>2 or 3 words, for example "Glass-lined pigments". Used where space is small, like the phone menu.</small><span class="field-error" data-error="short" hidden></span></label>
+      ${id ? `<p class="help">Web address: <strong>${esc(site)}/${esc(id)}</strong> (stays the same when the name changes)</p>` : ''}
+
+      <fieldset class="choices"><legend class="legend">Group</legend>
+        ${c.groups.map((g) => `<label class="choice"><input type="radio" name="group" value="${esc(g.id)}" ${group === g.id ? 'checked' : ''}><span>${esc(g.title)}</span></label>`).join('')}
+        <label class="choice"><input type="radio" name="group" value="__new" ${c.groups.length ? '' : 'checked'}><span>A new group…</span></label>
+      </fieldset>
+      <label class="field" id="newGroupField" ${c.groups.length ? 'hidden' : ''}><span>Name of the new group</span><input name="newGroup" maxlength="60" autocomplete="off"><span class="field-error" data-error="newGroup" hidden></span></label>
+
+      <div class="field"><span class="legend">Firing temperature</span>
+        <div class="grid-2">
+          <label class="field"><span>Lowest (°C)</span><input name="min" type="number" inputmode="numeric" value="${esc(item.min ?? '')}" ${noTemps ? 'disabled' : ''}></label>
+          <label class="field"><span>Highest (°C)</span><input name="max" type="number" inputmode="numeric" value="${esc(item.max ?? '')}" ${noTemps ? 'disabled' : ''}></label>
+        </div>
+        <label class="check"><input type="checkbox" name="noTemps" ${noTemps ? 'checked' : ''}> No firing temperature, or not known yet</label>
+        <span class="field-error" data-error="temps" hidden></span>
+      </div>
+
+      <label class="field"><span>Short description</span><textarea name="summary" rows="3" maxlength="400">${esc(item.summary)}</textarea>
+        <small>One or two sentences, shown on the Products page and the category page.</small><span class="field-error" data-error="summary" hidden></span></label>
+      <label class="field"><span>Points on the Products page</span><textarea name="points" rows="3">${esc(item.points.join('\n'))}</textarea><small>One point per line. Can be empty.</small></label>
+      <label class="field"><span>Notes at the top of the category page</span><textarea name="notes" rows="3">${esc(item.notes.join('\n'))}</textarea><small>One note per line. Can be empty.</small></label>
+
+      ${photoBlock()}
+      <p class="help">The photo for this category's tile on the home page and Products page. Without one, a plain coloured tile is shown.</p>
+
+      ${
+        n === 0
+          ? `<fieldset class="choices"><legend class="legend">How are the products listed?</legend>
+              ${Object.entries(layoutLabels).map(([v, l]) => `<label class="choice wide"><input type="radio" name="layout" value="${v}" ${layout === v ? 'checked' : ''}><span>${esc(l)}</span></label>`).join('')}
+            </fieldset>`
+          : `<p class="help">Products are listed: ${esc(layoutLabels[layout])}. This can only be changed while the category is empty.</p>`
+      }
+
+      <div class="field"><span class="legend">Types (optional)</span>
+        <small class="help">Types let customers filter the list, for example "On-glaze" and "Glass". Temperatures are only needed if a type fires differently from the whole category.</small>
+        <div id="typeBox">${typeRows()}</div>
+        <span class="field-error" data-error="types" hidden></span>
+      </div>
+
+      <label class="check"><input type="checkbox" name="show" ${item.hidden ? '' : 'checked'}> Show this category on the website</label>
+
+      <details class="advanced"><summary>For Google (optional)</summary>
+        <label class="field"><span>Description for Google search results</span><textarea name="description" rows="3" maxlength="300">${esc(item.description || '')}</textarea>
+        <small>Leave empty to use the short description.</small></label>
+      </details>
+      <p class="form-error" id="formError" role="alert" hidden></p>
+    </div>
+    <div class="panel-foot">
+      ${canDelete ? '<button type="button" class="btn danger" id="deleteItem">Delete</button>' : ''}
+      <span class="spacer"></span>
+      <button type="button" class="btn" data-close>Cancel</button>
+      <button type="submit" class="btn primary">Save</button>
+    </div>
+  </form>`;
+}
+
+function wireCategoryForm(form) {
+  form.addEventListener('change', (e) => {
+    if (e.target.name === 'group') $('#newGroupField').hidden = e.target.value !== '__new';
+    if (e.target.name === 'noTemps') form.querySelectorAll('input[name=min], input[name=max]').forEach((x) => (x.disabled = e.target.checked));
+  });
+  // Suggest a short name from the name while the short name has not been typed in.
+  let shortTouched = !!panelState.item.short;
+  form.addEventListener('input', (e) => {
+    const t = e.target;
+    if (t.name === 'short') shortTouched = true;
+    if (t.name === 'title' && !shortTouched) form.short.value = t.value.trim().split(/\s+/).slice(0, 3).join(' ');
+    if (t.dataset.type !== undefined) {
+      const ty = panelState.types[Number(t.dataset.type)];
+      if (t.dataset.field === 'label') ty.label = t.value;
+      else ty[t.dataset.field] = t.value === '' ? null : parseInt(t.value, 10);
+    }
+  });
+  form.addEventListener('click', (e) => {
+    const t = e.target.closest('button');
+    if (!t) return;
+    if (t.id === 'addType') {
+      panelState.types.push({ id: '', label: '', min: null, max: null });
+      panelState.dirty = true;
+      $('#typeBox').innerHTML = typeRows();
+      $('#typeBox').querySelector(`[data-type="${panelState.types.length - 1}"]`).focus();
+    } else if (t.dataset.removeType !== undefined) {
+      const i = Number(t.dataset.removeType);
+      const ty = panelState.types[i];
+      const used = ty.id && panelState.id ? (S.work[productPath(panelState.id)] || []).filter((x) => x.range === ty.id).length : 0;
+      if (used) return showErrors({ types: `${used} ${used === 1 ? 'product uses' : 'products use'} the type "${ty.label}". Change their type first.` });
+      panelState.types.splice(i, 1);
+      panelState.dirty = true;
+      $('#typeBox').innerHTML = typeRows();
+    }
+  });
+}
+
+function saveCategory() {
+  const form = $('#itemForm');
+  const data = Object.fromEntries(new FormData(form));
+  const c = cats();
+  const { id, item } = panelState;
+  const errors = {};
+  const title = (data.title || '').trim().replace(/\s+/g, ' ');
+  const short = (data.short || '').trim().replace(/\s+/g, ' ');
+  if (!title) errors.title = 'Write the name of the category.';
+  if (!short) errors.short = 'Write a short name for menus.';
+  const dupe = Object.entries(c.categories).find(([k, x]) => k !== id && (x.title.toLowerCase() === title.toLowerCase() || x.short.toLowerCase() === short.toLowerCase()));
+  if (dupe && title) errors.title = `There is already a category called "${dupe[1].title}" (${dupe[1].short}).`;
+  let min = null;
+  let max = null;
+  if (!data.noTemps) {
+    min = parseInt(data.min, 10);
+    max = parseInt(data.max, 10);
+    if (!Number.isInteger(min) || !Number.isInteger(max) || min < 100 || max > 2000 || min >= max)
+      errors.temps = 'Write both temperatures in °C, the lowest below the highest. Or tick "No firing temperature".';
+  }
+  if (!(data.summary || '').trim()) errors.summary = 'Write a sentence about this category.';
+  let groupId = data.group;
+  if (groupId === '__new' && !(data.newGroup || '').trim()) errors.newGroup = 'Write the name of the new group.';
+  const labels = new Set();
+  for (const t of panelState.types) {
+    const l = (t.label || '').trim().toLowerCase();
+    if (!l) errors.types = 'Every type needs a name. Remove the empty ones.';
+    else if (labels.has(l)) errors.types = `There are two types called "${t.label}".`;
+    else if ((t.min === null) !== (t.max === null) || (t.min !== null && !(t.min < t.max)))
+      errors.types = `Type "${t.label}": write both temperatures (lowest first), or leave both empty.`;
+    labels.add(l);
+  }
+  if (Object.keys(errors).length) return showErrors(errors);
+
+  const cid = id || uniqueId(short, new Set([...Object.keys(c.categories), ...Object.keys(S.base[FILES.categories]?.categories || {})]));
+  // Give new types an id; keep existing ids so products stay linked to their type.
+  const typeIds = new Set();
+  const types = panelState.types.map((t) => {
+    const tid = t.id || uniqueId(t.label, typeIds);
+    typeIds.add(tid);
+    const out = { id: tid, label: t.label.trim() };
+    if (t.min !== null && t.max !== null) Object.assign(out, { min: t.min, max: t.max });
+    if (t.note) out.note = t.note;
+    return out;
+  });
+  const layout = data.layout || (item.layout === 'grades' ? 'grades' : item.code === 'required' ? 'code' : 'name');
+  const cat = {
+    ...item,
+    title,
+    short,
+    min,
+    max,
+    summary: data.summary.trim(),
+    points: (data.points || '').split('\n').map((x) => x.trim()).filter(Boolean),
+    notes: (data.notes || '').split('\n').map((x) => x.trim()).filter(Boolean),
+    description: (data.description || '').trim(),
+    image: panelState.item.image || null,
+    layout: layout === 'grades' ? 'grades' : 'shades',
+    types,
+    hidden: !data.show,
+  };
+  if (layout === 'grades') delete cat.code;
+  else cat.code = layout === 'code' ? 'required' : 'optional';
+  if (!cat.hidden) delete cat.hidden;
+  if (!id) cat.folder = cid;
+  c.categories[cid] = cat;
+
+  if (groupId === '__new') {
+    const title = data.newGroup.trim().replace(/\s+/g, ' ');
+    groupId = uniqueId(title, new Set(c.groups.map((g) => g.id)));
+    c.groups.push({ id: groupId, title, categories: [] });
+  }
+  const current = c.groups.find((g) => g.categories.includes(cid));
+  if (current?.id !== groupId) moveCategoryTo(cid, groupId);
+
+  // Keep every product's type valid: with no types, products use the category id; new types start with the first one.
+  const path = productPath(cid);
+  if (!S.work[path]) {
+    S.work[path] = [];
+    if (S.base[path] === undefined) S.base[path] = [];
+  }
+  const valid = new Set(types.length ? types.map((t) => t.id) : [cid]);
+  for (const p of S.work[path]) if (!valid.has(p.range)) p.range = [...valid][0];
+
+  $('#panel').close();
+  panelState = null;
+  changed();
+  if (!id) {
+    S.view = cid;
+    S.q = '';
+    S.filter = 'all';
+  }
+  render();
+  toast(id ? `Saved ${short}. Press "Publish changes" to put it on the website.` : `Added ${short}. Now add its colours, then press "Publish changes".`);
+}
+
+async function deleteCategory() {
+  const { id } = panelState;
+  const c = cats();
+  const cat = c.categories[id];
+  const n = (S.work[productPath(id)] || []).length;
+  if (n) return showErrors({ title: `Delete or move its ${n} ${n === 1 ? 'product' : 'products'} first. To keep them but take the page off the website, untick "Show this category on the website".` });
+  if (!(await confirmBox(`Delete ${cat.title}?`, 'Its page will be removed from the website when you publish.', 'Delete', true))) return;
+  delete c.categories[id];
+  for (const g of c.groups) g.categories = g.categories.filter((x) => x !== id);
+  if (S.base[productPath(id)]?.length === 0 && !S.base[FILES.categories]?.categories?.[id]) {
+    delete S.base[productPath(id)];
+    delete S.work[productPath(id)];
+  }
+  $('#panel').close();
+  panelState = null;
+  if (S.view === id) S.view = 'categories';
+  changed();
+  render();
+  toast(`Deleted ${cat.title}.`);
 }
 
 function helpView() {
+  const android = /Android/i.test(navigator.userAgent);
+  const installed = matchMedia('(display-mode: standalone)').matches || window.Capacitor;
   return `
-    <div class="view-head"><div><h1>How to use the editor</h1></div></div>
+    <div class="view-head"><div class="view-title"><h1>How to use the editor</h1></div></div>
     <div class="sheet">
+      ${
+        installed
+          ? ''
+          : `<h2>Put the editor on ${android ? 'this phone' : 'this computer'}</h2>
+        <p>${installPrompt ? 'Press the button to add the editor as an app, with its own icon.' : android ? 'In Chrome, open the menu (⋮) and choose <strong>Add to home screen</strong> → <strong>Install</strong>.' : 'In Edge, open the menu (⋯) and choose <strong>Apps</strong> → <strong>Install this site as an app</strong>. Tick “Create desktop shortcut”.'}</p>
+        ${installPrompt ? '<p><button class="btn primary" id="installBtn">Install the editor as an app</button></p>' : ''}`
+      }
       <h2>Add a colour</h2>
       <ol class="steps">
-        <li>Choose the range on the left, for example <strong>Ceramic & glass</strong>.</li>
+        <li>Choose the category in the menu, for example <strong>Ceramic colours</strong>.</li>
         <li>Press <strong>Add a colour</strong>. Fill in the name and code, choose the type and stock.</li>
-        <li>Press <strong>Choose photo</strong>, or drag a photo onto the dotted box. A clear daylight photo on white paper works best.</li>
+        <li>Press <strong>Choose photo</strong>${android ? '' : ', or drag a photo onto the dotted box'}. A clear daylight photo on white paper works best.</li>
         <li>Press <strong>Save</strong>. The colour shows on the list with a green <strong>New</strong> label.</li>
+      </ol>
+      <h2>Add a new product category</h2>
+      <ol class="steps">
+        <li>Open <strong>Categories and groups</strong> (under "Set up" in the menu).</li>
+        <li>Press <strong>+ Add a category to this group</strong> in the group it belongs to.</li>
+        <li>Write its name and a short name for menus, the firing temperature and a sentence about it. Press <strong>Save</strong>.</li>
+        <li>It now has its own list in the menu: add its colours there, then publish. The website gets a new page for it.</li>
       </ol>
       <h2>Put changes on the website</h2>
       <ol class="steps">
-        <li>Press <strong>Publish changes</strong> at the top right. You will see a list of everything that changed.</li>
+        <li>Press <strong>Publish</strong> at the top. You will see a list of everything that changed.</li>
         <li>Press <strong>Publish now</strong>. The website updates in about 2 minutes.</li>
       </ol>
       <h2>Good to know</h2>
       <ul class="steps">
-        <li>You can close the editor at any time. Changes that are not published yet are kept for next time.</li>
-        <li>Made a mistake? Open the item and change it, or press <strong>Undo all changes</strong> before publishing.</li>
+        <li>You can close the editor at any time. Changes that are not published yet are kept on this ${android ? 'phone' : 'computer'} for next time.</li>
+        <li>Made a mistake? Open the item and change it, or press <strong>Undo all</strong> before publishing.</li>
         <li>Colours without a photo show as a coloured tile with the code, labelled "screen colour only".</li>
         <li>If something says it could not reach GitHub, check the internet and try again.</li>
+        <li>Want to try things out first? Open the editor in <strong>practice mode</strong>: <button class="link" data-open-practice>open practice mode</button>. Nothing you do there changes the website.</li>
       </ul>
     </div>`;
 }
@@ -508,7 +923,7 @@ let panelState = null; // { section, path, id, item, dirty }
 
 function blankItem(section) {
   if (section === 'gallery') return { image: null, caption: '', category: 'ceramic' };
-  const cfg = PRODUCTS[section];
+  const cfg = cfgOf(section);
   const item = { name: '', hex: '#888888', image: null, stock: 'in', range: cfg.types()[0][0] };
   if (cfg.code) item.code = '';
   if (cfg.purity) item.purity = '';
@@ -516,7 +931,7 @@ function blankItem(section) {
 }
 
 function openPanel(section, id) {
-  const path = FILES[section];
+  const path = section === 'gallery' ? FILES.gallery : productPath(section);
   const list = S.work[path];
   const existing = id ? list.find((x) => x.__id === id) : null;
   const item = existing ? clone(existing) : blankItem(section);
@@ -526,7 +941,8 @@ function openPanel(section, id) {
   dlg.showModal();
   wirePanel();
   const first = dlg.querySelector(section === 'gallery' ? 'textarea, input[name=caption]' : 'input[name=name]');
-  first?.focus();
+  // On phones, opening the keyboard straight away hides half the form; there they tap the field they want.
+  if (finePointer()) first?.focus();
 }
 
 function photoBlock() {
@@ -536,7 +952,7 @@ function photoBlock() {
       <div class="photo-actions">
         <span class="legend">Photo</span>
         <label class="btn"><input type="file" id="photoInput" accept="image/jpeg,image/png,image/webp" hidden>Choose photo…</label>
-        <span class="help">or drag a photo onto this box</span>
+        ${finePointer() ? '<span class="help">or drag a photo onto this box</span>' : ''}
         ${it.image && panelState.section !== 'gallery' ? '<button type="button" class="link" id="removePhoto">Remove photo</button>' : ''}
         <span class="help" id="photoStatus" role="status"></span>
       </div>
@@ -544,9 +960,9 @@ function photoBlock() {
 }
 
 function productForm() {
-  const { section, item, id } = panelState;
-  const cfg = PRODUCTS[section];
-  const names = [...new Set((S.work[FILES.gold] || []).map((x) => x.name))];
+  const { section, item, id, path } = panelState;
+  const cfg = cfgOf(section);
+  const names = [...new Set((S.work[path] || []).map((x) => x.name))];
   return `<form method="dialog" id="itemForm" novalidate>
     <div class="panel-head"><h2 id="panelTitle">${id ? 'Edit' : 'Add a'} ${esc(cfg.noun)}</h2><button type="button" class="icon-btn" data-close aria-label="Close">✕</button></div>
     <div class="panel-body">
@@ -617,7 +1033,7 @@ function galleryForm() {
 
 function refreshPreview() {
   const it = panelState.item;
-  $('#photoPreview').innerHTML = thumb(it, it.code || it.purity || '');
+  $('#photoPreview').innerHTML = thumb(it, it.code || it.purity || it.short || '');
 }
 
 async function uploadPhoto(file) {
@@ -656,6 +1072,7 @@ function wirePanel() {
       }
     }
   });
+  if (panelState.kind === 'category') wireCategoryForm(form);
   $('#photoInput').addEventListener('change', (e) => uploadPhoto(e.target.files[0]));
   const field = $('#photoField');
   field.addEventListener('dragover', (e) => {
@@ -675,10 +1092,11 @@ function wirePanel() {
     $('#removePhoto').remove();
   });
   form.querySelectorAll('[data-close]').forEach((b) => b.addEventListener('click', closePanel));
-  $('#deleteItem')?.addEventListener('click', deleteItem);
+  $('#deleteItem')?.addEventListener('click', panelState.kind === 'category' ? deleteCategory : deleteItem);
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    saveItem();
+    if (panelState.kind === 'category') saveCategory();
+    else saveItem();
   });
 }
 
@@ -717,7 +1135,7 @@ function saveItem() {
     if (!data.caption?.trim()) errors.caption = 'Write a short caption.';
     item = { image: it.image, caption: (data.caption || '').trim(), category: data.category || 'ceramic' };
   } else {
-    const cfg = PRODUCTS[section];
+    const cfg = cfgOf(section);
     const name = (data.name || '').trim();
     const code = (data.code || '').trim();
     const purity = (data.purity || '').trim();
@@ -842,35 +1260,6 @@ function onContactInput(e) {
   changed();
 }
 
-function onRangeInput(e) {
-  const form = e.target.closest('[data-range]');
-  const r = S.work[FILES.ranges][form.dataset.range];
-  const { name, value } = e.target;
-  if (name === 'min' || name === 'max') {
-    const n = parseInt(value, 10);
-    const errEl = form.querySelector('[data-error="temps"]');
-    const min = name === 'min' ? n : r.min;
-    const max = name === 'max' ? n : r.max;
-    if (!Number.isFinite(n) || n < 100 || n > 2000 || min >= max) {
-      errEl.textContent = 'Use numbers in °C, with the lowest below the highest.';
-      errEl.hidden = false;
-      return;
-    }
-    errEl.hidden = true;
-    r[name] = n;
-    // Keep the written firing range in step with the numbers.
-    r.firing = `${r.min} to ${r.max}°C`;
-  } else if (name === 'points' || name === 'notes') {
-    r[name] = value
-      .split('\n')
-      .map((x) => x.trim())
-      .filter(Boolean);
-  } else {
-    r[name] = value;
-  }
-  changed();
-}
-
 /* ---------- publishing ---------- */
 
 let pollTimer;
@@ -884,7 +1273,9 @@ function publishDialog(html) {
 function openPublish() {
   const list = changes();
   if (!list.length) return;
-  const photos = Object.values(FILES).reduce((n, p) => n + (Array.isArray(S.work[p]) ? S.work[p].filter((x) => x.image?.startsWith('draft:')).length : 0), 0);
+  const photos =
+    allPaths().reduce((n, p) => n + (Array.isArray(S.work[p]) ? S.work[p].filter((x) => x.image?.startsWith('draft:')).length : 0), 0) +
+    Object.values(cats().categories).filter((c) => c.image?.startsWith('draft:')).length;
   const dlg = publishDialog(`
     <h2 id="publishTitle">Put these changes on the website?</h2>
     <ul class="change-list">${list.map((c) => `<li>${esc(c.text)}</li>`).join('')}</ul>
@@ -904,7 +1295,7 @@ async function doPublish(list) {
   }
   const message = `Website update from the editor\n\n${list.map((c) => `- ${c.text}`).join('\n')}`;
   try {
-    const r = await api('/api/publish', { files, baseShas, message });
+    const r = await api('/api/publish', { files, baseShas, message, categories: strip(S.work[FILES.categories]) });
     await loadAll();
     published(r.sha);
   } catch (e) {
@@ -935,11 +1326,11 @@ function published(sha) {
   const site = S.settings.site_url;
   const dlg = publishDialog(`
     <div class="result"><span class="result-icon ok" aria-hidden="true">✓</span><div><h2 id="publishTitle">Published</h2>
-    <p id="deployText">${S.local ? 'Saved to the website folder on this computer.' : 'The website is updating. This usually takes about 2 minutes.'}</p></div></div>
+    <p id="deployText">${S.practice ? 'Practice mode: this was not really published. Nothing on the website changed.' : 'The website is updating. This usually takes about 2 minutes.'}</p></div></div>
     <div class="modal-actions">${S.local ? '' : '<button class="btn" id="openSite">Open the website</button>'}<button class="btn primary" id="pubDone">Done</button></div>`);
   $('#pubDone', dlg).onclick = () => dlg.close();
   $('#openSite', dlg)?.addEventListener('click', () => api('/api/open', { url: site }).catch(() => {}));
-  if (S.local || !sha) return;
+  if (S.practice || !sha) return;
   let tries = 0;
   clearInterval(pollTimer);
   pollTimer = setInterval(async () => {
@@ -974,7 +1365,6 @@ function showSetup(firstTime) {
   f.site_url.value = S.settings.site_url || '';
   f.token.value = '';
   f.token.placeholder = firstTime ? 'github_pat_…' : 'Saved. Leave empty to keep it.';
-  $('#shortcutRow').hidden = !(S.windows && firstTime);
   $('#setupBack').hidden = firstTime;
   $('#setupForget').hidden = firstTime;
   $('#setupError').hidden = true;
@@ -992,7 +1382,6 @@ async function submitSetup(e) {
   try {
     const st = await api('/api/setup', { token: f.token.value, repo: f.repo.value, branch: f.branch.value, site_url: f.site_url.value });
     S.settings = st.settings;
-    if (!$('#shortcutRow').hidden && f.shortcut.checked) await api('/api/shortcut', {}).catch(() => {});
     $('#setup').hidden = true;
     $('#app').hidden = false;
     await loadAll();
@@ -1027,7 +1416,18 @@ function wire() {
       openPanel(S.view, null);
     } else if (t.dataset.open) {
       api('/api/open', { url: t.dataset.open }).catch((ex) => toast(ex.message));
+    } else if (t.dataset.editCat) {
+      openCategory(t.dataset.editCat);
+    } else if (t.dataset.catAction) {
+      categoryAction(t.dataset.catAction, t.dataset.id);
+    } else if (t.id === 'installBtn') {
+      installApp();
+    } else if (t.hasAttribute('data-reload')) {
+      location.reload();
+    } else if (t.hasAttribute('data-open-practice')) {
+      location.href = `${location.pathname}?practice`;
     }
+    if (t.dataset.view || t.id === 'sideToggle') setSideOpen(t.id === 'sideToggle' && !document.body.classList.contains('side-open'));
   });
   $('#main').addEventListener('input', (e) => {
     if (e.target.id === 'search') {
@@ -1038,7 +1438,9 @@ function wire() {
       s.focus();
       s.setSelectionRange(pos, pos);
     } else if (e.target.closest('#contactForm')) onContactInput(e);
-    else if (e.target.closest('[data-range]')) onRangeInput(e);
+  });
+  $('#main').addEventListener('change', (e) => {
+    if (e.target.dataset.moveTo) moveCategoryTo(e.target.dataset.moveTo, e.target.value);
   });
   $('#panel').addEventListener('cancel', (e) => {
     e.preventDefault();
@@ -1048,12 +1450,13 @@ function wire() {
   $('#undoAll').addEventListener('click', async () => {
     if (!(await confirmBox('Undo all changes?', 'Everything you changed since the last publish will be thrown away.', 'Undo all', true))) return;
     S.work = clone(S.base);
+    for (const p of Object.keys(S.work)) if (S.base[p] === undefined) delete S.work[p];
     await api('/api/discard', {}).catch(() => {});
     render();
     toast('All changes undone.');
   });
   $('#settingsBtn').addEventListener('click', async () => {
-    if (S.local) return toast('Test mode has no settings.');
+    if (S.practice) return toast('Practice mode has no settings.');
     if (await confirmBox('Open settings?', 'Settings are for Kartik. Your changes are kept.', 'Open settings')) showSetup(false);
   });
   $('#setupForm').addEventListener('submit', submitSetup);
@@ -1069,22 +1472,57 @@ function wire() {
   });
   window.addEventListener('pagehide', flushDraft);
   document.addEventListener('visibilitychange', () => document.visibilityState === 'hidden' && flushDraft());
-  setInterval(() => api('/api/heartbeat', {}).catch(() => {}), 20000);
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    installPrompt = e;
+    if (S.view === 'help') renderMain();
+  });
+  document.addEventListener('keydown', (e) => e.key === 'Escape' && setSideOpen(false));
+
+  // Android app: the back button closes whatever is open (form, question, menu) before leaving the app.
+  const androidApp = window.Capacitor?.Plugins?.App;
+  androidApp?.addListener('backButton', () => {
+    const open = [...document.querySelectorAll('dialog[open]')].at(-1);
+    if (open?.id === 'panel') return closePanel();
+    if (open) return open.close();
+    if (document.body.classList.contains('side-open')) return setSideOpen(false);
+    if (!$('#setup').hidden && !$('#setupBack').hidden) return $('#setupBack').click();
+    flushDraft();
+    androidApp.minimizeApp();
+  });
+}
+
+function setSideOpen(open) {
+  document.body.classList.toggle('side-open', open);
+  $('#sideToggle').setAttribute('aria-expanded', String(open));
+}
+
+// "Install as an app": Edge/Chrome offer this for the editor's web address; it adds a desktop and Start menu icon.
+let installPrompt = null;
+async function installApp() {
+  if (!installPrompt) return toast('Use the browser menu (⋯) → Apps → Install this site as an app.');
+  installPrompt.prompt();
+  await installPrompt.userChoice.catch(() => {});
+  installPrompt = null;
+  renderMain();
 }
 
 async function start() {
   wire();
+  // Lets Edge and Chrome install the editor as an app (desktop icon, own window). Not needed inside the Android app.
+  if ('serviceWorker' in navigator && location.protocol === 'https:' && !window.Capacitor) navigator.serviceWorker.register('sw.js').catch(() => {});
   try {
     const st = await api('/api/state');
     S.settings = st.settings;
     S.local = st.local;
-    S.windows = st.windows;
+    S.practice = st.practice;
+    document.body.classList.toggle('practice', !!st.practice);
     if (!st.configured) return showSetup(true);
     $('#app').hidden = false;
     await loadAll();
   } catch (e) {
     $('#app').hidden = false;
-    $('#main').innerHTML = `<div class="sheet"><h1>Could not open the website</h1><p>${esc(e.message)}</p><p><button class="btn primary" onclick="location.reload()">Try again</button></p></div>`;
+    $('#main').innerHTML = `<div class="sheet"><h1>Could not open the website</h1><p>${esc(e.message)}</p><p><button class="btn primary" data-reload>Try again</button></p></div>`;
     $('#status').textContent = '';
   }
 }

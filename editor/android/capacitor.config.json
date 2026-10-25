@@ -1,0 +1,14 @@
+{
+  "appId": "in.shrivijayenterprises.editor",
+  "appName": "SVE Editor",
+  "webDir": "www",
+  "android": {
+    "allowMixedContent": false,
+    "backgroundColor": "#f7f4ee"
+  },
+  "plugins": {
+    "SystemBars": {
+      "style": "LIGHT"
+    }
+  }
+}

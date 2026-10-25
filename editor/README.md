@@ -1,100 +1,117 @@
 # SVE Website Editor
 
-A small Windows app for adding and editing colours, photos and a few website texts, without touching code.
-It saves changes straight to GitHub (no git, no cloning), and the website rebuilds itself from there.
+Adds and edits colours, photos, product categories and contact details without touching code. It saves
+straight to GitHub, and the website rebuilds itself from there in about 2 minutes.
 
-What it can change:
+**One editor, three ways to open it.** It is a web page (`editor/ui`), published with the website at
+**https://www.shrivijayenterprises.in/editor/**:
 
-| Section in the app | File it edits |
+| Where | How |
 | --- | --- |
-| Ceramic & glass, Lustres, Gold & platinum, In-glaze | `src/data/{ceramic,luster,gold,inglaze}.json` + photos in `src/assets/resources/` |
+| Windows (dad's computer) | Edge, installed as an app: own window, desktop icon, no .exe |
+| Android phone | The **SVE Editor** app (APK, section 4) |
+| Linux (Kartik) | `./editor/run-linux.sh`, or install it from Chrome like on Windows |
+
+There is no Windows .exe any more. Microsoft Defender reported the old unsigned .exe as a virus. That was a
+false alarm, but signing it costs money every year, and a web page installed from Edge needs no signing.
+
+What it changes:
+
+| In the editor | File |
+| --- | --- |
+| One list per category (Liquid gold, Lustre colours, ...) | `src/data/<category>.json` + photos in `src/assets/resources/<folder>/` |
+| Categories and groups | `src/data/categories.json`: names, groups and their order, temperatures, texts, types, tile photo, shown or hidden |
 | Gallery photos | `src/data/gallery.json` + photos in `src/assets/resources/gallery/` |
-| Contact details | `src/data/site.json` (phones, WhatsApp, emails, hours, address) |
-| Range descriptions | `src/data/ranges.json` (names, firing temperatures, descriptions, points, notes) |
+| Contact details | `src/data/site.json` |
 
-The home page hero, page layouts and everything else stay as they are.
+A new category gets its own page at `/<id>` (for example `/glass-lined-pigments`), and appears in the Products
+menu, on the Products page, on the home page, in the firing guide (if it has temperatures), in the sitemap and in
+`llms.txt`. No code changes are needed. The home page hero and the page layouts are not editable.
 
-## 1. Get the .exe
+## 1. Make a GitHub key (once)
 
-GitHub builds it automatically whenever anything in `editor/` changes:
-
-1. Open the repository on GitHub, go to **Actions**, then **Build website editor**.
-2. Open the latest green run and download **SVE-Website-Editor** under *Artifacts*.
-3. Unzip it. Inside is `SVE Website Editor.exe`.
-
-## 2. Make a GitHub key (once)
-
-The repository belongs to the personal account `shrivijaylustures-ops`. GitHub only allows fine-grained keys for
-repositories owned by the account making the key (or an organisation), so make it **while signed in as
-`shrivijaylustures-ops`**:
+The repository belongs to the personal account `shrivijaylustures-ops`. Fine-grained keys only work for
+repositories of the account that makes them, so make it **while signed in as `shrivijaylustures-ops`**:
 
 1. **Settings > Developer settings > Personal access tokens > Fine-grained tokens > Generate new token**.
 2. Name: `SVE Website Editor`. Expiration: the longest allowed (set a reminder to renew it).
-3. Resource owner: `shrivijaylustures-ops`.
-4. Repository access: **Only select repositories** > `ShriVijayEnterprises`.
-5. Permissions > Repository permissions: **Contents: Read and write**. (Metadata: Read is added automatically.)
-6. Generate, and copy the key. It is shown only once.
+3. Resource owner: `shrivijaylustures-ops`. Repository access: **Only select repositories** > `ShriVijayEnterprises`.
+4. Repository permissions: **Contents: Read and write**.
+5. Generate, and copy the key. It is shown only once.
 
-Changes published with this key are made by `shrivijaylustures-ops`. Cloudflare Pages deploys them; Vercel's free plan
-does not (it only deploys commits by the Vercel project owner), so move hosting first (section 5).
+## 2. Windows: install it on dad's computer (once)
 
-Stopgap while still on Vercel: a **classic** token from the Vercel owner's GitHub account with only the `public_repo`
-scope. It works, but it can write to every public repository that account can push to, so prefer the key above.
+1. Open **Microsoft Edge** and go to `https://www.shrivijayenterprises.in/editor/`.
+2. Paste the key and press **Check and save**. (Under *Website settings*: repository
+   `shrivijaylustures-ops/ShriVijayEnterprises`, branch `redesign` while the site deploys from `redesign`, later `main`.)
+3. Edge menu (**⋯**) > **Apps** > **Install this site as an app** > **Install**. Tick **Create desktop shortcut**
+   (or use the **Install** button on the editor's *How to use* page).
 
-## 3. Set it up on your dad's computer (once)
+From then on he opens **SVE Website Editor** from the desktop or the Start menu. It always loads the newest editor.
+The key stays in that app's storage on his computer and is only sent to GitHub.
 
-1. Copy `SVE Website Editor.exe` to his computer, for example into `Documents`.
-2. Double-click it. Windows may say *"Windows protected your PC"* because the app is not signed:
-   click **More info** > **Run anyway**. This happens once.
-3. The setup screen opens. Paste the key. Under *Website settings*, check:
-   - Repository: `shrivijaylustures-ops/ShriVijayEnterprises`
-   - Branch: `main` (use `redesign` to try it out on the preview first)
-   - Website address: `https://www.shrivijayenterprises.in`
-4. Leave **Put an icon for the editor on the desktop** ticked and press **Check and save**.
+## 3. Using it
 
-From then on he double-clicks the desktop icon and the editor opens straight away. The key is encrypted with
-his Windows login and never leaves his computer except to talk to GitHub.
+- Choose a category in the menu, press **Add a colour** (or click a colour to change it), fill in the form, add a photo, **Save**.
+- **Categories and groups** (under *Set up*): add a category, rename or reorder groups, move categories with ↑ ↓,
+  edit a category's name, short name, group, temperatures, texts, types and tile photo, or hide it from the website.
+  A category can only be deleted while it has no products; the four original ones cannot be deleted.
+- Press **Publish**, check the list, press **Publish now**. Every publish is one commit, so anything can be undone on GitHub.
+- Unpublished changes stay on the device if the editor is closed. **Undo all** throws them away.
+- **Practice mode** (link on the *How to use* page, or add `?practice` to the address) reads the real website and
+  never changes it. Good for learning.
+- Photos are only resized (to at most 2000 px) and saved as JPEG. Their colours are never adjusted: the photo's own
+  colour profile is kept, and the editor tests check that the pixels come out the same.
 
-## 4. How he uses it
+## 4. Android app
 
-- Pick a section on the left, press **Add a colour** (or click a colour to change it), fill in the form, add a photo, **Save**.
-- Press **Publish changes**, check the list, press **Publish now**. The website updates in about 2 minutes,
-  and the editor says when it is done.
-- Unpublished changes are kept if the window is closed. **Undo all changes** throws them away.
-- Photos are only resized (to at most 2000 px) and saved as JPEG. Colours are never adjusted.
-- Every publish is one commit on GitHub, so any change can be undone from the commit history.
+### Install on dad's phone
 
-## 5. Moving hosting to Cloudflare Pages (free, no card)
+1. Send him `SVE-Editor.apk` (WhatsApp as a *document*, Google Drive, or a cable).
+2. He taps it. Android asks to allow installing from that app (WhatsApp, Files, ...): **Settings > Allow from this source**, then back, **Install**.
+   Play Protect may say it does not recognise the app: **More details > Install anyway**. It is not from the Play Store, which is normal for a private app.
+3. Open **SVE Editor**, paste the GitHub key once (send it separately, and delete the message after).
 
-Vercel's free plan only deploys commits made by the project owner, and is meant for non-commercial use.
-Cloudflare Pages has neither limit. The site needs no changes for it (`_headers`, `.node-version` are already in the repo).
+To update, send a newer APK and he taps **Update**. His key and unpublished changes stay.
 
-1. Create a free account at <https://dash.cloudflare.com/sign-up> (email and password; no card needed).
-2. **Workers & Pages > Create > Pages > Connect to Git**, allow access to `ShriVijayEnterprises`.
-3. Production branch: `main`. Framework preset: **Astro**. Build command: `npm run build`. Output directory: `dist`.
-4. Save and deploy. Check the site at the `*.pages.dev` address it gives you.
-5. Custom domain: in the Pages project, **Custom domains > Set up a domain** > `shrivijayenterprises.in` and
-   `www.shrivijayenterprises.in`. Cloudflare asks to move the domain's nameservers to Cloudflare: change them
-   at the place the domain was bought (it currently uses Vercel's nameservers, `ns1/ns2.vercel-dns.com`).
-6. Once the site loads from Cloudflare, remove the domain from the Vercel project.
+### Build the APK (Kartik, on Linux)
+
+Needs Node and the Android SDK (`ANDROID_HOME`), JDK 21. From `editor/android`:
+
+```bash
+npm install
+npm run apk
+```
+
+The signed APK is copied to **`editor/android/SVE-Editor.apk`** (git-ignored). Before giving out a new
+version, raise `versionCode` (and `versionName`) in `android/app/build.gradle`.
+
+**The signing key** is in `editor/android/signing/` (`release.jks` and `keystore.properties`; git-ignored, never
+committed), with a copy in `~/.config/sve-editor-android/`. Also back it up off this laptop (a private drive or USB). Android only installs an update if it is signed with the
+same key: if the key is lost, dad has to uninstall the app and set it up again.
+
+The app shows the same `editor/ui` files, bundled inside the APK (Capacitor). Edits to the editor reach the Android
+app only with a new APK; the website's content does not need one.
 
 ## Problems
 
 - **"Could not reach GitHub"**: no internet, or GitHub is down. Try again later; nothing is lost.
-- **"GitHub did not accept the key"**: the key expired or was deleted. Make a new one (section 2), then in the editor
-  press the gear icon (top right) > paste the new key > **Check and save**.
+- **"GitHub did not accept the key"**: the key expired or was deleted. Make a new one (section 1), then press the
+  gear icon (top right) > paste the new key > **Check and save**.
 - **"The website was changed from somewhere else"**: press **Get latest and keep my changes**, check, publish again.
-- Log file: `%APPDATA%\SVE Website Editor\editor.log`. Unpublished draft: `%APPDATA%\SVE Website Editor\draft\`.
+- **A photo will not load** (for example HEIC from an iPhone): save or share it as JPG first.
 
 ## For developers
 
 ```bash
-pip install -r editor/requirements.txt
-python editor/main.py                        # normal use (GitHub)
-python editor/main.py --local . --no-window  # edit this folder instead of GitHub, print the address
-python editor/main.py --self-test            # quick check used by the build
+./editor/run-linux.sh --practice        # the editor in a window, practice mode
+node editor/tests/e2e.mjs               # full test against a fake GitHub (needs Playwright; PLAYWRIGHT_CORE=<path> if not installed)
 ```
 
-The app is a small Python web server bound to `127.0.0.1`, shown in an Edge app window. Every request needs the
-random key in the window's address, so other web pages cannot use it. Code: `main.py` (start-up), `sve/server.py`
-(API, publishing, validation), `sve/store.py` (GitHub and local folder), `sve/images.py`, `sve/config.py`, `ui/`.
+- `ui/index.html`, `ui/app.css`, `ui/app.js`: the screens. `ui/backend.js`: GitHub API (one commit per publish via
+  the Git Data API, conflict check by file version), photo preparation, checks before publishing, drafts
+  (localStorage) and new photos (IndexedDB).
+- `astro.config.mjs` copies `editor/ui` to `dist/editor/` on every build. `public/_headers` gives `/editor/*` a strict
+  Content-Security-Policy (only GitHub may be contacted) and `noindex`; `robots.txt` disallows it.
+- `tests/fake_github.py`: a stand-in for the GitHub API that serves and writes a folder.
+- `android/`: the Capacitor project (`npm run sync` copies `ui/` into it).

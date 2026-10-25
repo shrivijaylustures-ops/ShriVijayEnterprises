@@ -1,7 +1,7 @@
 ---
 import { Icon } from 'astro-icon/components';
 import site from '../data/site.json';
-import { lines } from '../data/lines';
+import { groups, lines } from '../data/lines';
 import { waLink } from '../lib/links';
 
 const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/index';
@@ -26,11 +26,16 @@ const current = (href: string) => (path === href.replace('.html', '') ? 'page' :
         <div class="dd-panel" id="dd-products">
           <div class="dd-inner">
             {
-              lines.map((l) => (
-                <a href={l.href} class="dd-item" aria-current={current(l.href)}>
-                  <span class="dd-title">{l.title}</span>
-                  <span class="dd-meta num">{l.firing}</span>
-                </a>
+              groups.map((g) => (
+                <div class="dd-group" role="group" aria-label={g.title}>
+                  <p class="dd-group-h" aria-hidden="true">{g.title}</p>
+                  {g.lines.map((l) => (
+                    <a href={l.href} class="dd-item" aria-current={current(l.href)}>
+                      <span class="dd-title">{l.title}</span>
+                      {l.firing && <span class="dd-meta num">{l.firing}</span>}
+                    </a>
+                  ))}
+                </div>
               ))
             }
             <a href="/products" class="dd-all">All products overview</a>
@@ -62,15 +67,26 @@ const current = (href: string) => (path === href.replace('.html', '') ? 'page' :
   <div class="menu" id="menu" data-menu hidden>
   <nav class="wrap menu-inner" aria-label="Mobile">
     {
+      groups.map((g, gi) => (
+        <div class="menu-group" style={`--i:${gi}`}>
+          <p class="menu-group-h">{g.title}</p>
+          {g.lines.map((l) => (
+            <a href={l.href} class="menu-sub" aria-current={current(l.href)}>
+              {l.short}
+            </a>
+          ))}
+        </div>
+      ))
+    }
+    {
       [
-        ...lines.map((l) => ({ href: l.href, label: l.short })),
         { href: '/products', label: 'All products' },
         { href: '/gallery', label: 'Gallery' },
         { href: '/aboutus', label: 'About us' },
         { href: '/contact', label: 'Contact us' },
       ].map(
         (item, i) => (
-          <a href={item.href} class="menu-link" style={`--i:${i}`} aria-current={current(item.href)}>
+          <a href={item.href} class="menu-link" style={`--i:${groups.length + i}`} aria-current={current(item.href)}>
             {item.label}
           </a>
         ),
@@ -255,7 +271,7 @@ const current = (href: string) => (path === href.replace('.html', '') ? 'page' :
     position: absolute;
     top: calc(100% + 10px);
     left: -12px;
-    width: 340px;
+    width: min(400px, calc(100vw - 32px));
     opacity: 0;
     visibility: hidden;
     transform: translateY(-6px);
@@ -310,8 +326,25 @@ const current = (href: string) => (path === href.replace('.html', '') ? 'page' :
     background: var(--gold-soft);
   }
 
-  .dd-title {
+  .dd-group + .dd-group {
+    margin-top: 4px;
+    padding-top: 4px;
+    border-top: 1px solid var(--line);
+  }
+
+  .dd-group-h {
+    padding: 10px 14px 4px;
+    font-size: 0.74rem;
     font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .dd-title {
+    min-width: 0;
+    font-weight: 500;
+    line-height: 1.3;
   }
 
   .dd-meta {
@@ -486,6 +519,38 @@ const current = (href: string) => (path === href.replace('.html', '') ? 'page' :
     transition-delay: calc(60ms + var(--i) * 50ms);
   }
 
+  .menu-group {
+    display: grid;
+    padding: 10px 0 12px;
+    border-bottom: 1px solid var(--line);
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 0.6s var(--ease),
+      transform 0.6s var(--ease);
+    transition-delay: calc(60ms + var(--i) * 50ms);
+  }
+
+  .menu-group-h {
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 2px;
+  }
+
+  .menu-sub {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: 1.2;
+    padding: 6px 0;
+    text-decoration: none;
+    overflow-wrap: break-word;
+  }
+
+  .menu-sub[aria-current='page'],
   .menu-link[aria-current='page'] {
     color: var(--gold-ink);
   }
@@ -501,6 +566,7 @@ const current = (href: string) => (path === href.replace('.html', '') ? 'page' :
     transition-delay: 0.45s;
   }
 
+  .menu:global(.is-open) .menu-group,
   .menu:global(.is-open) .menu-link,
   .menu:global(.is-open) .menu-cta {
     opacity: 1;

@@ -1,0 +1,13 @@
+node_modules/
+www/
+android/app/build/
+android/build/
+android/.gradle/
+android/local.properties
+android/app/release/
+*.jks
+*.keystore
+keystore.properties
+# The APK signing key (kept here on Kartik's laptop, never in git) and the built APK.
+signing/
+SVE-Editor.apk

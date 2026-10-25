@@ -1,0 +1,174 @@
+{
+  "groups": [
+    {
+      "id": "gold-lustre",
+      "title": "Gold based lustre colours",
+      "categories": [
+        "gold",
+        "glass-lined-pigments"
+      ]
+    },
+    {
+      "id": "lustre",
+      "title": "Lustre colours",
+      "categories": [
+        "luster"
+      ]
+    },
+    {
+      "id": "ceramic",
+      "title": "Ceramic colours",
+      "categories": [
+        "inglaze",
+        "ceramic"
+      ]
+    }
+  ],
+  "categories": {
+    "gold": {
+      "title": "Liquid Gold & Platinum",
+      "short": "Liquid gold",
+      "min": 500,
+      "max": 830,
+      "summary": "Bright and burnished gold and platinum in 7%, 10%, 12% and custom purity, for glass and ceramic.",
+      "points": [
+        "7%, 10%, 12% and custom purity",
+        "Glass 500 to 600°C, ceramic 760 to 830°C",
+        "Rich shine, streak-free application, high durability after firing"
+      ],
+      "notes": [
+        "Purity 7%, 10%, 12% or made to your specification.",
+        "For glass (500 to 600°C) and ceramic third firing (760 to 830°C).",
+        "Smooth, streak-free application and even colour at lower firing temperatures."
+      ],
+      "description": "Liquid gold and platinum lustre in 7%, 10%, 12% and custom purity for glass (500 to 600°C) and ceramic third firing (760 to 830°C).",
+      "image": "resources/Gold/LiquidGoldCup.jpg",
+      "folder": "Gold",
+      "layout": "grades",
+      "types": [
+        {
+          "id": "gold",
+          "label": "Gold"
+        },
+        {
+          "id": "platinum",
+          "label": "Platinum"
+        }
+      ],
+      "builtIn": true
+    },
+    "luster": {
+      "title": "Liquid Lustre Colours",
+      "short": "Lustre colours",
+      "min": 750,
+      "max": 850,
+      "summary": "Metallic and pearl lustres with stable viscosity and an even sheen across firing cycles.",
+      "points": [
+        "Glassware 500 to 600°C",
+        "Ceramicware third firing 760 to 830°C",
+        "Stable viscosity, high coverage, consistent finish"
+      ],
+      "notes": [
+        "For glassware, 500 to 600°C: bright, reflective finish with clean firing.",
+        "For ceramicware, third firing 760 to 830°C: metallic sheen for decorative ware, giftware and tableware."
+      ],
+      "description": "Liquid lustre colours for ceramic and glass: bronze, mother of pearl, steel grey, rose pink and more, including gold-based lustres. Made in Agra since 1975.",
+      "image": "resources/Luster/Pink.jpg",
+      "folder": "Luster",
+      "layout": "shades",
+      "code": "optional",
+      "types": [
+        {
+          "id": "non-gold",
+          "label": "Standard"
+        },
+        {
+          "id": "gold-based",
+          "label": "Gold based"
+        },
+        {
+          "id": "medium",
+          "label": "Medium",
+          "note": "Oil base"
+        }
+      ],
+      "builtIn": true
+    },
+    "ceramic": {
+      "title": "Ceramic & Glass Colours",
+      "short": "Ceramic colours",
+      "min": 500,
+      "max": 830,
+      "summary": "Imported on-glaze and glass colours for third-firing decoration, with sharp shades and high gloss.",
+      "points": [
+        "Glass colours 500 to 600°C",
+        "On-glaze third firing 760 to 830°C, sharp shades and high gloss",
+        "Imported for purity and firing consistency"
+      ],
+      "notes": [
+        "Glass colours, 500 to 600°C: smooth, even application on glassware with stable firing.",
+        "On-glaze colours, third firing 760 to 830°C: sharp shades and high gloss for overglaze decoration."
+      ],
+      "description": "Imported on-glaze ceramic colours (760 to 830°C) and glass colours (500 to 560°C) for third-firing decoration. Browse shades by code and enquire on WhatsApp.",
+      "image": "resources/Ceramic/CeramicColor.png",
+      "folder": "Ceramic",
+      "layout": "shades",
+      "code": "required",
+      "types": [
+        {
+          "id": "on-glaze",
+          "label": "On-glaze",
+          "min": 760,
+          "max": 830
+        },
+        {
+          "id": "glass",
+          "label": "Glass",
+          "min": 500,
+          "max": 560
+        }
+      ],
+      "builtIn": true
+    },
+    "inglaze": {
+      "title": "In-Glaze Colours",
+      "short": "In-glaze colours",
+      "min": 1150,
+      "max": 1250,
+      "summary": "High-temperature colours that fuse into the glaze for scratch resistance and lasting depth.",
+      "points": [
+        "1150 to 1250°C",
+        "Fuses into the glaze layer",
+        "Scratch resistance and thermal stability"
+      ],
+      "notes": [],
+      "description": "High-temperature in-glaze ceramic colours (1150 to 1250°C) that fuse into the glaze for scratch resistance and lasting colour depth.",
+      "image": null,
+      "folder": "InGlaze",
+      "layout": "shades",
+      "code": "required",
+      "types": [
+        {
+          "id": "inglaze",
+          "label": "In-glaze"
+        }
+      ],
+      "builtIn": true
+    },
+    "glass-lined-pigments": {
+      "title": "Pigment for Glass Lined Coatings",
+      "short": "Glass-lined pigments",
+      "min": null,
+      "max": null,
+      "summary": "Pigments for glass-lined coatings.",
+      "points": [],
+      "notes": [],
+      "description": "",
+      "image": null,
+      "folder": "glass-lined-pigments",
+      "layout": "shades",
+      "code": "optional",
+      "types": []
+    }
+  }
+}
