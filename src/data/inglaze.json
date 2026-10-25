@@ -1,13 +1,5 @@
 [
   {
-    "name": "SV 1154",
-    "code": "Red",
-    "hex": "#7A1622",
-    "image": "resources/InGlaze/red-sv-1154-223964.jpg",
-    "stock": "in",
-    "range": "inglaze"
-  },
-  {
     "name": "Nickel Black",
     "code": "SV 1168",
     "hex": "#2B323A",
