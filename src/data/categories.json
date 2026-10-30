@@ -143,14 +143,16 @@
       ],
       "notes": [],
       "description": "High-temperature in-glaze ceramic colours (1150 to 1250°C) that fuse into the glaze for scratch resistance and lasting colour depth.",
-      "image": null,
+      "image": "resources/InGlaze/category-in-glaze-colours-d5ccc5.jpg",
       "folder": "InGlaze",
       "layout": "shades",
       "code": "required",
       "types": [
         {
           "id": "inglaze",
-          "label": "In-glaze"
+          "label": "In-glaze",
+          "min": 1150,
+          "max": 1250
         }
       ],
       "builtIn": true
@@ -164,7 +166,7 @@
       "points": [],
       "notes": [],
       "description": "",
-      "image": null,
+      "image": "resources/glass-lined-pigments/category-glass-lined-pigments-04b682.jpg",
       "folder": "glass-lined-pigments",
       "layout": "shades",
       "code": "optional",
